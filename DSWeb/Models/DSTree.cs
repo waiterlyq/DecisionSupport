@@ -29,6 +29,6 @@ namespace DSWeb.Models
         public string Result { get; set; }
         public string ResultCn { get; set; }
         public Nullable<int> CoverCount { get; set; }
-        public Nullable<int> ErroCount { get; set; }
+        public Nullable<int> ErrorCount { get; set; }
     }
 }

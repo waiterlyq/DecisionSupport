@@ -24,7 +24,7 @@
           <Property Name="Result" Type="varchar" MaxLength="50" />
           <Property Name="ResultCn" Type="varchar" MaxLength="50" />
           <Property Name="CoverCount" Type="int" />
-          <Property Name="ErroCount" Type="int" />
+          <Property Name="ErrorCount" Type="int" />
         </EntityType>
         <EntityType Name="DSTreeCEMap">
           <Key>
@@ -74,7 +74,7 @@
           <Property Name="Result" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ResultCn" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="CoverCount" Type="Int32" />
-          <Property Name="ErroCount" Type="Int32" />
+          <Property Name="ErrorCount" Type="Int32" />
         </EntityType>
         <EntityType Name="DSTreeCEMap">
           <Key>
@@ -110,6 +110,7 @@
           <EntitySetMapping Name="DSTree">
             <EntityTypeMapping TypeName="DSModel.DSTree">
               <MappingFragment StoreEntitySet="DSTree">
+                <ScalarProperty Name="ErrorCount" ColumnName="ErrorCount" />
                 <ScalarProperty Name="DSTreeGUID" ColumnName="DSTreeGUID" />
                 <ScalarProperty Name="ModGUID" ColumnName="ModGUID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
@@ -125,7 +126,6 @@
                 <ScalarProperty Name="Result" ColumnName="Result" />
                 <ScalarProperty Name="ResultCn" ColumnName="ResultCn" />
                 <ScalarProperty Name="CoverCount" ColumnName="CoverCount" />
-                <ScalarProperty Name="ErroCount" ColumnName="ErroCount" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -9,6 +9,13 @@
     <script type="text/javascript" src="~/scripts/bootstrap.min.js"></script>
     <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">
+        window.onload = function () {
+            $("#myModal").modal({
+                remote: "~/Views/DSTreeCEMaps/Create.cshtml"
+            });
+        }
+    </script>
 </head>
 <body>
     <nav class="navbar navbar-default" role="navigation">
@@ -21,6 +28,9 @@
                     <li>
                         @Html.ActionLink("模型管理", "Index", "DSTreeModels")
                     </li>
+                    <li>
+                       <a href="/DSTrees/Index" target="_blank">aaaa</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -30,4 +40,3 @@
     </div>
 </body>
 </html>
-
