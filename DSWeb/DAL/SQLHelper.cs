@@ -40,6 +40,7 @@ namespace DSWeb.DAL
             DataTable dt = new DataTable(); ;
             using (SqlConnection conn = new SqlConnection(strConn))
             {
+                try { 
                 SqlDataAdapter da = new SqlDataAdapter(strSQL, conn);
                 da.SelectCommand.CommandType = cmdtype;
                 if (pas != null)
@@ -47,6 +48,11 @@ namespace DSWeb.DAL
                     da.SelectCommand.Parameters.AddRange(pas);
                 }
                 da.Fill(dt);
+                }
+                catch(Exception e)
+                {
+                    return null;
+                }
             }
             return dt;
         }

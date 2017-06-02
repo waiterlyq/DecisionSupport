@@ -17,7 +17,9 @@ namespace DSWeb.Controllers
         // GET: DSTreeCEMaps
         public ActionResult Index()
         {
-            return View(db.DSTreeCEMap.ToList());
+            string str = Request.QueryString["id"];
+            ;
+            return View(db.Database.SqlQuery<DSTreeCEMap>("SELECT * FROM dbo.DSTreeCEMap WHERE ModGUID = '" + str + "'").ToList());
         }
 
         // GET: DSTreeCEMaps/Details/5

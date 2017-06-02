@@ -1,5 +1,7 @@
 ﻿@model IEnumerable<DSWeb.Models.DSTreeCEMap>
-
+{
+    @Layout = null;
+}
 <!DOCTYPE html>
 
 <html>
@@ -13,9 +15,7 @@
     </p>
     <table class="table">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ModGUID)
-            </th>
+           
             <th>
                 @Html.DisplayNameFor(model => model.ECellName)
             </th>
@@ -29,15 +29,13 @@
         </tr>
     
     @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModGUID)
-            </td>
+        <tr id="@item.CEMapGUID" modid ="@item.ModGUID">
+            
             <td>
                 @Html.DisplayFor(modelItem => item.ECellName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CCellName)
+                @Html.EditorFor(modelItem => item.CCellName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IsResultFactor)

@@ -7,12 +7,32 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Index</title>
+    <script type="text/javascript">
+        $(function () {  
+            $('tr').on('dblclick', function () {  
+               
+            });
+            $('tr').on('click', function () {
+                $("#modal").modal({
+                   /// remote: @Url.Action("Index", "DSTreeCEMaps")
+                    remote: "/DSTreeCEMaps/Index?id="+this.id
+                })
+            })
+        })
+    </script>
 </head>
 <body>
     <p>
         @Html.ActionLink("Create New", "Create")
     </p>
-    <table class="table">
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                //remote.html内容会被加载到这里
+            </div>
+        </div>
+    </div>
+    <table class="table table-hover table-bordered">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.ModName)
@@ -30,7 +50,7 @@
         </tr>
     
     @foreach (var item in Model) {
-        <tr>
+        <tr id=@item.ModGUID>
             <td>
                 @Html.DisplayFor(modelItem => item.ModName)
             </td>
