@@ -1,0 +1,58 @@
+﻿@model DSWeb.Models.DSTreeCEMap
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+    <div>
+        <h4>DSTreeCEMap</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.ModGUID)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.ModGUID)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.ECellName)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.ECellName)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.CCellName)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.CCellName)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.IsResultFactor)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.IsResultFactor)
+            </dd>
+    
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.CEMapGUID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>

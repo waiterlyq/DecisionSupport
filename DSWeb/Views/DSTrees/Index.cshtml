@@ -1,0 +1,123 @@
+﻿@model IEnumerable<DSWeb.Models.DSTree>
+
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ModGUID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FactorName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FactorNameCn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Operator)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OperatorCn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FactorValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FactorValueCn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Describe)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DescribeCn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Result)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ResultCn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CoverCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ErroCount)
+            </th>
+            <th></th>
+        </tr>
+    
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModGUID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FactorName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FactorNameCn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Operator)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OperatorCn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FactorValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FactorValueCn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Describe)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DescribeCn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Result)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ResultCn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CoverCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ErroCount)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.DSTreeGUID }) |
+                @Html.ActionLink("Details", "Details", new { id=item.DSTreeGUID }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.DSTreeGUID })
+            </td>
+        </tr>
+    }
+    
+    </table>
+</body>
+</html>

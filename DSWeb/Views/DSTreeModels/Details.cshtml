@@ -1,0 +1,58 @@
+﻿@model DSWeb.Models.DSTreeModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+    <div>
+        <h4>DSTreeModel</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.ModName)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.ModName)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.ModGenerateTime)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.ModGenerateTime)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.ModDataSource)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.ModDataSource)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.ModRemark)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.ModRemark)
+            </dd>
+    
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ModGUID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>

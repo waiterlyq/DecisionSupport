@@ -1,0 +1,56 @@
+﻿@model IEnumerable<DSWeb.Models.DSTreeModel>
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ModName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModGenerateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModDataSource)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModRemark)
+            </th>
+            <th></th>
+        </tr>
+    
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModGenerateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModDataSource)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModRemark)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.ModGUID }) |
+                @Html.ActionLink("Details", "Details", new { id=item.ModGUID }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.ModGUID })
+            </td>
+        </tr>
+    }
+    
+    </table>
+</body>
+</html>

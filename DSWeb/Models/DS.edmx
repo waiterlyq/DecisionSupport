@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="DSTree">
+          <Key>
+            <PropertyRef Name="DSTreeGUID" />
+          </Key>
+          <Property Name="DSTreeGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ModGUID" Type="uniqueidentifier" />
+          <Property Name="ID" Type="varchar" MaxLength="50" />
+          <Property Name="PID" Type="varchar" MaxLength="50" />
+          <Property Name="FactorName" Type="varchar" MaxLength="50" />
+          <Property Name="FactorNameCn" Type="varchar" MaxLength="50" />
+          <Property Name="Operator" Type="varchar" MaxLength="50" />
+          <Property Name="OperatorCn" Type="varchar" MaxLength="50" />
+          <Property Name="FactorValue" Type="varchar" MaxLength="500" />
+          <Property Name="FactorValueCn" Type="varchar" MaxLength="500" />
+          <Property Name="Describe" Type="varchar" MaxLength="1000" />
+          <Property Name="DescribeCn" Type="varchar" MaxLength="1000" />
+          <Property Name="Result" Type="varchar" MaxLength="50" />
+          <Property Name="ResultCn" Type="varchar" MaxLength="50" />
+          <Property Name="CoverCount" Type="int" />
+          <Property Name="ErroCount" Type="int" />
+        </EntityType>
+        <EntityType Name="DSTreeCEMap">
+          <Key>
+            <PropertyRef Name="CEMapGUID" />
+          </Key>
+          <Property Name="CEMapGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ModGUID" Type="uniqueidentifier" />
+          <Property Name="ECellName" Type="varchar" MaxLength="50" />
+          <Property Name="CCellName" Type="varchar" MaxLength="50" />
+          <Property Name="IsResultFactor" Type="bit" />
+        </EntityType>
+        <EntityType Name="DSTreeModel">
+          <Key>
+            <PropertyRef Name="ModGUID" />
+          </Key>
+          <Property Name="ModGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ModName" Type="varchar" MaxLength="50" />
+          <Property Name="ModGenerateTime" Type="datetime" />
+          <Property Name="ModDataSource" Type="varchar(max)" />
+          <Property Name="ModRemark" Type="varchar(max)" />
+        </EntityType>
+        <EntityContainer Name="DSModelStoreContainer">
+          <EntitySet Name="DSTree" EntityType="Self.DSTree" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DSTreeCEMap" EntityType="Self.DSTreeCEMap" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DSTreeModel" EntityType="Self.DSTreeModel" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="DSTree">
+          <Key>
+            <PropertyRef Name="DSTreeGUID" />
+          </Key>
+          <Property Name="DSTreeGUID" Type="Guid" Nullable="false" />
+          <Property Name="ModGUID" Type="Guid" />
+          <Property Name="ID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FactorName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FactorNameCn" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Operator" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OperatorCn" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FactorValue" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="FactorValueCn" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Describe" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="DescribeCn" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Result" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ResultCn" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CoverCount" Type="Int32" />
+          <Property Name="ErroCount" Type="Int32" />
+        </EntityType>
+        <EntityType Name="DSTreeCEMap">
+          <Key>
+            <PropertyRef Name="CEMapGUID" />
+          </Key>
+          <Property Name="CEMapGUID" Type="Guid" Nullable="false" />
+          <Property Name="ModGUID" Type="Guid" />
+          <Property Name="ECellName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CCellName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsResultFactor" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="DSTreeModel">
+          <Key>
+            <PropertyRef Name="ModGUID" />
+          </Key>
+          <Property Name="ModGUID" Type="Guid" Nullable="false" />
+          <Property Name="ModName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ModGenerateTime" Type="DateTime" Precision="3" />
+          <Property Name="ModDataSource" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="ModRemark" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityContainer Name="DSEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="DSTree" EntityType="Self.DSTree" />
+          <EntitySet Name="DSTreeCEMap" EntityType="Self.DSTreeCEMap" />
+          <EntitySet Name="DSTreeModel" EntityType="Self.DSTreeModel" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DSModelStoreContainer" CdmEntityContainer="DSEntities">
+          <EntitySetMapping Name="DSTree">
+            <EntityTypeMapping TypeName="DSModel.DSTree">
+              <MappingFragment StoreEntitySet="DSTree">
+                <ScalarProperty Name="DSTreeGUID" ColumnName="DSTreeGUID" />
+                <ScalarProperty Name="ModGUID" ColumnName="ModGUID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="PID" ColumnName="PID" />
+                <ScalarProperty Name="FactorName" ColumnName="FactorName" />
+                <ScalarProperty Name="FactorNameCn" ColumnName="FactorNameCn" />
+                <ScalarProperty Name="Operator" ColumnName="Operator" />
+                <ScalarProperty Name="OperatorCn" ColumnName="OperatorCn" />
+                <ScalarProperty Name="FactorValue" ColumnName="FactorValue" />
+                <ScalarProperty Name="FactorValueCn" ColumnName="FactorValueCn" />
+                <ScalarProperty Name="Describe" ColumnName="Describe" />
+                <ScalarProperty Name="DescribeCn" ColumnName="DescribeCn" />
+                <ScalarProperty Name="Result" ColumnName="Result" />
+                <ScalarProperty Name="ResultCn" ColumnName="ResultCn" />
+                <ScalarProperty Name="CoverCount" ColumnName="CoverCount" />
+                <ScalarProperty Name="ErroCount" ColumnName="ErroCount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DSTreeCEMap">
+            <EntityTypeMapping TypeName="DSModel.DSTreeCEMap">
+              <MappingFragment StoreEntitySet="DSTreeCEMap">
+                <ScalarProperty Name="CEMapGUID" ColumnName="CEMapGUID" />
+                <ScalarProperty Name="ModGUID" ColumnName="ModGUID" />
+                <ScalarProperty Name="ECellName" ColumnName="ECellName" />
+                <ScalarProperty Name="CCellName" ColumnName="CCellName" />
+                <ScalarProperty Name="IsResultFactor" ColumnName="IsResultFactor" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DSTreeModel">
+            <EntityTypeMapping TypeName="DSModel.DSTreeModel">
+              <MappingFragment StoreEntitySet="DSTreeModel">
+                <ScalarProperty Name="ModGUID" ColumnName="ModGUID" />
+                <ScalarProperty Name="ModName" ColumnName="ModName" />
+                <ScalarProperty Name="ModGenerateTime" ColumnName="ModGenerateTime" />
+                <ScalarProperty Name="ModDataSource" ColumnName="ModDataSource" />
+                <ScalarProperty Name="ModRemark" ColumnName="ModRemark" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="false" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,55 @@
+﻿@model IEnumerable<DSWeb.Models.DSTreeCEMap>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ModGUID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ECellName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CCellName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsResultFactor)
+            </th>
+            <th></th>
+        </tr>
+    
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModGUID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ECellName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CCellName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsResultFactor)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.CEMapGUID }) |
+                @Html.ActionLink("Details", "Details", new { id=item.CEMapGUID }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.CEMapGUID })
+            </td>
+        </tr>
+    }
+    
+    </table>
+</body>
+</html>

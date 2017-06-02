@@ -1,0 +1,146 @@
+﻿@model DSWeb.Models.DSTree
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+    <div>
+        <h4>DSTree</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.ModGUID)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.ModGUID)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.ID)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.ID)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.PID)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.PID)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.FactorName)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.FactorName)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.FactorNameCn)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.FactorNameCn)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Operator)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Operator)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.OperatorCn)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.OperatorCn)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.FactorValue)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.FactorValue)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.FactorValueCn)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.FactorValueCn)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Describe)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Describe)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.DescribeCn)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.DescribeCn)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Result)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Result)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.ResultCn)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.ResultCn)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.CoverCount)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.CoverCount)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.ErroCount)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.ErroCount)
+            </dd>
+    
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.DSTreeGUID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>
