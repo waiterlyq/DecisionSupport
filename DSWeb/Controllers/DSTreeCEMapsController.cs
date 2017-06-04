@@ -22,6 +22,11 @@ namespace DSWeb.Controllers
             return View(db.Database.SqlQuery<DSTreeCEMap>("SELECT * FROM dbo.DSTreeCEMap WHERE ModGUID = '" + str + "'").ToList());
         }
 
+        public ActionResult ListSave(List<string> CCellName, List<string> IsResultFactor)
+        {
+            return RedirectToAction("Index", "DSTreeModels");
+        }
+
         // GET: DSTreeCEMaps/Details/5
         public ActionResult Details(Guid? id)
         {
