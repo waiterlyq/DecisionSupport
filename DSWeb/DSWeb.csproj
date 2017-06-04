@@ -133,13 +133,22 @@
     </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\jquery-1.9.1.js" />
-    <Content Include="Scripts\jquery-1.9.1.min.js" />
+    <None Include="Scripts\jquery-3.1.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.1.1.js" />
+    <Content Include="Scripts\jquery-3.1.1.min.js" />
+    <Content Include="Scripts\jquery-3.1.1.slim.js" />
+    <Content Include="Scripts\jquery-3.1.1.slim.min.js" />
     <Content Include="Web.config" />
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="BLL\loglib.cs" />
+    <Compile Include="BLL\NpyLib.cs" />
+    <Compile Include="BLL\Program.cs" />
+    <Compile Include="BLL\RC50.cs" />
+    <Compile Include="BLL\RClass.cs" />
+    <Compile Include="BLL\RDataFrame.cs" />
     <Compile Include="Controllers\DSTreeCEMapsController.cs" />
     <Compile Include="Controllers\DSTreeModelsController.cs" />
     <Compile Include="Controllers\DSTreesController.cs" />
@@ -177,7 +186,6 @@
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Scripts\jquery-1.9.1.min.map" />
     <Content Include="Views\DSTrees\Create.cshtml" />
     <Content Include="Views\DSTrees\Delete.cshtml" />
     <Content Include="Views\DSTrees\Details.cshtml" />
@@ -193,6 +201,8 @@
     <Content Include="Views\DSTreeModels\Details.cshtml" />
     <Content Include="Views\DSTreeModels\Edit.cshtml" />
     <Content Include="Views\DSTreeModels\Index.cshtml" />
+    <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.1.1.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -202,7 +212,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="BLL\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

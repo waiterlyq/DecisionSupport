@@ -7,6 +7,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using DSWeb.Models;
+using System.Web.Script.Serialization;
+using System.IO;
 
 namespace DSWeb.Controllers
 {
@@ -22,9 +24,20 @@ namespace DSWeb.Controllers
             return View(db.Database.SqlQuery<DSTreeCEMap>("SELECT * FROM dbo.DSTreeCEMap WHERE ModGUID = '" + str + "'").ToList());
         }
 
-        public ActionResult ListSave(List<string> CCellName, List<string> IsResultFactor)
+        
+
+        public JsonResult ListSave()
         {
-            return RedirectToAction("Index", "DSTreeModels");
+            var sr = new StreamReader(Request.InputStream);
+            var steam = sr.ReadToEnd();
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            var list = js.Deserialize<List<DSTreeCEMap>>(steam);
+            foreach(DSTreeCEMap dscem in list)
+            {
+                db.Entry(dscem).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            return Json("success");
         }
 
         // GET: DSTreeCEMaps/Details/5
