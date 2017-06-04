@@ -583,8 +583,6 @@ namespace RLib
             {
                 string strResult = "";
                 int iResult = -1;
-                string strTree = "";
-                string strFactors = "";
 
                 string strC50 = getC50String();
                 string strR = "";
