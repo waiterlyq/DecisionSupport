@@ -36,6 +36,18 @@ namespace DSWeb.Controllers
             return View(dSTreeModel);
         }
 
+        public JsonResult Generate(string ModID)
+        {
+            return Json("");
+        }
+
+        public JsonResult GetDSTreeModelList(int limit, int offset)
+        {
+            var total = db.DSTreeModel.ToList().Count;
+            var rows = db.DSTreeModel.ToList().Skip(offset).Take(limit).ToList();
+            return Json(new { total = total, rows = rows }, JsonRequestBehavior.AllowGet);
+        }
+
         // GET: DSTreeModels/Create
         public ActionResult Create()
         {

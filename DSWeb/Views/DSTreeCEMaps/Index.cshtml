@@ -10,10 +10,10 @@
     <script type="text/javascript">
         $(function () {
             $('#submit').click(function () {
-                var dscm = [];
+                var dscemlist = [];
                 $(".CEMap").each(function () {
                     var thisItem = $(this);
-                    dscm.push({
+                    dscemlist.push({
                         CEMapGUID: thisItem.attr('id'),
                         ModGUID: thisItem.attr('modid'),
                         ECellName: thisItem.children('td:eq(0)').text().trim(),
@@ -25,11 +25,10 @@
                     async: false,
                     type: "POST",
                     url: "DSTreeCEMaps/ListSave",//注意路径
-                    data: JSON.stringify(dscm),
+                    data: { dscemlist: dscemlist },
                     dataType: "html",
                     success: function (data) {
-                        debugger;
-                        if (data == "success") {
+                        if (data.result == "success") {
                             alert("修改成功");
                         } else {
                             alert("修改失败，失败原因【" + data + "】");
@@ -68,7 +67,7 @@
                     <input type="text" name="CCellName" value="@item.CCellName" />
                 </td>
                 <td>
-                    <input type="radio" name="IsResultFactor" value="@item.IsResultFactor" />
+                    <input type="radio" name="IsResultFactor" value="@item.IsResultFactor" checked="if(@item.IsResultFactor==1) checked" />
                 </td>
             </tr>
         }

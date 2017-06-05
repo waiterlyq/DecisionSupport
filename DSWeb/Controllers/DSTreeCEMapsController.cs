@@ -26,13 +26,9 @@ namespace DSWeb.Controllers
 
         
 
-        public JsonResult ListSave()
+        public JsonResult ListSave(List<DSTreeCEMap> dscemlist)
         {
-            var sr = new StreamReader(Request.InputStream);
-            var steam = sr.ReadToEnd();
-            JavaScriptSerializer js = new JavaScriptSerializer();
-            var list = js.Deserialize<List<DSTreeCEMap>>(steam);
-            foreach(DSTreeCEMap dscem in list)
+            foreach(DSTreeCEMap dscem in dscemlist)
             {
                 db.Entry(dscem).State = EntityState.Modified;
                 db.SaveChanges();
