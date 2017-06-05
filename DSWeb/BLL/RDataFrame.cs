@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 
-namespace RLib
+namespace DSWeb.BLL
 {
     /// <summary>
     /// R环境中DataFrame对象C#中适配

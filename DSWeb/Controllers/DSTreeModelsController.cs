@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using DSWeb.Models;
+using DSWeb.BLL;
 using DSWeb.DAL;
 
 namespace DSWeb.Controllers
@@ -38,6 +39,21 @@ namespace DSWeb.Controllers
 
         public JsonResult Generate(string ModID)
         {
+            DataTable dtce = SQLHelper.GetTable("SELECT ECellName AS cn,CCellName AS cnz FROM dbo.DSTreeCEMap WHERE ModGUID = '" + ModID + "'");
+            string strModDataSource = SQLHelper.GetTable("SELECT ModDataSource FROM dbo.DSTreeModel WHERE ModGUID = '" + ModID + "'").Rows[0][0].ToString();
+            string strIsResultFactor = SQLHelper.GetTable("SELECT ECellName FROM dbo.DSTreeCEMap WHERE ModGUID = '" + ModID + "' AND IsResultFactor = 1").Rows[0][0].ToString();
+            DataTable dtsc = SQLHelper.GetTable(strModDataSource);
+            RDataFramePy rdfpy = new RDataFramePy();
+            rdfpy.setDataFrameInRByDt(dtsc);
+            dtsc.Clear();
+            using (RC50 rc = new RC50(rdfpy.DfName, strIsResultFactor))
+            {
+                if (rc.EvaluateByR(rdfpy.DfR))
+                {
+                    rdfpy.DfR = "";
+                }
+                RC50Tree rct = rc.getC50Tree(ModID, dtce, rdfpy.DtPy);
+            }
             return Json("");
         }
 
@@ -69,7 +85,7 @@ namespace DSWeb.Controllers
                 DataTable dt = SQLHelper.GetTable(dSTreeModel.ModDataSource);
                 int ic = dt.Columns.Count;
                 List<DSTreeCEMap> ldstcm = new List<DSTreeCEMap>();
-                for(int i =0; i < ic;i++)
+                for (int i = 0; i < ic; i++)
                 {
                     DSTreeCEMap dstcm = new DSTreeCEMap();
                     dstcm.CEMapGUID = Guid.NewGuid();

@@ -7,7 +7,7 @@ using System.Data;
 using loglib;
 using RDotNet;
 
-namespace RLib
+namespace DSWeb.BLL
 {
     /// <summary>
     /// C50树类
@@ -39,11 +39,11 @@ namespace RLib
             setDtFactorsStruct();
         }
 
-        public RC50Tree(string strtree, string strfactors, int isize, DataTable dtcnz, DataTable dtpy, string strFormula)
+        public RC50Tree(string strtree, string ModGUID, string strfactors, int isize, DataTable dtcnz, DataTable dtpy, string strFormula)
         {
             Treesize = isize;
-            setDtFactors(strfactors, dtcnz);
-            setDtDstree(strtree, dtcnz, dtpy, strFormula);
+            setDtFactors(ModGUID, strfactors, dtcnz);
+            setDtDstree(strtree, ModGUID, dtcnz, dtpy, strFormula);
         }
 
         /// <summary>
@@ -52,8 +52,10 @@ namespace RLib
         public void setDtDstreeStruct()
         {
             DtDstree = new DataTable();
+            DtDstree.Columns.Add("DSTreeGUID");
+            DtDstree.Columns.Add("ModGUID");
             DtDstree.Columns.Add("ID");
-            DtDstree.Columns.Add("ParentId");
+            DtDstree.Columns.Add("PID");
             DtDstree.Columns.Add("FactorName");
             DtDstree.Columns.Add("FactorNameCn");
             DtDstree.Columns.Add("Operator");
@@ -65,14 +67,14 @@ namespace RLib
             DtDstree.Columns.Add("Result");
             DtDstree.Columns.Add("ResultCn");
             DtDstree.Columns.Add("CoverCount");
-            DtDstree.Columns.Add("ErroCount");
-            DtDstree.Columns.Add("refGUID");
+            DtDstree.Columns.Add("ErrorCount");
+
         }
 
         /// <summary>
         /// 根据决策树字符串生成决策树表
         /// </summary>
-        public void setDtDstree(string strtree, DataTable dtcnz, DataTable dtpy, string strFormula)
+        public void setDtDstree(string strtree, string ModGUID, DataTable dtcnz, DataTable dtpy, string strFormula)
         {
             setDtDstreeStruct();
             strtree = strtree.Replace(":...", "    ");
@@ -191,7 +193,7 @@ namespace RLib
                     }
                 }
                 strDescribeCn = strFactorNameCn + " " + strOperatorCn + " " + strFactorValueCn;
-                DtDstree.Rows.Add(strid, strpid, strFactorName, strFactorNameCn, strOperator, strOperatorCn, strFactorValue, strFactorValueCn, strDescribe, strDescribeCn, strResult, strResultCn, iCoverCount, iErroCount, "");
+                DtDstree.Rows.Add(Guid.NewGuid().ToString(), ModGUID,strid, strpid, strFactorName, strFactorNameCn, strOperator, strOperatorCn, strFactorValue, strFactorValueCn, strDescribe, strDescribeCn, strResult, strResultCn, iCoverCount, iErroCount);
             }
         }
 
@@ -238,6 +240,10 @@ namespace RLib
         public void setDtFactorsStruct()
         {
             DtFactors = new DataTable();
+            ///因素GUID
+            DtFactors.Columns.Add("FactorGUID");
+            ///模型GUID
+            DtFactors.Columns.Add("ModGUID");
             ///因素名称
             DtFactors.Columns.Add("Factorname");
             ///因素中文名称
@@ -248,7 +254,7 @@ namespace RLib
         /// <summary>
         /// 根据因素字符串生成因素表
         /// </summary>
-        public void setDtFactors(string strfactors, DataTable dtcnz)
+        public void setDtFactors(string ModGUID, string strfactors, DataTable dtcnz)
         {
             setDtFactorsStruct();
             string[] arrfactors = strfactors.Split(new string[] { "\n\t" }, StringSplitOptions.None);
@@ -258,7 +264,7 @@ namespace RLib
                 for (int i = 0; i < ir; i++)
                 {
                     string[] strtemp = arrfactors[i].Split(new string[] { "\t" }, StringSplitOptions.None);
-                    DtFactors.Rows.Add(strtemp[1], dtcnz.Select("cn='" + strtemp[1] + "'")[0][1], strtemp[0].Replace(@"%", ""));
+                    DtFactors.Rows.Add(Guid.NewGuid().ToString(), ModGUID, strtemp[1], dtcnz.Select("cn='" + strtemp[1] + "'")[0][1], strtemp[0].Replace(@"%", ""));
                 }
             }
         }
@@ -577,7 +583,7 @@ namespace RLib
         /// <param name="dtcnz">字段中文对照表</param>
         /// <param name="dtpy">内容拼音对照表</param>
         /// <returns></returns>
-        public RC50Tree getC50Tree(DataTable dtcnz, DataTable dtpy)
+        public RC50Tree getC50Tree(string ModGUID,DataTable dtcnz, DataTable dtpy)
         {
             try
             {
@@ -598,7 +604,7 @@ namespace RLib
                         {
                             string strtree = getSpecifiedString(strResult, "tree");
                             string strfactors = getSpecifiedString(strResult, "factors");
-                            RC50Tree Rctree = new RC50Tree(strtree, strfactors, iResult, dtcnz, dtpy, Formula);
+                            RC50Tree Rctree = new RC50Tree(strtree, ModGUID, strfactors, iResult, dtcnz, dtpy, Formula);
                             return Rctree;
                         }
                         else

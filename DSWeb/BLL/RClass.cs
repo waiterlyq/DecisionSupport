@@ -9,7 +9,7 @@ using NpyLib;
 using loglib;
 
 
-namespace RLib
+namespace DSWeb.BLL
 {
     /// <summary>
     /// C#调用R环境基础对象
@@ -75,7 +75,6 @@ namespace RLib
             {
                 myLog.writeLog(e);
                 return false;
-
             }
         }
 
