@@ -77,19 +77,43 @@ namespace DSWeb.BLL
         public void setDtDstree(string strtree, string ModGUID, DataTable dtcnz, DataTable dtpy, string strFormula)
         {
             setDtDstreeStruct();
-            strtree = strtree.Replace(":...", "    ");
-
+            strtree = strtree.Replace(":...", "    ").Replace(":   ", "    ");
             int[] icj = new int[Treesize];
             for (int i = 0; i < Treesize; i++)
             {
                 icj[i] = 0;
             }
-            string[] arrtree = strtree.Split(new string[] { "\n" }, StringSplitOptions.None);
-            int ir = arrtree.Length;
+            List<string> arrtree = new List<string>();
+            bool bflag = false;
+            int iflag = -1;
+            string[] arrtreetemp = strtree.Split(new string[] { "\n" }, StringSplitOptions.None);
+            int ir = arrtreetemp.Length;
             if (ir == 0 || ir == 1)
             {
                 return;
             }
+            for (int i = 0; i < ir; i++)
+            {
+                if (bflag)
+                {
+                    arrtree[iflag] += arrtreetemp[i].Trim();
+                }
+                else
+                {
+                    arrtree.Add(arrtreetemp[i]);
+                    iflag++;
+                }
+
+                if (arrtreetemp[i].IndexOf("in {") > 0)
+                {
+                    bflag = true;
+                }
+                if (arrtreetemp[i].IndexOf("}:") > 0 && bflag)
+                {
+                    bflag = false;
+                }
+            }
+            ir = arrtree.Count;
             for (int i = 0; i < ir; i++)
             {
                 int iSpaceCount = 0;
@@ -185,11 +209,11 @@ namespace DSWeb.BLL
                         {
                             strt += "," + dtpy.Select("cn='" + strFactorName + "' AND cvpy='" + arrfc[j] + "'")[0][1].ToString();
                         }
-                        strFactorValueCn = strt.Substring(1) + ")";
+                        strFactorValueCn += strt.Substring(1) + ")";
                     }
                     else
                     {
-                        strFactorValueCn = dtpy.Select("cn='" + strFactorName + "' AND cvpy='" + arrstr4[2] + "'")[0][1].ToString();
+                        strFactorValueCn += dtpy.Select("cn='" + strFactorName + "' AND cvpy='" + arrstr4[2] + "'")[0][1].ToString();
                     }
                 }
                 strDescribeCn = strFactorNameCn + " " + strOperatorCn + " " + strFactorValueCn;
@@ -588,8 +612,8 @@ namespace DSWeb.BLL
                 string strP = "";
                 string strC50 = getC50String();
                 strP = "library(C50)\r\n";
-                strP += Rct.getCtString()+ "\r\n";
-                strP += strC50+ "\r\n";
+                strP += Rct.getCtString() + "\r\n";
+                strP += strC50 + "\r\n";
                 string strR = "";
                 if (!string.IsNullOrEmpty(strP))
                 {
