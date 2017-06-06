@@ -22,6 +22,7 @@ namespace DSWeb.BLL
         {
             REngine.SetEnvironmentVariables();
             engine = REngine.GetInstance();
+            engine.Initialize();
         }
 
         /// <summary>

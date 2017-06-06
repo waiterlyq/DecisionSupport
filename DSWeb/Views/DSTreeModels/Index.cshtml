@@ -162,7 +162,6 @@
                 $("#btn_sz").click(function () {
                     var arrselections = $("#tb_DSTreeModel").bootstrapTable('getSelections');
                     $("#modal").modal({
-                        /// remote: @Url.Action("Index", "DSTreeCEMaps")
                         remote: "/DSTreeCEMaps/Index?id=" + arrselections[0].ModGUID
                     })
                 });
