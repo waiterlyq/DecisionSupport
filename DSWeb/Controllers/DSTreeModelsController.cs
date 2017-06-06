@@ -39,6 +39,8 @@ namespace DSWeb.Controllers
 
         public JsonResult Generate(string ModID)
         {
+            
+
             DataTable dtce = SQLHelper.GetTable("SELECT ECellName AS cn,CCellName AS cnz FROM dbo.DSTreeCEMap WHERE ModGUID = '" + ModID + "'");
             string strModDataSource = SQLHelper.GetTable("SELECT ModDataSource FROM dbo.DSTreeModel WHERE ModGUID = '" + ModID + "'").Rows[0][0].ToString();
             string strIsResultFactor = SQLHelper.GetTable("SELECT ECellName FROM dbo.DSTreeCEMap WHERE ModGUID = '" + ModID + "' AND IsResultFactor = 1").Rows[0][0].ToString();

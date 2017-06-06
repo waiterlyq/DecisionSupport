@@ -193,7 +193,7 @@ namespace DSWeb.BLL
                     }
                 }
                 strDescribeCn = strFactorNameCn + " " + strOperatorCn + " " + strFactorValueCn;
-                DtDstree.Rows.Add(Guid.NewGuid().ToString(), ModGUID,strid, strpid, strFactorName, strFactorNameCn, strOperator, strOperatorCn, strFactorValue, strFactorValueCn, strDescribe, strDescribeCn, strResult, strResultCn, iCoverCount, iErroCount);
+                DtDstree.Rows.Add(Guid.NewGuid().ToString(), ModGUID, strid, strpid, strFactorName, strFactorNameCn, strOperator, strOperatorCn, strFactorValue, strFactorValueCn, strDescribe, strDescribeCn, strResult, strResultCn, iCoverCount, iErroCount);
             }
         }
 
@@ -545,8 +545,6 @@ namespace DSWeb.BLL
             Trials = itrials;
             C5Name = strC5Name;
             Rules = strRules;
-            REngine.SetEnvironmentVariables();
-            engine = REngine.GetInstance();
             Rct = new RC50Control(dcf, imc, strCtName);
             EvaluateByR("library(C50)");
         }
@@ -569,10 +567,8 @@ namespace DSWeb.BLL
             }
             else
             {
-                if (EvaluateByR(strct))
-                {
-                    strC50 = C5Name + "<- C5.0(formula=" + Formula + " ~ ., data = " + Data + ",rules=" + Rules + ",control =" + Rct.CtName + ")";
-                }
+
+                strC50 = C5Name + "<- C5.0(formula=" + Formula + " ~ ., data = " + Data + ",rules=" + Rules + ",control =" + Rct.CtName + ")";
             }
             return strC50;
         }
@@ -583,18 +579,21 @@ namespace DSWeb.BLL
         /// <param name="dtcnz">字段中文对照表</param>
         /// <param name="dtpy">内容拼音对照表</param>
         /// <returns></returns>
-        public RC50Tree getC50Tree(string ModGUID,DataTable dtcnz, DataTable dtpy)
+        public RC50Tree getC50Tree(string ModGUID, DataTable dtcnz, DataTable dtpy)
         {
             try
             {
                 string strResult = "";
                 int iResult = -1;
-
+                string strP = "";
                 string strC50 = getC50String();
+                strP = "library(C50)\r\n";
+                strP += Rct.getCtString()+ "\r\n";
+                strP += strC50+ "\r\n";
                 string strR = "";
-                if (!string.IsNullOrEmpty(strC50))
+                if (!string.IsNullOrEmpty(strP))
                 {
-                    if (EvaluateByR(strC50))
+                    if (EvaluateByR(strP))
                     {
                         strR = C5Name + "$output";
                         strResult = getStringByR(strR);
