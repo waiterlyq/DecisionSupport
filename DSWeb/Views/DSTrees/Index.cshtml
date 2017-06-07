@@ -8,116 +8,112 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Index</title>
+    <script src="~/Scripts/jquery.ztree.all-3.5.min.js"></script>
+    <link href="~/Content/zTree.theme.metro.css" rel="stylesheet"/>
+    <script type="text/javascript">
+        var setting = {
+            view: {
+                addHoverDom: addHoverDom,
+                removeHoverDom: removeHoverDom,
+                selectedMulti: false
+            },
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            edit: {
+                enable: false
+            }
+        };
+
+        //var zNodes = [
+        //    { id: 1, pId: 0, name: "父节点1", open: true },
+        //    { id: 11, pId: 1, name: "父节点11" },
+        //    { id: 111, pId: 11, name: "叶子节点111" },
+        //    { id: 112, pId: 11, name: "叶子节点112" },
+        //    { id: 113, pId: 11, name: "叶子节点113" },
+        //    { id: 114, pId: 11, name: "叶子节点114" },
+        //    { id: 12, pId: 1, name: "父节点12" },
+        //    { id: 121, pId: 12, name: "叶子节点121" },
+        //    { id: 122, pId: 12, name: "叶子节点122" },
+        //    { id: 123, pId: 12, name: "叶子节点123" },
+        //    { id: 124, pId: 12, name: "叶子节点124" },
+        //    { id: 13, pId: 1, name: "父节点13", isParent: true },
+        //    { id: 2, pId: 0, name: "父节点2" },
+        //    { id: 21, pId: 2, name: "父节点21", open: true },
+        //    { id: 211, pId: 21, name: "叶子节点211" },
+        //    { id: 212, pId: 21, name: "叶子节点212" },
+        //    { id: 213, pId: 21, name: "叶子节点213" },
+        //    { id: 214, pId: 21, name: "叶子节点214" },
+        //    { id: 22, pId: 2, name: "父节点22" },
+        //    { id: 221, pId: 22, name: "叶子节点221" },
+        //    { id: 222, pId: 22, name: "叶子节点222" },
+        //    { id: 223, pId: 22, name: "叶子节点223" },
+        //    { id: 224, pId: 22, name: "叶子节点224" },
+        //    { id: 23, pId: 2, name: "父节点23" },
+        //    { id: 231, pId: 23, name: "叶子节点231" },
+        //    { id: 232, pId: 23, name: "叶子节点232" },
+        //    { id: 233, pId: 23, name: "叶子节点233" },
+        //    { id: 234, pId: 23, name: "叶子节点234" },
+        //    { id: 3, pId: 0, name: "父节点3", isParent: true }
+        //];
+
+        $(document).ready(function () {
+            var zNodes;
+            
+            //$.ajax({
+            //    type: "POST",//请求方式  
+            //    url: "/DSTrees/GetJson",//地址，就是action请求路径  
+            //    data: "json",//数据类型text xml json  script  jsonp  
+            //    success: function (data) {//返回的参数就是 action里面所有的有get和set方法的参数  
+            //        //$.each(msg.items, function(i,item){});  
+            //        debugger;
+            //        zNodes = result;
+            //    }
+            //});
+            $.ajax({
+                async: false,
+                type: "POST",
+                url: "DSTrees/GetJson",//注意路径
+                data: {  },
+                dataType: "json",
+                success: function (data) {
+                    debugger;
+                    zNodes = data;
+                },
+                error: function (data) {
+                    debugger;
+                    alert(data.result);
+                }
+            });
+            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        });
+
+        function addHoverDom(treeId, treeNode) {
+            var sObj = $("#" + treeNode.tId + "_span");
+            if (treeNode.editNameFlag || $("#addBtn_" + treeNode.tId).length > 0) return;
+            var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+                + "' title='add node' onfocus='this.blur();'></span>";
+            sObj.after(addStr);
+            var btn = $("#addBtn_" + treeNode.tId);
+            if (btn) btn.bind("click", function () {
+                var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+                zTree.addNodes(treeNode, { id: (100 + newCount), pId: treeNode.id, name: "new node" + (newCount++) });
+                return false;
+            });
+        };
+        function removeHoverDom(treeId, treeNode) {
+            $("#addBtn_" + treeNode.tId).unbind().remove();
+        };
+    </script>
 </head>
 <body>
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ModGUID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FactorName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FactorNameCn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Operator)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OperatorCn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FactorValue)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FactorValueCn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Describe)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DescribeCn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Result)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ResultCn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CoverCount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ErrorCount)
-            </th>
-            <th></th>
-        </tr>
-    
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModGUID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FactorName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FactorNameCn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Operator)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OperatorCn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FactorValue)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FactorValueCn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Describe)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DescribeCn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Result)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ResultCn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CoverCount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ErrorCount)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.DSTreeGUID }) |
-                @Html.ActionLink("Details", "Details", new { id=item.DSTreeGUID }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.DSTreeGUID })
-            </td>
-        </tr>
-    }
-    
-    </table>
+    <div id="menuContent" class="menuContent" style="width:95%;border:1px solid rgb(170,170,170);z-index:10;">
+        <ul id="treeDemo" class="ztree" style="margin-top:0; width:100%; height:auto;"></ul>
+    </div>
 </body>
 </html>

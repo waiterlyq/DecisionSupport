@@ -600,6 +600,7 @@ namespace DSWeb.BLL
         /// <summary>
         /// 获得决策支持树
         /// </summary>
+        /// <param name="ModGUID">模型GUID</param>
         /// <param name="dtcnz">字段中文对照表</param>
         /// <param name="dtpy">内容拼音对照表</param>
         /// <returns></returns>

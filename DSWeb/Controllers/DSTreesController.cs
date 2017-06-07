@@ -7,6 +7,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using DSWeb.Models;
+using DSWeb.DAL;
+using System.Web.Script.Serialization;
+using Newtonsoft.Json;
 
 namespace DSWeb.Controllers
 {
@@ -57,6 +60,15 @@ namespace DSWeb.Controllers
             }
 
             return View(dSTree);
+        }
+
+        public string GetJson()
+        {
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            DataTable dt = new DataTable();
+            dt = SQLHelper.GetTable("SELECT id,case when pid='' then '0' else pid end  as pId,DescribeCn+ CASE WHEN ResultCn <> '' THEN '则'+ResultCn ELSE '' END AS name FROM dbo.DSTree  WHERE ModGUID = '3B237DC3-2641-458D-957F-BECA477CB4E5' ORDER BY ID");
+            
+            return JsonConvert.SerializeObject(dt);
         }
 
         // GET: DSTrees/Edit/5
