@@ -1,8 +1,6 @@
 ﻿@model IEnumerable<DSWeb.Models.DSTreeModel>
 
-
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -144,11 +142,9 @@
                         type: "post",
                         url: "/DSTreeModels/Generate",
                         data: { ModID: arrselections[0].ModGUID },
-                        success: function (data, status) {
-                            if (status == "success") {
-                                toastr.success('提交数据成功');
-                                $("#tb_DSTreeModel").bootstrapTable('refresh');
-                            }
+                        success: function (data) {
+                            toastr.success('提交数据成功');
+                            $("#tb_DSTreeModel").bootstrapTable('refresh')
                         },
                         error: function () {
                             toastr.error('Error');
@@ -173,7 +169,7 @@
             return oInit;
         };
     </script>
-    
+
 </head>
 <body>
     <p>
