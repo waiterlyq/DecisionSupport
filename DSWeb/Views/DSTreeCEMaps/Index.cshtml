@@ -28,11 +28,7 @@
                     data: { dscemlist: dscemlist },
                     dataType: "html",
                     success: function (data) {
-                        if (data.result == "success") {
-                            alert("修改成功");
-                        } else {
-                            alert("修改失败，失败原因【" + data + "】");
-                        }
+                        alert("修改成功");
                     },
                     error: function (data) {
                         alert(data.result);
