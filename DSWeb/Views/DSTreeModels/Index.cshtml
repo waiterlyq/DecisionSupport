@@ -143,7 +143,7 @@
                         url: "/DSTreeModels/Generate",
                         data: { ModID: arrselections[0].ModGUID },
                         success: function (data) {
-                            toastr.success('提交数据成功');
+                            alert("生成成功！");
                             $("#tb_DSTreeModel").bootstrapTable('refresh')
                         },
                         error: function () {

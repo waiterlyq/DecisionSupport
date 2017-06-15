@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using System.ServiceModel;
 using DSWeb.Models;
 using DSWeb.DAL;
 using DSWeb.RWS;
@@ -38,11 +37,11 @@ namespace DSWeb.Controllers
             return View(dSTreeModel);
         }
 
-        public JsonResult Generate(string ModID)
+        public string Generate(string ModID)
         {
             RServiceClient client = new RServiceClient();
             client.GenerDSTree(ModID);
-            return Json("");
+            return "success";
         }
 
         public JsonResult GetDSTreeModelList(int limit, int offset)
