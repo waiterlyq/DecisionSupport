@@ -45,6 +45,14 @@
           <Property Name="ModGenerateTime" Type="datetime" />
           <Property Name="ModDataSource" Type="varchar(max)" />
           <Property Name="ModRemark" Type="varchar(max)" />
+          <Property Name="IsFileDataSource" Type="bit" />
+          <Property Name="ModServer" Type="varchar" MaxLength="50" />
+          <Property Name="ModDataBase" Type="varchar" MaxLength="50" />
+          <Property Name="ModUid" Type="varchar" MaxLength="50" />
+          <Property Name="ModPassword" Type="varchar" MaxLength="50" />
+          <Property Name="ModCycleType" Type="varchar" MaxLength="50" />
+          <Property Name="ModCycleWD" Type="int" />
+          <Property Name="ModCycleDate" Type="int" />
         </EntityType>
         <EntityContainer Name="DSModelStoreContainer">
           <EntitySet Name="DSTree" EntityType="Self.DSTree" Schema="dbo" store:Type="Tables" />
@@ -95,6 +103,14 @@
           <Property Name="ModGenerateTime" Type="DateTime" Precision="3" />
           <Property Name="ModDataSource" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="ModRemark" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="IsFileDataSource" Type="Boolean" />
+          <Property Name="ModServer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ModDataBase" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ModUid" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ModPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ModCycleType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ModCycleWD" Type="Int32" />
+          <Property Name="ModCycleDate" Type="Int32" />
         </EntityType>
         <EntityContainer Name="DSEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="DSTree" EntityType="Self.DSTree" />
@@ -143,6 +159,14 @@
           <EntitySetMapping Name="DSTreeModel">
             <EntityTypeMapping TypeName="DSModel.DSTreeModel">
               <MappingFragment StoreEntitySet="DSTreeModel">
+                <ScalarProperty Name="ModCycleDate" ColumnName="ModCycleDate" />
+                <ScalarProperty Name="ModCycleWD" ColumnName="ModCycleWD" />
+                <ScalarProperty Name="ModCycleType" ColumnName="ModCycleType" />
+                <ScalarProperty Name="ModPassword" ColumnName="ModPassword" />
+                <ScalarProperty Name="ModUid" ColumnName="ModUid" />
+                <ScalarProperty Name="ModDataBase" ColumnName="ModDataBase" />
+                <ScalarProperty Name="ModServer" ColumnName="ModServer" />
+                <ScalarProperty Name="IsFileDataSource" ColumnName="IsFileDataSource" />
                 <ScalarProperty Name="ModGUID" ColumnName="ModGUID" />
                 <ScalarProperty Name="ModName" ColumnName="ModName" />
                 <ScalarProperty Name="ModGenerateTime" ColumnName="ModGenerateTime" />

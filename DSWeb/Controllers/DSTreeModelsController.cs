@@ -7,8 +7,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using DSWeb.Models;
-using DSWeb.DAL;
 using DSWeb.RWS;
+using DBLib;
+using Pylib;
 
 namespace DSWeb.Controllers
 {
@@ -40,7 +41,7 @@ namespace DSWeb.Controllers
         public string Generate(string ModID)
         {
             RServiceClient client = new RServiceClient();
-            client.GenerDSTree(ModID);
+            client.AddRq(ModID);
             return "success";
         }
 
@@ -57,6 +58,11 @@ namespace DSWeb.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 待完善1、表头获取 2、表头校验
+        /// </summary>
+        /// <param name="dSTreeModel"></param>
+        /// <returns></returns>
         // POST: DSTreeModels/Create
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
@@ -69,15 +75,18 @@ namespace DSWeb.Controllers
                 dSTreeModel.ModGUID = Guid.NewGuid();
                 db.DSTreeModel.Add(dSTreeModel);
                 db.SaveChanges();
-                DataTable dt = SQLHelper.GetTable(dSTreeModel.ModDataSource);
+                SQLHelper sqdb = new SQLHelper(db.Database.Connection.ConnectionString);
+                DataTable dt = sqdb.GetTable(dSTreeModel.ModDataSource);
                 int ic = dt.Columns.Count;
+                DataTable dtCNPy =  NPy.getDtCNPy(dt, ic);
                 List<DSTreeCEMap> ldstcm = new List<DSTreeCEMap>();
                 for (int i = 0; i < ic; i++)
                 {
                     DSTreeCEMap dstcm = new DSTreeCEMap();
                     dstcm.CEMapGUID = Guid.NewGuid();
                     dstcm.ModGUID = dSTreeModel.ModGUID;
-                    dstcm.ECellName = dt.Columns[i].ColumnName;
+                    dstcm.CCellName = dt.Columns[i].ColumnName;
+                    dstcm.ECellName = dtCNPy.Select("cnC='" + dstcm.CCellName + "'")[0][1].ToString();
                     db.DSTreeCEMap.Add(dstcm);
                 }
                 db.SaveChanges();

@@ -11,16 +11,13 @@ namespace DSWeb.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
+    
     public partial class DSTreeCEMap
     {
         public System.Guid CEMapGUID { get; set; }
         public Nullable<System.Guid> ModGUID { get; set; }
-        [Display(Name = "英文字段名")]
         public string ECellName { get; set; }
-        [Display(Name = "中文字段名")]
         public string CCellName { get; set; }
-        [Display(Name = "结果因素")]
         public Nullable<bool> IsResultFactor { get; set; }
     }
 }

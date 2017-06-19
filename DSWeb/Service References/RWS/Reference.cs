@@ -15,11 +15,11 @@ namespace DSWeb.RWS {
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="RWS.IRService")]
     public interface IRService {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IRService/GenerDSTree", ReplyAction="http://tempuri.org/IRService/GenerDSTreeResponse")]
-        bool GenerDSTree(string strModGUID);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IRService/AddRq", ReplyAction="http://tempuri.org/IRService/AddRqResponse")]
+        bool AddRq(string strModGUID);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IRService/GenerDSTree", ReplyAction="http://tempuri.org/IRService/GenerDSTreeResponse")]
-        System.Threading.Tasks.Task<bool> GenerDSTreeAsync(string strModGUID);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IRService/AddRq", ReplyAction="http://tempuri.org/IRService/AddRqResponse")]
+        System.Threading.Tasks.Task<bool> AddRqAsync(string strModGUID);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -49,12 +49,12 @@ namespace DSWeb.RWS {
                 base(binding, remoteAddress) {
         }
         
-        public bool GenerDSTree(string strModGUID) {
-            return base.Channel.GenerDSTree(strModGUID);
+        public bool AddRq(string strModGUID) {
+            return base.Channel.AddRq(strModGUID);
         }
         
-        public System.Threading.Tasks.Task<bool> GenerDSTreeAsync(string strModGUID) {
-            return base.Channel.GenerDSTreeAsync(strModGUID);
+        public System.Threading.Tasks.Task<bool> AddRqAsync(string strModGUID) {
+            return base.Channel.AddRqAsync(strModGUID);
         }
     }
 }

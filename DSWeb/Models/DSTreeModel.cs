@@ -19,5 +19,13 @@ namespace DSWeb.Models
         public Nullable<System.DateTime> ModGenerateTime { get; set; }
         public string ModDataSource { get; set; }
         public string ModRemark { get; set; }
+        public Nullable<bool> IsFileDataSource { get; set; }
+        public string ModServer { get; set; }
+        public string ModDataBase { get; set; }
+        public string ModUid { get; set; }
+        public string ModPassword { get; set; }
+        public string ModCycleType { get; set; }
+        public Nullable<int> ModCycleWD { get; set; }
+        public Nullable<int> ModCycleDate { get; set; }
     }
 }

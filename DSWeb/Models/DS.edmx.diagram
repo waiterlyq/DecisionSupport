@@ -7,7 +7,7 @@
       <Diagram DiagramId="39aaff95393e4c639cd9ceceecbfed03" Name="Diagram1">
         <EntityTypeShape EntityType="DSModel.DSTree" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="DSModel.DSTreeCEMap" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="DSModel.DSTreeModel" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DSModel.DSTreeModel" Width="4" PointX="4.625" PointY="0.625" IsExpanded="true" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
