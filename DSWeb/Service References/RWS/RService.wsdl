@@ -173,7 +173,7 @@
       <wsa10:EndpointReference>
         <wsa10:Address>http://localhost:8387/Service</wsa10:Address>
         <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
-          <Spn>host/LUOYQ.mysoft.com.cn</Spn>
+          <Spn>host/luoyq</Spn>
         </Identity>
       </wsa10:EndpointReference>
     </wsdl:port>
