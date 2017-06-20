@@ -144,7 +144,6 @@
                         data: { ModID: arrselections[0].ModGUID },
                         success: function (data) {
                             alert("生成成功！");
-                            $("#tb_DSTreeModel").bootstrapTable('refresh')
                         },
                         error: function () {
                             toastr.error('Error');
