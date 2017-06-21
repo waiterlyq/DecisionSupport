@@ -10,22 +10,36 @@
 namespace DSWeb.Models
 {
     using System;
+    using System.ComponentModel.DataAnnotations;
     using System.Collections.Generic;
     
     public partial class DSTreeModel
     {
+        
         public System.Guid ModGUID { get; set; }
+        [Display(Name = "模型名称")]
         public string ModName { get; set; }
+        [Display(Name = "上次生成时间")]
         public Nullable<System.DateTime> ModGenerateTime { get; set; }
+        [Display(Name = "数据源")]
         public string ModDataSource { get; set; }
+        [Display(Name = "模型说明")]
         public string ModRemark { get; set; }
+        [Display(Name = "是否文件数据来源")]
         public Nullable<bool> IsFileDataSource { get; set; }
+        [Display(Name = "数据服务器")]
         public string ModServer { get; set; }
+        [Display(Name = "数据库名称")]
         public string ModDataBase { get; set; }
+        [Display(Name = "用户名")]
         public string ModUid { get; set; }
+        [Display(Name = "密码")]
         public string ModPassword { get; set; }
+        [Display(Name = "生成周期")]
         public string ModCycleType { get; set; }
+        [Display(Name = "生成日期")]
         public Nullable<int> ModCycleWD { get; set; }
+        [Display(Name = "生成时间")]
         public Nullable<int> ModCycleDate { get; set; }
     }
 }
