@@ -76,13 +76,23 @@
             var postdata = {};
 
             oInit.Init = function () {
+                ///新增
                 $("#btn_xz").click(function () {
                     $("#modal").modal({
                         remote: "/DSTreeModels/Create"
                     })
-                })
+                });
 
-                $("#btn_ger").click(function () {
+                ////修改
+                $("#btn_xg").click(function () {
+                    var arrselections = $("#tb_DSTreeModel").bootstrapTable('getSelections');
+                    $("#modal").modal({
+                        remote: "/DSTreeModels/Edit?id=" + arrselections[0].ModGUID
+                    })
+                });
+
+                ////生成
+                $("#btn_gener").click(function () {
                     var arrselections = $("#tb_DSTreeModel").bootstrapTable('getSelections');
                     $.ajax({
                         type: "post",
@@ -100,12 +110,32 @@
 
                     });
                 });
-                $("#btn_sz").click(function () {
+
+                ///删除
+                $("#btn_sc").click(function () {
                     var arrselections = $("#tb_DSTreeModel").bootstrapTable('getSelections');
-                    $("#modal").modal({
-                        remote: "/DSTreeCEMaps/Index?id=" + arrselections[0].ModGUID
-                    })
+                    $.ajax({
+                        type: "post",
+                        url: "/DSTreeModels/Delete",
+                        data: { id: arrselections[0].ModGUID },
+                        success: function (data) {
+                            alert("删除成功！");
+                        },
+                        error: function () {
+                            toastr.error('Error');
+                        },
+                        complete: function () {
+
+                        }
+
+                    });
                 });
+                //$("#btn_sz").click(function () {
+                //    var arrselections = $("#tb_DSTreeModel").bootstrapTable('getSelections');
+                //    $("#modal").modal({
+                //        remote: "/DSTreeCEMaps/Index?id=" + arrselections[0].ModGUID
+                //    })
+                //});
                 //$("#btn_query").click(function () {
                 //    $("#tb_departments").bootstrapTable('refresh');
                 //});

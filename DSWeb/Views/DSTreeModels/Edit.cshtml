@@ -17,53 +17,86 @@
         @Html.AntiForgeryToken()
         
         <div class="form-horizontal">
-            <h4>DSTreeModel</h4>
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.HiddenFor(model => model.ModGUID)
     
-            <div class="form-group">
-                @Html.LabelFor(model => model.ModName, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.ModName, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.ModName, "", new { @class = "text-danger" })
+            <fieldset>
+                <legend>新增模型</legend>
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ModName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ModName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ModName, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-            </div>
-    
-            <div class="form-group">
-                @Html.LabelFor(model => model.ModGenerateTime, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.ModGenerateTime, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.ModGenerateTime, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ModCycleType, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-sm-4">
+                        @Html.EditorFor(model => model.ModCycleType, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ModCycleType, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.ModCycleWD, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-sm-4">
+                        @Html.EditorFor(model => model.ModCycleWD, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ModCycleWD, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.ModCycleDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-sm-4">
+                        @Html.EditorFor(model => model.ModCycleDate, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ModCycleDate, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-            </div>
-    
-            <div class="form-group">
-                @Html.LabelFor(model => model.ModDataSource, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.ModDataSource, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.ModDataSource, "", new { @class = "text-danger" })
+            </fieldset>
+            <fieldset>
+                <legend>配置数据源</legend>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ModServer, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-sm-4">
+                        @Html.EditorFor(model => model.ModServer, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ModServer, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.ModDataBase, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-sm-4">
+                        @Html.EditorFor(model => model.ModDataBase, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ModDataBase, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-            </div>
-    
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ModUid, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-sm-4">
+                        @Html.EditorFor(model => model.ModUid, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ModUid, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.ModPassword, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-sm-4">
+                        @Html.EditorFor(model => model.ModPassword, new { htmlAttributes = new { @class = "form-control", @type = "password" } })
+                        @Html.ValidationMessageFor(model => model.ModPassword, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ModDataSource, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-lg-10">
+                        @Html.TextAreaFor(model => model.ModDataSource, new { @class = "form-control", @rows = "4" })
+                        @Html.ValidationMessageFor(model => model.ModDataSource, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </fieldset>
             <div class="form-group">
                 @Html.LabelFor(model => model.ModRemark, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.ModRemark, new { htmlAttributes = new { @class = "form-control" } })
+                <div class="col-lg-10">
+                    @Html.TextAreaFor(model => model.ModRemark, new { @class = "form-control", @rows = "4" })
                     @Html.ValidationMessageFor(model => model.ModRemark, "", new { @class = "text-danger" })
                 </div>
             </div>
     
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Save" class="btn btn-default" />
+                    <input type="submit" value="保存" class="btn btn-default" />
                 </div>
             </div>
         </div>
     }
-    
-    <div>
-        @Html.ActionLink("Back to List", "Index")
-    </div>
 </body>
 </html>

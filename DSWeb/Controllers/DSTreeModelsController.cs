@@ -10,6 +10,7 @@ using DSWeb.Models;
 using DSWeb.RWS;
 using DBLib;
 using Pylib;
+using Loglib;
 
 namespace DSWeb.Controllers
 {
@@ -42,6 +43,7 @@ namespace DSWeb.Controllers
         {
             RServiceClient client = new RServiceClient();
             client.AddRq(ModID);
+            MyLog.writeLog("执行", logtype.Info);
             return "success";
         }
 
@@ -55,6 +57,7 @@ namespace DSWeb.Controllers
         // GET: DSTreeModels/Create
         public ActionResult Create()
         {
+            
             return View();
         }
 
@@ -68,14 +71,14 @@ namespace DSWeb.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ModGUID,ModName,ModGenerateTime,ModDataSource,ModRemark")] DSTreeModel dSTreeModel)
+        public ActionResult Create([Bind(Include = "ModGUID,ModName,ModUid,ModPassword,ModDataBase,ModServer,ModDataSource,ModRemark")] DSTreeModel dSTreeModel)
         {
             if (ModelState.IsValid)
             {
                 dSTreeModel.ModGUID = Guid.NewGuid();
                 db.DSTreeModel.Add(dSTreeModel);
                 db.SaveChanges();
-                SQLHelper sqdb = new SQLHelper(db.Database.Connection.ConnectionString);
+                SQLHelper sqdb = new SQLHelper(dSTreeModel.GetConnString());
                 DataTable dt = sqdb.GetTable(dSTreeModel.ModDataSource);
                 int ic = dt.Columns.Count;
                 DataTable dtCNPy =  NPy.getDtCNPy(dt, ic);
@@ -116,7 +119,7 @@ namespace DSWeb.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ModGUID,ModName,ModGenerateTime,ModDataSource,ModRemark")] DSTreeModel dSTreeModel)
+        public ActionResult Edit([Bind(Include = "ModGUID,ModName,ModUid,ModPassword,ModDataBase,ModServer,ModDataSource,ModRemark")] DSTreeModel dSTreeModel)
         {
             if (ModelState.IsValid)
             {

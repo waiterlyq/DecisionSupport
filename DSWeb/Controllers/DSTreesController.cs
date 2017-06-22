@@ -67,7 +67,7 @@ namespace DSWeb.Controllers
             JavaScriptSerializer js = new JavaScriptSerializer();
             DataTable dt = new DataTable();
             SQLHelper sqdb = new SQLHelper(db.Database.Connection.ConnectionString);
-            dt = sqdb.GetTable("SELECT id,case when pid='' then '0' else pid end  as pId,DescribeCn+ CASE WHEN ResultCn <> '' THEN '则'+ResultCn ELSE '' END AS name FROM dbo.DSTree  WHERE ModGUID = '3B237DC3-2641-458D-957F-BECA477CB4E5' ORDER BY ID");
+            dt = sqdb.GetTable("SELECT id,case when pid='' then '0' else pid end  as pId,DescribeCn+ CASE WHEN ResultCn <> '' THEN '则'+ResultCn ELSE '' END AS name FROM dbo.DSTree  WHERE ModGUID = 'D21BFBC8-9761-4E73-AA5E-133BF9A12F06' ORDER BY ID");
             
             return JsonConvert.SerializeObject(dt);
         }
