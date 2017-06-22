@@ -11,7 +11,7 @@ namespace DSWeb.Models
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class DSTreeModel
     {
         public System.Guid ModGUID { get; set; }
@@ -27,5 +27,11 @@ namespace DSWeb.Models
         public string ModCycleType { get; set; }
         public Nullable<int> ModCycleWD { get; set; }
         public Nullable<int> ModCycleDate { get; set; }
+
+        public string GetConnString()
+        {
+            string strconn = @"data source=" + ModServer + ";initial catalog=" + ModDataBase + ";user id=" + ModUid + ";password=" + ModPassword;
+            return strconn;
+        }
     }
 }
