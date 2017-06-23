@@ -9,12 +9,12 @@
     <meta name="viewport" content="width=device-width" />
     <title>Index</title>
     <script src="~/Scripts/jquery.ztree.all-3.5.min.js"></script>
-    <link href="~/Content/zTree.theme.metro.css" rel="stylesheet"/>
+    <link href="~/Content/zTree.theme.metro.css" rel="stylesheet" />
     <script type="text/javascript">
         var setting = {
             view: {
-                addHoverDom: addHoverDom,
-                removeHoverDom: removeHoverDom,
+                addHoverDom: false,
+                removeHoverDom: false,
                 selectedMulti: false
             },
             check: {
@@ -64,13 +64,13 @@
 
         $(document).ready(function () {
             var zNodes;
-            
+
             //$.ajax({
-            //    type: "POST",//请求方式  
-            //    url: "/DSTrees/GetJson",//地址，就是action请求路径  
-            //    data: "json",//数据类型text xml json  script  jsonp  
-            //    success: function (data) {//返回的参数就是 action里面所有的有get和set方法的参数  
-            //        //$.each(msg.items, function(i,item){});  
+            //    type: "POST",//请求方式
+            //    url: "/DSTrees/GetJson",//地址，就是action请求路径
+            //    data: "json",//数据类型text xml json  script  jsonp
+            //    success: function (data) {//返回的参数就是 action里面所有的有get和set方法的参数
+            //        //$.each(msg.items, function(i,item){});
             //        debugger;
             //        zNodes = result;
             //    }
@@ -79,7 +79,7 @@
                 async: false,
                 type: "POST",
                 url: "DSTrees/GetJson",//注意路径
-                data: {  },
+                data: {},
                 dataType: "json",
                 success: function (data) {
                     debugger;
@@ -112,8 +112,34 @@
     </script>
 </head>
 <body>
-    <div id="menuContent" class="menuContent" style="width:95%;border:1px solid rgb(170,170,170);z-index:10;">
-        <ul id="treeDemo" class="ztree" style="margin-top:0; width:100%; height:auto;"></ul>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8 " style="height:600px;overflow-x:scroll">
+                <div class="panel-default ">
+                    <div class="panel-heading">决策树</div>
+                    <div class="panel-body">
+                        <ul id="treeDemo" class="ztree" style="margin-top:0; width:100%; height:auto;"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4"style="height:350px">
+                <div class="panel-default">
+                    <div class="panel-heading">覆盖率</div>
+                    <div class="panel-body">
+                        2
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4"style="height:250px">
+                <div class="panel-default">
+                    <div class="panel-heading">属性贡献度</div>
+                    <div class="panel-body">
+                        3
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+   
 </body>
 </html>
