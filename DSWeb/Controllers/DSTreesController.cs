@@ -62,13 +62,61 @@ namespace DSWeb.Controllers
             return View(dSTree);
         }
 
+        /// <summary>
+        /// 获得树形json
+        /// </summary>
+        /// <param name="ModGUID"></param>
+        /// <returns></returns>
+        public string GetDstreeJson(string ModGUID)
+        {
+            if (string.IsNullOrEmpty(ModGUID))
+            {
+                return "";
+            }
+            DataTable dt = new DataTable();
+            SQLHelper sqdb = new SQLHelper(db.Database.Connection.ConnectionString);
+            dt = sqdb.GetTable("SELECT id,case when pid='' then '0' else pid end  as pId,DescribeCn+ CASE WHEN ResultCn <> '' THEN '则'+ResultCn ELSE '' END AS name FROM dbo.DSTree  WHERE ModGUID = '" + ModGUID + "' ORDER BY ID");
+            if (dt.Rows.Count > 0)
+            {
+                return JsonConvert.SerializeObject(dt);
+            }
+            return "";
+        }
+
+
+        /// <summary>
+        /// 获取图形json
+        /// </summary>
+        /// <param name="ModGUID"></param>
+        /// <returns></returns>
+        public string GetGraphicJson(string ModGUID)
+        {
+            if (string.IsNullOrEmpty(ModGUID))
+            {
+                return "";
+            }
+            DataTable dt = new DataTable();
+            SQLHelper sqdb = new SQLHelper(db.Database.Connection.ConnectionString);
+            string strsql = @"SELECT DISTINCT dsp.FactorNameCn AS [source],dsc.FactorNameCn AS [target],'resolved' AS [type],dsp.DescribeCn AS [rela]  FROM dbo.DSTree dsp
+                            INNER JOIN dbo.DSTree dsc ON dsp.ID = dsc.PID AND dsp.ModGUID = dsc.ModGUID and dsp.ModGUID='" + ModGUID + "'";
+            strsql += @"UNION
+                            SELECT FactorNameCn AS [source],ResultCn AS [target],'resolved' AS [type],DescribeCn AS [rela] FROM dbo.DSTree
+                            WHERE Result <> '' AND ModGUID='" + ModGUID + "'";
+            dt = sqdb.GetTable(strsql);
+            if (dt.Rows.Count > 0)
+            {
+                return JsonConvert.SerializeObject(dt);
+            }
+            return "";
+        }
+
         public string GetJson()
         {
             JavaScriptSerializer js = new JavaScriptSerializer();
             DataTable dt = new DataTable();
             SQLHelper sqdb = new SQLHelper(db.Database.Connection.ConnectionString);
             dt = sqdb.GetTable("SELECT id,case when pid='' then '0' else pid end  as pId,DescribeCn+ CASE WHEN ResultCn <> '' THEN '则'+ResultCn ELSE '' END AS name FROM dbo.DSTree  WHERE ModGUID = 'D21BFBC8-9761-4E73-AA5E-133BF9A12F06' ORDER BY ID");
-            
+
             return JsonConvert.SerializeObject(dt);
         }
 

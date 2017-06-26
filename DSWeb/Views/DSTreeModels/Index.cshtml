@@ -20,7 +20,6 @@
             $('body').on('hidden', '.modal', function () {
                 $(this).removeData('modal');
             });
-
         });
         var TableInit = function () {
             var oTableInit = new Object();
@@ -97,12 +96,12 @@
                     $.ajax({
                         type: "post",
                         url: "/DSTreeModels/Generate",
-                        data: { ModID: arrselections[0].ModGUID },
+                        data: { ModGUID: arrselections[0].ModGUID },
                         success: function (data) {
-                            alert("生成成功！");
+                            alert("后台正在努力生成中！");
                         },
                         error: function () {
-                            alert("生成失败！");
+                            alert("加入生成队列失败！");
                         },
                         complete: function () {
 

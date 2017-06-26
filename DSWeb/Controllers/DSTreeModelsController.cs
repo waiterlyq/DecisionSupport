@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using DSWeb.Models;
 using DSWeb.RWS;
+using Newtonsoft.Json;
 using DBLib;
 using Pylib;
 using Loglib;
@@ -39,10 +40,10 @@ namespace DSWeb.Controllers
             return View(dSTreeModel);
         }
 
-        public string Generate(string ModID)
+        public string Generate(string ModGUID)
         {
             RServiceClient client = new RServiceClient();
-            client.AddRq(ModID);
+            client.AddRq(ModGUID);
             MyLog.writeLog("执行", logtype.Info);
             return "success";
         }
@@ -99,6 +100,21 @@ namespace DSWeb.Controllers
             return View(dSTreeModel);
         }
 
+        /// <summary>
+        /// 获取模型下拉列表
+        /// </summary>
+        /// <returns></returns>
+        public string GetModSelectJson()
+        {
+            DataTable dt = new DataTable();
+            SQLHelper sqdb = new SQLHelper(db.Database.Connection.ConnectionString);
+            dt = sqdb.GetTable("SELECT ModGUID,ModName FROM dbo.DSTreeModel");
+            if (dt.Rows.Count > 0)
+            {
+                return JsonConvert.SerializeObject(dt);
+            }
+            return "";
+        }
         // GET: DSTreeModels/Edit/5
         public ActionResult Edit(Guid? id)
         {
