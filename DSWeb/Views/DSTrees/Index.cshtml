@@ -123,8 +123,8 @@
                 link.target = nodes[link.target] || (nodes[link.target] = { name: link.target });
             });
 
-            var width = 1560,
-                height = 800;
+            var width = 800,
+                height = 600;
 
             var force = d3.layout.force()//layout将json格式转化为力学图可用的格式
                 .nodes(d3.values(nodes))//设定节点数组
@@ -242,7 +242,7 @@
                     }
                     return color;
                 })
-                .attr("r", 28)//设置圆圈半径
+                .attr("r", 35)//设置圆圈半径
                 .on("click", function (node) {
                     //单击时让连接线加粗
                     edges_line.style("stroke-width", function (line) {
@@ -304,35 +304,45 @@
                 }).attr('x', function (d) {
                     // console.log(d.name+"---"+ d.name.length);
                     var re_en = /[a-zA-Z]+/g;
-                    //如果是全英文，不换行
-                    if (re_en.test(d.name) ){
-                        d3.select(this).append('tspan')
-                        .attr('x', 0)
-                        .attr('y', 2)
-                        .text(function () { return d.name; });
-                    }
-                        //如果小于四个字符，不换行
-                    else if (d.name.length <= 4) {
-                        d3.select(this).append('tspan')
+                    d3.select(this).append('tspan')
                        .attr('x', 0)
                        .attr('y', 2)
-                       .text(function () { return d.name; });
-                    } else {
-                        var top = d.name.substring(0, 4);
-                        var bot = d.name.substring(4, d.name.length);
+                       .text(function () {
+                           return d.name.split("&")[0];
+                       });
+                    ////如果是全英文，不换行
+                    //if (re_en.test(d.name) ){
+                    //    d3.select(this).append('tspan')
+                    //    .attr('x', 0)
+                    //    .attr('y', 2)
+                    //    .text(function () { return d.name; });
+                    //}
+                    //    //如果小于四个字符，不换行
+                    //else if (d.name.length <= 4) {
+                    //    d3.select(this).append('tspan')
+                    //   .attr('x', 0)
+                    //   .attr('y', 2)
+                    //   .text(function () { return d.name; });
+                    //} else {
+                    //    d3.select(this).append('tspan')
+                    //  .attr('x', 0)
+                    //  .attr('y', 2)
+                    //  .text(function () { return d.name; });
+                    //    //var top = d.name.substring(0, 4);
+                    //    //var bot = d.name.substring(4, d.name.length);
 
-                        d3.select(this).text(function () { return ''; });
+                    //    //d3.select(this).text(function () { return ''; });
 
-                        d3.select(this).append('tspan')
-                            .attr('x', 0)
-                            .attr('y', -7)
-                            .text(function () { return top; });
+                    //    //d3.select(this).append('tspan')
+                    //    //    .attr('x', 0)
+                    //    //    .attr('y', -7)
+                    //    //    .text(function () { return top; });
 
-                        d3.select(this).append('tspan')
-                            .attr('x', 0)
-                            .attr('y', 10)
-                            .text(function () { return bot; });
-                    }
+                    //    //d3.select(this).append('tspan')
+                    //    //    .attr('x', 0)
+                    //    //    .attr('y', 10)
+                    //    //    .text(function () { return bot; });
+                    //}
                     //直接显示文字    
                     /*.text(function(d) { 
                     return d.name; */

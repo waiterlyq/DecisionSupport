@@ -97,11 +97,23 @@ namespace DSWeb.Controllers
             }
             DataTable dt = new DataTable();
             SQLHelper sqdb = new SQLHelper(db.Database.Connection.ConnectionString);
-            string strsql = @"SELECT DISTINCT dsp.FactorNameCn AS [source],dsc.FactorNameCn AS [target],'resolved' AS [type],dsp.DescribeCn AS [rela]  FROM dbo.DSTree dsp
-                            INNER JOIN dbo.DSTree dsc ON dsp.ID = dsc.PID AND dsp.ModGUID = dsc.ModGUID and dsp.ModGUID='" + ModGUID + "'";
-            strsql += @"UNION
-                            SELECT FactorNameCn AS [source],ResultCn AS [target],'resolved' AS [type],DescribeCn AS [rela] FROM dbo.DSTree
-                            WHERE Result <> '' AND ModGUID='" + ModGUID + "'";
+            string strsql = @"SELECT  CASE WHEN dsp.PID = '' THEN dsp.FactorNameCn ELSE dsp.FactorNameCn + '&' + REPLACE(dsp.PID,'.','') END AS [source] ,
+                            dsc.FactorNameCn + '&' + REPLACE(dsp.ID,'.','') AS [target] ,
+                            'resolved' AS [type] ,
+                            dsp.DescribeCn AS [rela]
+                            FROM    dbo.DSTree dsp
+                            INNER JOIN dbo.DSTree dsc ON dsp.ID = dsc.PID
+                            AND dsp.ModGUID = dsc.ModGUID
+                            AND dsp.ModGUID = 'd21bfbc8-9761-4e73-aa5e-133bf9a12f06'
+                            UNION ALL
+                            SELECT CASE WHEN PID = '' THEN FactorNameCn ELSE  FactorNameCn + '&' + REPLACE(PID,'.','') END AS [source] ,
+                            ResultCn + '&' + REPLACE(PID,'.','') AS [target] ,
+                            'resolved' AS [type] ,
+                            DescribeCn AS [rela]
+                            FROM    dbo.DSTree
+                            WHERE   Result <> ''
+                            AND ModGUID = 'd21bfbc8-9761-4e73-aa5e-133bf9a12f06'
+                            ORDER BY [source]";
             dt = sqdb.GetTable(strsql);
             if (dt.Rows.Count > 0)
             {

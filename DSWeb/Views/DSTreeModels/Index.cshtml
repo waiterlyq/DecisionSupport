@@ -85,6 +85,7 @@
                 ////修改
                 $("#btn_xg").click(function () {
                     var arrselections = $("#tb_DSTreeModel").bootstrapTable('getSelections');
+                    $("#modal").removeData();
                     $("#modal").modal({
                         remote: "/DSTreeModels/Edit?id=" + arrselections[0].ModGUID
                     })
