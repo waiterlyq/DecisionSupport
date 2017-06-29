@@ -77,6 +77,7 @@
             oInit.Init = function () {
                 ///新增
                 $("#btn_xz").click(function () {
+                    $("#modal").removeData();
                     $("#modal").modal({
                         remote: "/DSTreeModels/Create"
                     })
