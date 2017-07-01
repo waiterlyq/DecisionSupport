@@ -115,6 +115,38 @@ namespace DSWeb.Controllers
             }
             return "";
         }
+
+        /// <summary>
+        /// 获取饼图数据
+        /// </summary>
+        /// <returns></returns>
+        public string GetModSelectPieJson(string ID)
+        {
+            DataTable dt = new DataTable();
+            SQLHelper sqdb = new SQLHelper(db.Database.Connection.ConnectionString);
+            dt = sqdb.GetTable("SELECT CoverCount,ErrorCount FROM dbo.DSTree WHERE DSTreeGUID='"+ID+"'");
+            if (dt.Rows.Count > 0)
+            {
+                return JsonConvert.SerializeObject(dt);
+            }
+            return "";
+        }
+
+        /// <summary>
+        /// 获取柱状图数据
+        /// </summary>
+        /// <returns></returns>
+        public string GetModSelectGramJson(string ID)
+        {
+            DataTable dt = new DataTable();
+            SQLHelper sqdb = new SQLHelper(db.Database.Connection.ConnectionString);
+            dt = sqdb.GetTable("SELECT FactornameCn,Useage FROM dbo.DSTreeFactors WHERE ModGUID='" + ID + "'");
+            if (dt.Rows.Count > 0)
+            {
+                return JsonConvert.SerializeObject(dt);
+            }
+            return "";
+        }
         // GET: DSTreeModels/Edit/5
         public ActionResult Edit(Guid? id)
         {

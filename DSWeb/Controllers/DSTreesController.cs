@@ -75,7 +75,11 @@ namespace DSWeb.Controllers
             }
             DataTable dt = new DataTable();
             SQLHelper sqdb = new SQLHelper(db.Database.Connection.ConnectionString);
-            dt = sqdb.GetTable("SELECT id,case when pid='' then '0' else pid end  as pId,DescribeCn+ CASE WHEN ResultCn <> '' THEN '则'+ResultCn ELSE '' END AS name FROM dbo.DSTree  WHERE ModGUID = '" + ModGUID + "' ORDER BY ID");
+            dt = sqdb.GetTable(@"SELECT id,case when pid='' then '0' else pid end  as pId,DescribeCn AS name,DSTreeGUID,ModGUID,'0' as isLastResault FROM dbo.DSTree  WHERE ModGUID = '" + ModGUID + @"' 
+                                 UNION ALL
+                                 SELECT id + '000' as id, id as pId, ResultCn as name, DSTreeGUID, ModGUID,'1' as isLastResault FROM dbo.DSTree  WHERE ModGUID = '" + ModGUID + @"'  AND ResultCn <> ''
+                                 ORDER BY ID");
+            
             if (dt.Rows.Count > 0)
             {
                 return JsonConvert.SerializeObject(dt);
