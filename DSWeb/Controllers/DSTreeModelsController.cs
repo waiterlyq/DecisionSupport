@@ -43,9 +43,9 @@ namespace DSWeb.Controllers
 
         public string Generate(string ModGUID)
         {
-            //RServiceClient client = new RServiceClient();
-            //client.AddRq(ModGUID);
-            //MyLog.writeLog("执行", logtype.Info);
+            RServiceClient client = new RServiceClient();
+            client.AddRq(ModGUID);
+            MyLog.writeLog("执行", logtype.Info);
             return "success";
         }
 
@@ -164,6 +164,38 @@ namespace DSWeb.Controllers
             DataTable dt = new DataTable();
             SQLHelper sqdb = new SQLHelper(db.Database.Connection.ConnectionString);
             dt = sqdb.GetTable("SELECT ModGUID,ModName FROM dbo.DSTreeModel");
+            if (dt.Rows.Count > 0)
+            {
+                return JsonConvert.SerializeObject(dt);
+            }
+            return "";
+        }
+
+        /// <summary>
+        /// 获取饼图数据
+        /// </summary>
+        /// <returns></returns>
+        public string GetModSelectPieJson(string ID)
+        {
+            DataTable dt = new DataTable();
+            SQLHelper sqdb = new SQLHelper(db.Database.Connection.ConnectionString);
+            dt = sqdb.GetTable("SELECT CoverCount,ErrorCount FROM dbo.DSTree WHERE DSTreeGUID='"+ID+"'");
+            if (dt.Rows.Count > 0)
+            {
+                return JsonConvert.SerializeObject(dt);
+            }
+            return "";
+        }
+
+        /// <summary>
+        /// 获取柱状图数据
+        /// </summary>
+        /// <returns></returns>
+        public string GetModSelectGramJson(string ID)
+        {
+            DataTable dt = new DataTable();
+            SQLHelper sqdb = new SQLHelper(db.Database.Connection.ConnectionString);
+            dt = sqdb.GetTable("SELECT FactornameCn,Useage FROM dbo.DSTreeFactors WHERE ModGUID='" + ID + "'");
             if (dt.Rows.Count > 0)
             {
                 return JsonConvert.SerializeObject(dt);
