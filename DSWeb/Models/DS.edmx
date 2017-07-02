@@ -16,18 +16,18 @@
     </Key>
     <Property Name="DSTreeGUID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ModGUID" Type="uniqueidentifier" Nullable="true" />
-    <Property Name="ID" Type="varchar" Nullable="true" MaxLength="50" />
-    <Property Name="PID" Type="varchar" Nullable="true" MaxLength="50" />
-    <Property Name="FactorName" Type="varchar" Nullable="true" MaxLength="50" />
-    <Property Name="FactorNameCn" Type="varchar" Nullable="true" MaxLength="50" />
+    <Property Name="ID" Type="varchar" Nullable="true" MaxLength="100" />
+    <Property Name="PID" Type="varchar" Nullable="true" MaxLength="100" />
+    <Property Name="FactorName" Type="varchar" Nullable="true" MaxLength="100" />
+    <Property Name="FactorNameCn" Type="varchar" Nullable="true" MaxLength="100" />
     <Property Name="Operator" Type="varchar" Nullable="true" MaxLength="50" />
     <Property Name="OperatorCn" Type="varchar" Nullable="true" MaxLength="50" />
-    <Property Name="FactorValue" Type="varchar" Nullable="true" MaxLength="500" />
-    <Property Name="FactorValueCn" Type="varchar" Nullable="true" MaxLength="500" />
-    <Property Name="Describe" Type="varchar" Nullable="true" MaxLength="3000" />
-    <Property Name="DescribeCn" Type="varchar" Nullable="true" MaxLength="3000" />
-    <Property Name="Result" Type="varchar" Nullable="true" MaxLength="50" />
-    <Property Name="ResultCn" Type="varchar" Nullable="true" MaxLength="50" />
+    <Property Name="FactorValue" Type="varchar(max)" Nullable="true" />
+    <Property Name="FactorValueCn" Type="varchar(max)" Nullable="true" />
+    <Property Name="Describe" Type="varchar(max)" Nullable="true" />
+    <Property Name="DescribeCn" Type="varchar(max)" Nullable="true" />
+    <Property Name="Result" Type="varchar" Nullable="true" MaxLength="500" />
+    <Property Name="ResultCn" Type="varchar" Nullable="true" MaxLength="500" />
     <Property Name="CoverCount" Type="int" Nullable="true" />
     <Property Name="ErrorCount" Type="int" Nullable="true" />
   </EntityType>
@@ -58,6 +58,7 @@
     <Property Name="ModCycleType" Type="varchar" Nullable="true" MaxLength="50" />
     <Property Name="ModCycleWD" Type="int" Nullable="true" />
     <Property Name="ModCycleDate" Type="int" Nullable="true" />
+    <Property Name="ModStatus" Type="varchar" Nullable="true" MaxLength="50" />
   </EntityType>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -69,18 +70,18 @@
           </Key>
           <Property Name="DSTreeGUID" Type="Guid" Nullable="false" />
           <Property Name="ModGUID" Type="Guid" />
-          <Property Name="ID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="FactorName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="FactorNameCn" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ID" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PID" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FactorName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FactorNameCn" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Operator" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="OperatorCn" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="FactorValue" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="FactorValueCn" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="Describe" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
-          <Property Name="DescribeCn" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
-          <Property Name="Result" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ResultCn" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FactorValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="FactorValueCn" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Describe" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="DescribeCn" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Result" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ResultCn" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="CoverCount" Type="Int32" />
           <Property Name="ErrorCount" Type="Int32" />
         </EntityType>
@@ -111,6 +112,7 @@
           <Property Name="ModCycleType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ModCycleWD" Type="Int32" />
           <Property Name="ModCycleDate" Type="Int32" />
+          <Property Name="ModStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityContainer Name="DSEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="DSTree" EntityType="Self.DSTree" />
@@ -172,6 +174,7 @@
           <ScalarProperty Name="ModCycleType" ColumnName="ModCycleType" />
           <ScalarProperty Name="ModCycleWD" ColumnName="ModCycleWD" />
           <ScalarProperty Name="ModCycleDate" ColumnName="ModCycleDate" />
+          <ScalarProperty Name="ModStatus" ColumnName="ModStatus" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

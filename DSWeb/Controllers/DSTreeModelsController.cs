@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using DBLib;
 using Pylib;
 using Loglib;
+using System.Data.SqlClient;
 
 namespace DSWeb.Controllers
 {
@@ -42,10 +43,60 @@ namespace DSWeb.Controllers
 
         public string Generate(string ModGUID)
         {
-            RServiceClient client = new RServiceClient();
-            client.AddRq(ModGUID);
-            MyLog.writeLog("执行", logtype.Info);
+            //RServiceClient client = new RServiceClient();
+            //client.AddRq(ModGUID);
+            //MyLog.writeLog("执行", logtype.Info);
             return "success";
+        }
+
+        public string CheckDbString(string Server,string DataBase,string Uid,string PassWord)
+        {
+            string strconn = @"data source=" + Server + ";initial catalog=" + DataBase + ";user id=" + Uid + ";password=" + PassWord;
+            SqlConnection con = new SqlConnection(strconn);
+            string result = "success";
+            try
+            {
+                con.Open();
+                if (con.State == ConnectionState.Open)
+                {
+                    result = "success";
+                }
+                else {
+                    result = "failure";
+                }
+            }
+            catch (Exception)
+            {
+                result = "failure";
+            }
+            finally {
+                con.Close();
+            }
+            return result;
+        }
+
+        public string UpdateResultField(string ModGUID,string ceMapGUID) {
+            string result = "success";
+            string sql = "";
+            sql = string.Format("update dstreecemap set IsResultFactor = null where ModGUID = '{0}';", ModGUID);
+            sql += string.Format("update dstreecemap set IsResultFactor = 1 where CEMapGUID = '{0}';", ceMapGUID);
+            SQLHelper sqdb = new SQLHelper(db.Database.Connection.ConnectionString);
+            try
+            {
+                if (sqdb.ExcuteSQL(sql) >= 0)
+                {
+                    result = "success";
+                }
+                else
+                {
+                    result = "failure";
+                }
+            }
+            catch (Exception)
+            {
+                result = "failure";
+            }
+            return result;
         }
 
         public JsonResult GetDSTreeModelList(int limit, int offset)
@@ -77,26 +128,30 @@ namespace DSWeb.Controllers
             if (ModelState.IsValid)
             {
                 dSTreeModel.ModGUID = Guid.NewGuid();
+                dSTreeModel.ModStatus = "等待执行";
                 db.DSTreeModel.Add(dSTreeModel);
                 db.SaveChanges();
                 SQLHelper sqdb = new SQLHelper(dSTreeModel.GetConnString());
-                DataTable dt = sqdb.GetTable(dSTreeModel.ModDataSource);
-                int ic = dt.Columns.Count;
-                DataTable dtCNPy =  NPy.getDtCNPy(dt, ic);
-                List<DSTreeCEMap> ldstcm = new List<DSTreeCEMap>();
-                for (int i = 0; i < ic; i++)
+                string sDataSource = "select top 1 * from (" + dSTreeModel.ModDataSource + ") tmp";
+                DataTable dt = sqdb.GetTable(sDataSource);
+                if (dt != null)
                 {
-                    DSTreeCEMap dstcm = new DSTreeCEMap();
-                    dstcm.CEMapGUID = Guid.NewGuid();
-                    dstcm.ModGUID = dSTreeModel.ModGUID;
-                    dstcm.CCellName = dt.Columns[i].ColumnName;
-                    dstcm.ECellName = dtCNPy.Select("cnC='" + dstcm.CCellName + "'")[0][1].ToString();
-                    db.DSTreeCEMap.Add(dstcm);
+                    int ic = dt.Columns.Count;
+                    DataTable dtCNPy = NPy.getDtCNPy(dt, ic);
+                    List<DSTreeCEMap> ldstcm = new List<DSTreeCEMap>();
+                    for (int i = 0; i < ic; i++)
+                    {
+                        DSTreeCEMap dstcm = new DSTreeCEMap();
+                        dstcm.CEMapGUID = Guid.NewGuid();
+                        dstcm.ModGUID = dSTreeModel.ModGUID;
+                        dstcm.CCellName = dt.Columns[i].ColumnName;
+                        dstcm.ECellName = dtCNPy.Select("cnC='" + dstcm.CCellName + "'")[0][1].ToString();
+                        db.DSTreeCEMap.Add(dstcm);
+                    }
+                    db.SaveChanges();
                 }
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index",new { ModGUID= dSTreeModel.ModGUID });
             }
-
             return View(dSTreeModel);
         }
 
@@ -115,6 +170,18 @@ namespace DSWeb.Controllers
             }
             return "";
         }
+
+        public string GetResultFieldJson(string ModGUID) {
+            DataTable dt = new DataTable();
+            SQLHelper sqdb = new SQLHelper(db.Database.Connection.ConnectionString);
+            dt = sqdb.GetTable("select CEMapGUID,CCellName from DSTreeCEMap WHERE ModGUID = '"+ ModGUID + "'");
+            if (dt.Rows.Count > 0)
+            {
+                return JsonConvert.SerializeObject(dt);
+            }
+            return "";
+        }
+
         // GET: DSTreeModels/Edit/5
         public ActionResult Edit(Guid? id)
         {

@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 06/22/2017 18:37:42
--- Generated from EDMX file: D:\workspace\DecisionSupport\DSWeb\Models\DS.edmx
+-- Date Created: 06/30/2017 16:48:15
+-- Generated from EDMX file: F:\Code\DecisionSupport\DSWeb\Models\DS.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -40,18 +40,18 @@ GO
 CREATE TABLE [dbo].[DSTree] (
     [DSTreeGUID] uniqueidentifier  NOT NULL,
     [ModGUID] uniqueidentifier  NULL,
-    [ID] varchar(50)  NULL,
-    [PID] varchar(50)  NULL,
-    [FactorName] varchar(50)  NULL,
-    [FactorNameCn] varchar(50)  NULL,
+    [ID] varchar(100)  NULL,
+    [PID] varchar(100)  NULL,
+    [FactorName] varchar(100)  NULL,
+    [FactorNameCn] varchar(100)  NULL,
     [Operator] varchar(50)  NULL,
     [OperatorCn] varchar(50)  NULL,
-    [FactorValue] varchar(500)  NULL,
-    [FactorValueCn] varchar(500)  NULL,
-    [Describe] varchar(3000)  NULL,
-    [DescribeCn] varchar(3000)  NULL,
-    [Result] varchar(50)  NULL,
-    [ResultCn] varchar(50)  NULL,
+    [FactorValue] varchar(max)  NULL,
+    [FactorValueCn] varchar(max)  NULL,
+    [Describe] varchar(max)  NULL,
+    [DescribeCn] varchar(max)  NULL,
+    [Result] varchar(500)  NULL,
+    [ResultCn] varchar(500)  NULL,
     [CoverCount] int  NULL,
     [ErrorCount] int  NULL
 );
@@ -81,7 +81,8 @@ CREATE TABLE [dbo].[DSTreeModel] (
     [ModPassword] varchar(50)  NULL,
     [ModCycleType] varchar(50)  NULL,
     [ModCycleWD] int  NULL,
-    [ModCycleDate] int  NULL
+    [ModCycleDate] int  NULL,
+    [ModStatus] varchar(50)  NULL
 );
 GO
 

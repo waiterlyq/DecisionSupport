@@ -15,7 +15,6 @@ namespace DSWeb.Models
 
     public partial class DSTreeModel
     {
-        
         public System.Guid ModGUID { get; set; }
         [Display(Name = "模型名称")]
         public string ModName { get; set; }
@@ -35,12 +34,14 @@ namespace DSWeb.Models
         public string ModUid { get; set; }
         [Display(Name = "数据库密码")]
         public string ModPassword { get; set; }
-        [Display(Name = "生成周期")]
+        [Display(Name = "执行周期")]
         public string ModCycleType { get; set; }
-        [Display(Name = "生成日期")]
+        [Display(Name = "执行日期")]
         public Nullable<int> ModCycleWD { get; set; }
-        [Display(Name = "生成时间")]
+        [Display(Name = "执行时间")]
         public Nullable<int> ModCycleDate { get; set; }
+        [Display(Name = "模型状态")]
+        public string ModStatus { get; set; }
 
         public string GetConnString()
         {

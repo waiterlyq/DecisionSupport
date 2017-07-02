@@ -14,6 +14,61 @@
     <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <title>新增</title>
+    <script>
+
+        $(function () {
+
+            var oButtonInit = new ButtonInit();
+            oButtonInit.Init();
+
+        });
+
+        var ButtonInit = function () {
+            var oInit = new Object();
+
+            oInit.Init = function () {
+                $("#btnTestDb").click(function () {
+                    var Server = $("#ModServer").val();
+                    var DataBase = $("#ModDataBase").val();
+                    var Uid = $("#ModUid").val();
+                    var PassWord = $("#ModPassword").val();
+                    if (Server == "") {
+                        alert("请填写服务器！");
+                        return;
+                    }
+                    if (DataBase == "") {
+                        alert("请填写数据库！");
+                        return;
+                    }
+                    if (Uid == "") {
+                        alert("请填写登录名！");
+                        return;
+                    }
+                    $.ajax({
+                        type: "post",
+                        url: "/DSTreeModels/CheckDbString",
+                        data: { Server: Server, DataBase: DataBase, Uid: Uid, PassWord: PassWord },
+                        success: function (data) {
+                            if (data == "success") {
+                                alert("数据库连接验证成功！");
+                            }
+                            if (data == "failure") {
+                                alert("数据库连接验证失败！");
+                            }
+                        },
+                        error: function () {
+                            alert("数据库连接验证失败！");
+                        },
+                        complete: function () {
+
+                        }
+
+                    });
+                });
+            }
+            return oInit;
+        };
+    </script>
 </head>
 <body>
     @using (Html.BeginForm())
@@ -94,6 +149,7 @@
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="保存" class="btn btn-default" />
+                    <input id="btnTestDb" type="button" value="测试数据库连接" class="btn btn-default" />
                 </div>
             </div>
         </div>
