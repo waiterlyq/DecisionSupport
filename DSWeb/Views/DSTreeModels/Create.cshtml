@@ -10,9 +10,12 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <script type="text/javascript" src="~/Scripts/jquery-3.1.1.min.js"></script>
-    <script type="text/javascript" src="~/scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/fileinput.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/Inputfilezh.js"></script>
     <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" type="text/css" />
     <title>新增</title>
     <script>
 
@@ -20,8 +23,28 @@
 
             var oButtonInit = new ButtonInit();
             oButtonInit.Init();
+            initFileInput("FileData", "DSTreeModels/UpLoader")
 
         });
+
+        //初始化fileinput控件（第一次初始化）
+        function initFileInput(ctrlName, uploadUrl) {
+            var control = $('#' + ctrlName);
+
+            control.fileinput({
+                language: 'zh', //设置语言
+                uploadAsync: true,
+                enctype: 'multipart/form-data',
+                uploadUrl: uploadUrl, //上传的地址
+                allowedFileExtensions: ['csv', 'xlsx', 'xls'],//接收的文件后缀
+                showUpload: true, //是否显示上传按钮
+                showCaption: true,//是否显示标题
+                showPreview: false,
+                dropZoneEnabled:true,
+                maxFileCount: 1,
+                browseClass: "btn btn-primary", //按钮样式
+            });
+        }
 
         var ButtonInit = function () {
             var oInit = new Object();
@@ -144,6 +167,12 @@
                 <div class="col-lg-10">
                     @Html.TextAreaFor(model => model.ModRemark, new { @class = "form-control", @rows = "4" })
                     @Html.ValidationMessageFor(model => model.ModRemark, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-10">
+                    
+                    <input id="FileData" type="file"/>
                 </div>
             </div>
             <div class="form-group">

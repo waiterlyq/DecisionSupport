@@ -13,6 +13,7 @@ using DBLib;
 using Pylib;
 using Loglib;
 using System.Data.SqlClient;
+using System.IO;
 
 namespace DSWeb.Controllers
 {
@@ -49,7 +50,7 @@ namespace DSWeb.Controllers
             return "success";
         }
 
-        public string CheckDbString(string Server,string DataBase,string Uid,string PassWord)
+        public string CheckDbString(string Server, string DataBase, string Uid, string PassWord)
         {
             string strconn = @"data source=" + Server + ";initial catalog=" + DataBase + ";user id=" + Uid + ";password=" + PassWord;
             SqlConnection con = new SqlConnection(strconn);
@@ -61,7 +62,8 @@ namespace DSWeb.Controllers
                 {
                     result = "success";
                 }
-                else {
+                else
+                {
                     result = "failure";
                 }
             }
@@ -69,13 +71,15 @@ namespace DSWeb.Controllers
             {
                 result = "failure";
             }
-            finally {
+            finally
+            {
                 con.Close();
             }
             return result;
         }
 
-        public string UpdateResultField(string ModGUID,string ceMapGUID) {
+        public string UpdateResultField(string ModGUID, string ceMapGUID)
+        {
             string result = "success";
             string sql = "";
             sql = string.Format("update dstreecemap set IsResultFactor = null where ModGUID = '{0}';", ModGUID);
@@ -106,10 +110,22 @@ namespace DSWeb.Controllers
             return Json(new { total = total, rows = rows }, JsonRequestBehavior.AllowGet);
         }
 
+        public string UpLoader()
+        {
+            HttpPostedFileBase file = Request.Files[0];
+            string filePath = Path.Combine(HttpContext.Server.MapPath("/Uploads/"), Path.GetExtension(file.FileName));
+            file.SaveAs(filePath);
+            //foreach (HttpPostedFileBase file in FilesInput)
+            //{
+            //    string filePath = Path.Combine(HttpContext.Server.MapPath("/Uploads/"), Path.GetExtension(file.FileName));
+            //    file.SaveAs(filePath);
+            //}
+            return "";
+        }
+
         // GET: DSTreeModels/Create
         public ActionResult Create()
         {
-            
             return View();
         }
 
@@ -150,7 +166,7 @@ namespace DSWeb.Controllers
                     }
                     db.SaveChanges();
                 }
-                return RedirectToAction("Index",new { ModGUID= dSTreeModel.ModGUID });
+                return RedirectToAction("Index", new { ModGUID = dSTreeModel.ModGUID });
             }
             return View(dSTreeModel);
         }
@@ -179,7 +195,7 @@ namespace DSWeb.Controllers
         {
             DataTable dt = new DataTable();
             SQLHelper sqdb = new SQLHelper(db.Database.Connection.ConnectionString);
-            dt = sqdb.GetTable("SELECT CoverCount,ErrorCount FROM dbo.DSTree WHERE DSTreeGUID='"+ID+"'");
+            dt = sqdb.GetTable("SELECT CoverCount,ErrorCount FROM dbo.DSTree WHERE DSTreeGUID='" + ID + "'");
             if (dt.Rows.Count > 0)
             {
                 return JsonConvert.SerializeObject(dt);
@@ -203,10 +219,11 @@ namespace DSWeb.Controllers
             return "";
         }
 
-        public string GetResultFieldJson(string ModGUID) {
+        public string GetResultFieldJson(string ModGUID)
+        {
             DataTable dt = new DataTable();
             SQLHelper sqdb = new SQLHelper(db.Database.Connection.ConnectionString);
-            dt = sqdb.GetTable("select CEMapGUID,CCellName from DSTreeCEMap WHERE ModGUID = '"+ ModGUID + "'");
+            dt = sqdb.GetTable("select CEMapGUID,CCellName from DSTreeCEMap WHERE ModGUID = '" + ModGUID + "'");
             if (dt.Rows.Count > 0)
             {
                 return JsonConvert.SerializeObject(dt);
