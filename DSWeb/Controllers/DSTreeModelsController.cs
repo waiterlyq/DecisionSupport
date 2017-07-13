@@ -14,6 +14,7 @@ using Pylib;
 using Loglib;
 using System.Data.SqlClient;
 using System.IO;
+using System.Text;
 
 namespace DSWeb.Controllers
 {
@@ -46,7 +47,7 @@ namespace DSWeb.Controllers
         {
             RServiceClient client = new RServiceClient();
             client.AddRq(ModGUID);
-            MyLog.writeLog("执行", logtype.Info);
+            MyLog.writeLog("执行");
             return "success";
         }
 
@@ -110,17 +111,23 @@ namespace DSWeb.Controllers
             return Json(new { total = total, rows = rows }, JsonRequestBehavior.AllowGet);
         }
 
-        public string UpLoader()
+        public JsonResult UpLoader()
         {
             HttpPostedFileBase file = Request.Files[0];
-            string filePath = Path.Combine(HttpContext.Server.MapPath("/Uploads/"), Path.GetExtension(file.FileName));
+            string filePath = Path.Combine(HttpContext.Server.MapPath("/Uploads/"), file.FileName);
             file.SaveAs(filePath);
+            StreamReader st = new StreamReader(filePath, Encoding.GetEncoding("UTF-8"));
+           
+            RServiceClient client = new RServiceClient();
+            client.saveFile(file.FileName, st.ReadToEnd());
+            st.Dispose();
+            st.Close();
             //foreach (HttpPostedFileBase file in FilesInput)
             //{
             //    string filePath = Path.Combine(HttpContext.Server.MapPath("/Uploads/"), Path.GetExtension(file.FileName));
             //    file.SaveAs(filePath);
             //}
-            return "";
+            return Json(new { });
         }
 
         // GET: DSTreeModels/Create

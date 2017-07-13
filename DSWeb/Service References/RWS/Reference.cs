@@ -20,6 +20,12 @@ namespace DSWeb.RWS {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IRService/AddRq", ReplyAction="http://tempuri.org/IRService/AddRqResponse")]
         System.Threading.Tasks.Task<bool> AddRqAsync(string strModGUID);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IRService/saveFile", ReplyAction="http://tempuri.org/IRService/saveFileResponse")]
+        bool saveFile(string fileName, string context);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IRService/saveFile", ReplyAction="http://tempuri.org/IRService/saveFileResponse")]
+        System.Threading.Tasks.Task<bool> saveFileAsync(string fileName, string context);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -55,6 +61,14 @@ namespace DSWeb.RWS {
         
         public System.Threading.Tasks.Task<bool> AddRqAsync(string strModGUID) {
             return base.Channel.AddRqAsync(strModGUID);
+        }
+        
+        public bool saveFile(string fileName, string context) {
+            return base.Channel.saveFile(fileName, context);
+        }
+        
+        public System.Threading.Tasks.Task<bool> saveFileAsync(string fileName, string context) {
+            return base.Channel.saveFileAsync(fileName, context);
         }
     }
 }
