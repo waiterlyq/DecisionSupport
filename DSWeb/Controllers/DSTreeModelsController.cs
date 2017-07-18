@@ -9,7 +9,7 @@ using System.Web.Mvc;
 using DSWeb.Models;
 using DSWeb.RWS;
 using Newtonsoft.Json;
-using DBLib;
+using DBlib;
 using Pylib;
 using Loglib;
 using System.Data.SqlClient;
@@ -114,7 +114,14 @@ namespace DSWeb.Controllers
         public JsonResult UpLoader()
         {
             HttpPostedFileBase file = Request.Files[0];
-            string filePath = Path.Combine(HttpContext.Server.MapPath("/Uploads/"), file.FileName);
+            
+
+            string dirPath = HttpContext.Server.MapPath("/Uploads/" + Guid.NewGuid().ToString() + "/");
+            if(!Directory.Exists(dirPath))
+            {
+                Directory.CreateDirectory(dirPath);
+            }
+            string filePath = Path.Combine(dirPath, file.FileName);
             file.SaveAs(filePath);
             StreamReader st = new StreamReader(filePath, Encoding.GetEncoding("UTF-8"));
            
