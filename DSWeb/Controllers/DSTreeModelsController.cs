@@ -140,7 +140,9 @@ namespace DSWeb.Controllers
         // GET: DSTreeModels/Create
         public ActionResult Create()
         {
-            return View();
+            DSTreeModel ds = new DSTreeModel();
+            ds.ModGUID = Guid.NewGuid();
+            return View(ds);
         }
 
         /// <summary>

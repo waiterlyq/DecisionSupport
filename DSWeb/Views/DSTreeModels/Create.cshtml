@@ -2,25 +2,15 @@
 @{
     Layout = null;
 }
-
-
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <script type="text/javascript" src="~/Scripts/jquery-3.1.1.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/fileinput.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/Inputfilezh.js"></script>
-    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" type="text/css" />
     <title>新增</title>
     <script>
-
         $(function () {
-
+            var a = '@Model.ModGUID';
+            debugger;
             var oButtonInit = new ButtonInit();
             oButtonInit.Init();
             initFileInput("FileData", "DSTreeModels/UpLoader")
@@ -40,7 +30,7 @@
                 showUpload: true, //是否显示上传按钮
                 showCaption: true,//是否显示标题
                 showPreview: false,
-                dropZoneEnabled:false,
+                dropZoneEnabled: false,
                 maxFileCount: 1,
                 browseClass: "btn btn-primary", //按钮样式
             });
@@ -94,94 +84,152 @@
     </script>
 </head>
 <body>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"
+                aria-hidden="true">
+            ×
+        </button>
+        <p>新增模型</p>
+    </div>
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
-
-        <div class="form-horizontal">
-            <hr />
-            <fieldset>
-                <legend>新增模型</legend>
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ModName, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.ModName, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.ModName, "", new { @class = "text-danger" })
+        <div class="modal-body">
+            <div id="ModMain" class="form-horizontal">
+                <fieldset>
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ModName, htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.EditorFor(model => model.ModName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ModName, "", new { @class = "text-danger" })
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ModCycleType, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-sm-4">
-                        @Html.EditorFor(model => model.ModCycleType, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.ModCycleType, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.IsFileDataSource, htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.RadioButtonFor(model => model.IsFileDataSource, new { htmlAttributes = new { @class = "form-control" }, @id = "radio01", @name = "DataType" })是
+                            @Html.RadioButtonFor(model => model.IsFileDataSource, new { htmlAttributes = new { @class = "form-control" }, @id = "radio01", @name = "DataType" })否
+                            @Html.ValidationMessageFor(model => model.IsFileDataSource, "", new { @class = "text-danger" })
+                        </div>
                     </div>
-                    @Html.LabelFor(model => model.ModCycleWD, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-sm-4">
-                        @Html.EditorFor(model => model.ModCycleWD, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.ModCycleWD, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ModRemark, htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-lg-7">
+                            @Html.TextAreaFor(model => model.ModRemark, new { @class = "form-control", @rows = "6" })
+                            @Html.ValidationMessageFor(model => model.ModRemark, "", new { @class = "text-danger" })
+                        </div>
                     </div>
-                    @Html.LabelFor(model => model.ModCycleDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-sm-4">
-                        @Html.EditorFor(model => model.ModCycleDate, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.ModCycleDate, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-            </fieldset>
-            <fieldset>
-                <legend>配置数据源</legend>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ModServer, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-sm-4">
-                        @Html.EditorFor(model => model.ModServer, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.ModServer, "", new { @class = "text-danger" })
-                    </div>
-                    @Html.LabelFor(model => model.ModDataBase, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-sm-4">
-                        @Html.EditorFor(model => model.ModDataBase, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.ModDataBase, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ModUid, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-sm-4">
-                        @Html.EditorFor(model => model.ModUid, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.ModUid, "", new { @class = "text-danger" })
-                    </div>
-                    @Html.LabelFor(model => model.ModPassword, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-sm-4">
-                        @Html.EditorFor(model => model.ModPassword, new { htmlAttributes = new { @class = "form-control", @type = "password" } })
-                        @Html.ValidationMessageFor(model => model.ModPassword, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ModDataSource, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-lg-10">
-                        @Html.TextAreaFor(model => model.ModDataSource, new { @class = "form-control", @rows = "4" })
-                        @Html.ValidationMessageFor(model => model.ModDataSource, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-            </fieldset>
-            <div class="form-group">
-                @Html.LabelFor(model => model.ModRemark, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-lg-10">
-                    @Html.TextAreaFor(model => model.ModRemark, new { @class = "form-control", @rows = "4" })
-                    @Html.ValidationMessageFor(model => model.ModRemark, "", new { @class = "text-danger" })
-                </div>
+                </fieldset>
             </div>
-            <div class="form-group">
-                <div class="col-lg-10">
-                    
-                    <input id="FileData" type="file"/>
-                </div>
+            <div id="ModFile" class="form-horizontal" hidden="hidden">
+                <hr />
+                <fieldset>
+                    <legend>上传文件</legend>
+                </fieldset>
             </div>
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="保存" class="btn btn-default" />
-                    <input id="btnTestDb" type="button" value="测试数据库连接" class="btn btn-default" />
-                </div>
+            <div id="ModDB" class="form-horizontal" hidden="hidden">
+                <hr />
+                <fieldset>
+                    <legend>设置数据源</legend>
+                </fieldset>
+            </div>
+            <div id="ModFactor" class="form-horizontal" hidden="hidden">
+                <hr />
+                <fieldset>
+                    <legend>选择结果属性</legend>
+                </fieldset>
             </div>
         </div>
     }
+    @*@using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <hr />
+                <fieldset>
+                    <legend>新增模型</legend>
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ModName, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.ModName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ModName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ModCycleType, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-sm-4">
+                            @Html.EditorFor(model => model.ModCycleType, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ModCycleType, "", new { @class = "text-danger" })
+                        </div>
+                        @Html.LabelFor(model => model.ModCycleWD, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-sm-4">
+                            @Html.EditorFor(model => model.ModCycleWD, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ModCycleWD, "", new { @class = "text-danger" })
+                        </div>
+                        @Html.LabelFor(model => model.ModCycleDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-sm-4">
+                            @Html.EditorFor(model => model.ModCycleDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ModCycleDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>配置数据源</legend>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ModServer, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-sm-4">
+                            @Html.EditorFor(model => model.ModServer, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ModServer, "", new { @class = "text-danger" })
+                        </div>
+                        @Html.LabelFor(model => model.ModDataBase, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-sm-4">
+                            @Html.EditorFor(model => model.ModDataBase, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ModDataBase, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ModUid, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-sm-4">
+                            @Html.EditorFor(model => model.ModUid, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ModUid, "", new { @class = "text-danger" })
+                        </div>
+                        @Html.LabelFor(model => model.ModPassword, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-sm-4">
+                            @Html.EditorFor(model => model.ModPassword, new { htmlAttributes = new { @class = "form-control", @type = "password" } })
+                            @Html.ValidationMessageFor(model => model.ModPassword, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ModDataSource, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-lg-10">
+                            @Html.TextAreaFor(model => model.ModDataSource, new { @class = "form-control", @rows = "4" })
+                            @Html.ValidationMessageFor(model => model.ModDataSource, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ModRemark, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-lg-10">
+                        @Html.TextAreaFor(model => model.ModRemark, new { @class = "form-control", @rows = "4" })
+                        @Html.ValidationMessageFor(model => model.ModRemark, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-lg-10">
+
+                        <input id="FileData" type="file" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="保存" class="btn btn-default" />
+                        <input id="btnTestDb" type="button" value="测试数据库连接" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        }*@
 </body>
 </html>

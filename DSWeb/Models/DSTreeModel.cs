@@ -24,7 +24,7 @@ namespace DSWeb.Models
         public string ModDataSource { get; set; }
         [Display(Name = "模型描述")]
         public string ModRemark { get; set; }
-        [Display(Name = "文件数据")]
+        [Display(Name = "是否文件数据")]
         public Nullable<bool> IsFileDataSource { get; set; }
         [Display(Name = "服务器")]
         public string ModServer { get; set; }
