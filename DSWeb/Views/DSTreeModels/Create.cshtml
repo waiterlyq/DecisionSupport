@@ -8,19 +8,92 @@
     <meta name="viewport" content="width=device-width" />
     <title>新增</title>
     <script>
+        var stepID = 1;
+        var isFile = 0;
         $(function () {
-            var a = '@Model.ModGUID';
-            debugger;
+            $("#ModFile").hide();
             var oButtonInit = new ButtonInit();
             oButtonInit.Init();
             initFileInput("FileData", "DSTreeModels/UpLoader")
+            divShowHide();
 
         });
+        ///显示隐藏文件上传控件
+        function fileShowHide()
+        {
+            if ($("input[name='IsFileDataSource']:checked").val() == 1) {
+                $("#ModFile").show(300);
+            }
+            else {
+                $("#ModFile").hide(300);
+            }
+        }
+
+        ///显示隐藏步骤div
+        function divShowHide() {
+            if (stepID == 1) {
+                $("#ModMain").show(500);
+                $("#ModDB").hide(500);
+                $("#ModCycle").hide();
+                $("#ModFactor").hide(500);
+                $("#btnTestDb").hide();
+                $("#preStep").hide();
+                $("#nextStep").show();
+                $("#save").hide();
+                fileShowHide();
+            }
+            else {
+                if (isFile == 1) {
+                    $("#ModMain").hide(500);
+                    $("#ModDB").hide();
+                    $("#ModCycle").hide();
+                    $("#ModFactor").show(500);
+                    $("#btnTestDb").hide();
+                    $("#preStep").show();
+                    $("#nextStep").hide();
+                    $("#save").show();
+                }
+                else
+                {
+                    switch (stepID) {
+                        case 2:
+                            $("#ModMain").hide(500);
+                            $("#ModDB").show(500);
+                            $("#ModCycle").hide(500);
+                            $("#ModFactor").hide();
+                            $("#btnTestDb").show();
+                            $("#preStep").show();
+                            $("#nextStep").show();
+                            $("#save").hide();
+                            break;
+                        case 3:
+                            $("#ModMain").hide();
+                            $("#ModDB").hide(500);
+                            $("#ModCycle").show(500);
+                            $("#ModFactor").hide(500);
+                            $("#btnTestDb").hide();
+                            $("#preStep").show();
+                            $("#nextStep").show();
+                            $("#save").hide();
+                            break;
+                        case 4:
+                            $("#ModMain").hide();
+                            $("#ModDB").hide();
+                            $("#ModCycle").hide(500);
+                            $("#ModFactor").show(500);
+                            $("#btnTestDb").hide();
+                            $("#preStep").show();
+                            $("#nextStep").hide();
+                            $("#save").show();
+                            break;
+                    }
+                }
+            }
+        }
 
         //初始化fileinput控件（第一次初始化）
         function initFileInput(ctrlName, uploadUrl) {
             var control = $('#' + ctrlName);
-
             control.fileinput({
                 language: 'zh', //设置语言
                 uploadAsync: true,
@@ -32,6 +105,7 @@
                 showPreview: false,
                 dropZoneEnabled: false,
                 maxFileCount: 1,
+                dropZoneTitle: "拖拽文件到这里 &hellip;",
                 browseClass: "btn btn-primary", //按钮样式
             });
         }
@@ -78,6 +152,20 @@
 
                     });
                 });
+                $("#preStep").click(function () {
+                    stepID--;
+                    divShowHide();
+                });
+                $("#nextStep").click(function () {
+                    if (stepID == 1) {
+                        isFile = $("input[name='IsFileDataSource']:checked").val();
+                    }
+                    stepID++;
+                    divShowHide();
+                });
+                $("input[name='IsFileDataSource']").change(function () {
+                    fileShowHide();
+                });
             }
             return oInit;
         };
@@ -89,7 +177,7 @@
                 aria-hidden="true">
             ×
         </button>
-        <p>新增模型</p>
+        <h3>新增模型</h3>
     </div>
     @using (Html.BeginForm())
     {
@@ -107,10 +195,16 @@
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.IsFileDataSource, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-7">
-                            @Html.RadioButtonFor(model => model.IsFileDataSource, new { htmlAttributes = new { @class = "form-control" }, @id = "radio01", @name = "DataType" })是
-                            @Html.RadioButtonFor(model => model.IsFileDataSource, new { htmlAttributes = new { @class = "form-control" }, @id = "radio01", @name = "DataType" })否
+                        <div class="col-md-3">
+                            @Html.RadioButtonFor(model => model.IsFileDataSource, 1)是
+                            @Html.RadioButtonFor(model => model.IsFileDataSource, 0, htmlAttributes: new { @checked = "true" })否
                             @Html.ValidationMessageFor(model => model.IsFileDataSource, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div id="ModFile" class="form-group text-center">
+                        <div class="col-md-3 text-right"><label class="control-label">上传文件</label></div>
+                        <div class="col-md-5" style="padding-bottom:20px;text-align:center">
+                            <input id="FileData" type="file" />
                         </div>
                     </div>
                     <div class="form-group">
@@ -122,23 +216,30 @@
                     </div>
                 </fieldset>
             </div>
-            <div id="ModFile" class="form-horizontal" hidden="hidden">
-                <hr />
-                <fieldset>
-                    <legend>上传文件</legend>
-                </fieldset>
-            </div>
             <div id="ModDB" class="form-horizontal" hidden="hidden">
-                <hr />
                 <fieldset>
                     <legend>设置数据源</legend>
                 </fieldset>
             </div>
+            <div id="ModCycle" class="form-horizontal" hidden="hidden">
+                <fieldset>
+                    <legend>设置生成周期</legend>
+                </fieldset>
+            </div>
             <div id="ModFactor" class="form-horizontal" hidden="hidden">
-                <hr />
                 <fieldset>
                     <legend>选择结果属性</legend>
                 </fieldset>
+            </div>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10 text-center">
+                        <input id="btnTestDb" type="button" value="测试数据库连接" class="btn btn-default" />
+                        <input id="preStep" type="button" value="上一步" class="btn btn-default" />
+                        <input id="nextStep" type="button" value="下一步" class="btn btn-default" />
+                        <input id="save" type="submit" value="保存" class="btn btn-default" />
+                    </div>
+                </div>
             </div>
         </div>
     }
