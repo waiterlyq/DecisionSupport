@@ -14,13 +14,12 @@
             $("#ModFile").hide();
             var oButtonInit = new ButtonInit();
             oButtonInit.Init();
-            initFileInput("FileData", "DSTreeModels/UpLoader")
+            initFileInput("FileData", "DSTreeModels/UpLoader?ModGUID=" + '@Model.ModGUID')
             divShowHide();
 
         });
         ///显示隐藏文件上传控件
-        function fileShowHide()
-        {
+        function fileShowHide() {
             if ($("input[name='IsFileDataSource']:checked").val() == 1) {
                 $("#ModFile").show(300);
             }
@@ -53,13 +52,12 @@
                     $("#nextStep").hide();
                     $("#save").show();
                 }
-                else
-                {
+                else {
                     switch (stepID) {
                         case 2:
-                            $("#ModMain").hide(500);
+                            $("#ModMain").hide();
                             $("#ModDB").show(500);
-                            $("#ModCycle").hide(500);
+                            $("#ModCycle").hide();
                             $("#ModFactor").hide();
                             $("#btnTestDb").show();
                             $("#preStep").show();
@@ -68,9 +66,9 @@
                             break;
                         case 3:
                             $("#ModMain").hide();
-                            $("#ModDB").hide(500);
+                            $("#ModDB").hide();
                             $("#ModCycle").show(500);
-                            $("#ModFactor").hide(500);
+                            $("#ModFactor").hide();
                             $("#btnTestDb").hide();
                             $("#preStep").show();
                             $("#nextStep").show();
@@ -79,7 +77,7 @@
                         case 4:
                             $("#ModMain").hide();
                             $("#ModDB").hide();
-                            $("#ModCycle").hide(500);
+                            $("#ModCycle").hide();
                             $("#ModFactor").show(500);
                             $("#btnTestDb").hide();
                             $("#preStep").show();
@@ -106,8 +104,14 @@
                 dropZoneEnabled: false,
                 maxFileCount: 1,
                 dropZoneTitle: "拖拽文件到这里 &hellip;",
-                browseClass: "btn btn-primary", //按钮样式
-            });
+                browseClass: "btn btn-primary" //按钮样式
+            }).on("filebatchselected", function (event, files) {
+                $(this).fileinput("upload");
+            }).on("fileuploaded", function (event, data) {
+            if (data.response) {
+                alert('处理成功');
+            }
+        });;
         }
 
         var ButtonInit = function () {
@@ -219,11 +223,59 @@
             <div id="ModDB" class="form-horizontal" hidden="hidden">
                 <fieldset>
                     <legend>设置数据源</legend>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ModServer, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-sm-4">
+                            @Html.EditorFor(model => model.ModServer, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ModServer, "", new { @class = "text-danger" })
+                        </div>
+                        @Html.LabelFor(model => model.ModDataBase, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-sm-4">
+                            @Html.EditorFor(model => model.ModDataBase, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ModDataBase, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ModUid, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-sm-4">
+                            @Html.EditorFor(model => model.ModUid, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ModUid, "", new { @class = "text-danger" })
+                        </div>
+                        @Html.LabelFor(model => model.ModPassword, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-sm-4">
+                            @Html.EditorFor(model => model.ModPassword, new { htmlAttributes = new { @class = "form-control", @type = "password" } })
+                            @Html.ValidationMessageFor(model => model.ModPassword, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ModDataSource, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-lg-10">
+                            @Html.TextAreaFor(model => model.ModDataSource, new { @class = "form-control", @rows = "4" })
+                            @Html.ValidationMessageFor(model => model.ModDataSource, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
                 </fieldset>
             </div>
             <div id="ModCycle" class="form-horizontal" hidden="hidden">
                 <fieldset>
                     <legend>设置生成周期</legend>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ModCycleType, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-sm-4">
+                            @Html.EditorFor(model => model.ModCycleType, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ModCycleType, "", new { @class = "text-danger" })
+                        </div>
+                        @Html.LabelFor(model => model.ModCycleWD, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-sm-4">
+                            @Html.EditorFor(model => model.ModCycleWD, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ModCycleWD, "", new { @class = "text-danger" })
+                        </div>
+                        @Html.LabelFor(model => model.ModCycleDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-sm-4">
+                            @Html.EditorFor(model => model.ModCycleDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ModCycleDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
                 </fieldset>
             </div>
             <div id="ModFactor" class="form-horizontal" hidden="hidden">

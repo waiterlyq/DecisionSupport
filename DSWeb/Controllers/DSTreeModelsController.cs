@@ -114,9 +114,9 @@ namespace DSWeb.Controllers
         public JsonResult UpLoader()
         {
             HttpPostedFileBase file = Request.Files[0];
-            
+            string strModGUID = Request.QueryString["ModGUID"];
 
-            string dirPath = HttpContext.Server.MapPath("/Uploads/" + Guid.NewGuid().ToString() + "/");
+            string dirPath = HttpContext.Server.MapPath("/Uploads/" + strModGUID + "/");
             if(!Directory.Exists(dirPath))
             {
                 Directory.CreateDirectory(dirPath);
