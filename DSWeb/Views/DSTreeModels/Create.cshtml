@@ -32,9 +32,9 @@
         function divShowHide() {
             if (stepID == 1) {
                 $("#ModMain").show(500);
-                $("#ModDB").hide(500);
+                $("#ModDB").hide();
                 $("#ModCycle").hide();
-                $("#ModFactor").hide(500);
+                $("#ModFactor").hide();
                 $("#btnTestDb").hide();
                 $("#preStep").hide();
                 $("#nextStep").show();
@@ -43,7 +43,7 @@
             }
             else {
                 if (isFile == 1) {
-                    $("#ModMain").hide(500);
+                    $("#ModMain").hide();
                     $("#ModDB").hide();
                     $("#ModCycle").hide();
                     $("#ModFactor").show(500);
@@ -98,7 +98,7 @@
                 enctype: 'multipart/form-data',
                 uploadUrl: uploadUrl, //上传的地址
                 allowedFileExtensions: ['csv', 'xlsx', 'xls'],//接收的文件后缀
-                showUpload: true, //是否显示上传按钮
+                showUpload: false, //是否显示上传按钮
                 showCaption: true,//是否显示标题
                 showPreview: false,
                 dropZoneEnabled: false,
@@ -107,11 +107,7 @@
                 browseClass: "btn btn-primary" //按钮样式
             }).on("filebatchselected", function (event, files) {
                 $(this).fileinput("upload");
-            }).on("fileuploaded", function (event, data) {
-            if (data.response) {
-                alert('处理成功');
-            }
-        });;
+            });
         }
 
         var ButtonInit = function () {

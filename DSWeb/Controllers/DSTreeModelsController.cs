@@ -15,6 +15,8 @@ using Loglib;
 using System.Data.SqlClient;
 using System.IO;
 using System.Text;
+using Csvlib;
+using Excellib;
 
 namespace DSWeb.Controllers
 {
@@ -115,20 +117,26 @@ namespace DSWeb.Controllers
         {
             HttpPostedFileBase file = Request.Files[0];
             string strModGUID = Request.QueryString["ModGUID"];
-
-            string dirPath = HttpContext.Server.MapPath("/Uploads/" + strModGUID + "/");
-            if(!Directory.Exists(dirPath))
+            try
             {
-                Directory.CreateDirectory(dirPath);
+                string dirPath = HttpContext.Server.MapPath("/Uploads/" + strModGUID + "/");
+                if (!Directory.Exists(dirPath))
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
+                string filePath = Path.Combine(dirPath, file.FileName);
+                file.SaveAs(filePath);
+                StreamReader st = new StreamReader(filePath, Encoding.GetEncoding("UTF-8"));
+                RServiceClient client = new RServiceClient();
+                client.saveFile(strModGUID + Path.GetExtension(file.FileName), st.ReadToEnd());
+                st.Dispose();
+                st.Close();
             }
-            string filePath = Path.Combine(dirPath, file.FileName);
-            file.SaveAs(filePath);
-            StreamReader st = new StreamReader(filePath, Encoding.GetEncoding("UTF-8"));
+            catch(Exception e)
+            {
+                MyLog.writeLog("ERROR",e);
+            }
            
-            RServiceClient client = new RServiceClient();
-            client.saveFile(file.FileName, st.ReadToEnd());
-            st.Dispose();
-            st.Close();
             //foreach (HttpPostedFileBase file in FilesInput)
             //{
             //    string filePath = Path.Combine(HttpContext.Server.MapPath("/Uploads/"), Path.GetExtension(file.FileName));
