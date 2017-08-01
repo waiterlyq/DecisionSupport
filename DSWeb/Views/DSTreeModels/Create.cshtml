@@ -18,6 +18,54 @@
             divShowHide();
 
         });
+
+        var TableInit = function () {
+            var oTableInit = new Object();
+            //初始化Table
+            oTableInit.Init = function () {
+                $('#tb_DSTreeModel').bootstrapTable({
+                    url: '/DSTreeModels/GetFieldName?ModGUID="' + '@Model.ModGUID' + "&isFile=" + isFile,         //请求后台的URL（*）
+                    method: 'post',                      //请求方式（*）
+                    striped: false,                      //是否显示行间隔色
+                    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                    pagination: false,                   //是否显示分页（*）
+                    sortable: false,                     //是否启用排序
+                    sortOrder: "asc",                   //排序方式
+                    queryParams: oTableInit.queryParams,
+                    search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                    strictSearch: false,
+                    showColumns: true,                  //是否显示所有的列
+                    showRefresh: true,                  //是否显示刷新按钮
+                    minimumCountColumns: 1,             //最少允许的列数
+                    clickToSelect: true,                //是否启用点击选中行
+                    height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                    uniqueId: "ModGUID",                     //每一行的唯一标识，一般为主键列
+                    showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+                    cardView: false,                    //是否显示详细视图
+                    detailView: false,                   //是否显示父子表
+                    columns: [{
+                        checkbox: true
+                    }, {
+                        field: 'ModName',
+                        title: '模型名称'
+                    }, {
+                        field: 'ModStatus',
+                        title: '模型状态'
+                    }, {
+                        field: 'ModCycleType',
+                        title: '模型生成周期类型'
+                    }, {
+                        field: 'ModRemark',
+                        title: '模型描述'
+                    }, {
+                        field: 'ModDataSource',
+                        title: '模型数据源'
+                    }]
+                });
+            };
+            return oTableInit;
+        };
+
         ///显示隐藏文件上传控件
         function fileShowHide() {
             if ($("input[name='IsFileDataSource']:checked").val() == 1) {
@@ -266,6 +314,8 @@
                             @Html.EditorFor(model => model.ModCycleWD, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.ModCycleWD, "", new { @class = "text-danger" })
                         </div>
+                    </div>
+                    <div class="form-group">
                         @Html.LabelFor(model => model.ModCycleDate, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
                             @Html.EditorFor(model => model.ModCycleDate, new { htmlAttributes = new { @class = "form-control" } })
@@ -277,6 +327,9 @@
             <div id="ModFactor" class="form-horizontal" hidden="hidden">
                 <fieldset>
                     <legend>选择结果属性</legend>
+                    <div class="panel-body" style="padding-bottom:0px;">
+                        <table id="tb_DSTreeCEMaps"></table>
+                    </div>
                 </fieldset>
             </div>
             <div class="form-horizontal">

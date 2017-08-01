@@ -53,6 +53,25 @@ namespace DSWeb.Controllers
             return "success";
         }
 
+        public string GetFieldName()
+        {
+            string ModGUID = Request.QueryString["ModGUID"];
+            string isFile = Request.QueryString["isFile"];
+            if(string.IsNullOrEmpty(isFile)||string.IsNullOrEmpty(ModGUID))
+            {
+                return "";
+            }
+            if(isFile=="1")
+            {
+
+            }
+            else
+            {
+
+            }
+            return "";
+        }
+
         public string CheckDbString(string Server, string DataBase, string Uid, string PassWord)
         {
             string strconn = @"data source=" + Server + ";initial catalog=" + DataBase + ";user id=" + Uid + ";password=" + PassWord;
