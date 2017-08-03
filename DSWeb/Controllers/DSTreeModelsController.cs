@@ -53,23 +53,66 @@ namespace DSWeb.Controllers
             return "success";
         }
 
+        /// <summary>
+        /// 获取列名
+        /// </summary>
+        /// <returns></returns>
         public string GetFieldName()
         {
-            string ModGUID = Request.QueryString["ModGUID"];
+            string strModGUID = Request.QueryString["ModGUID"];
             string isFile = Request.QueryString["isFile"];
-            if(string.IsNullOrEmpty(isFile)||string.IsNullOrEmpty(ModGUID))
+            DataTable dt = new DataTable();
+            if(string.IsNullOrEmpty(isFile)||string.IsNullOrEmpty(strModGUID))
             {
                 return "";
             }
             if(isFile=="1")
             {
-
+                string dirPath = HttpContext.Server.MapPath("/Uploads/" + strModGUID + "/");
+                string strFilePath = Directory.GetFiles(dirPath)[0];
+                DirectoryInfo di = new DirectoryInfo(dirPath);
+                FileInfo fi = di.GetFiles()[0];
+                if(fi.FullName != "")
+                {
+                    if(fi.Extension == ".csv")
+                    {
+                        dt = CsvHelper.GetFieldName(fi.FullName);
+                    }
+                    else
+                    {
+                        ExcelHelper exc = new ExcelHelper(fi.FullName);
+                        dt = exc.GetExcelFieldName();
+                    }
+                }
             }
             else
             {
-
+                string strModDataSource = Request.QueryString["dbs"];
+                if(string.IsNullOrEmpty(strModDataSource))
+                {
+                    return null;
+                }
+                else
+                {
+                    DSTreeModel dbs = JsonConvert.DeserializeObject<DSTreeModel>(strModDataSource);
+                    SQLHelper targetdb = new SQLHelper(dbs.GetConnString());
+                    string strSql = "select top 1 * from (" + dbs.ModDataSource + ") tmp";
+                    DataTable dtTemp = targetdb.GetTable(strSql);
+                    if(dtTemp ==null)
+                    {
+                        return null;
+                    }
+                    int ic = dtTemp.Columns.Count;
+                    dt.Columns.Add("FieldName");
+                    for(int i = 0; i < ic;i++)
+                    {
+                        DataRow dr = dt.NewRow();
+                        dr[0] = dtTemp.Columns[i].ColumnName;
+                        dt.Rows.Add(dr);
+                    }
+                }
             }
-            return "";
+            return JsonConvert.SerializeObject(dt);
         }
 
         public string CheckDbString(string Server, string DataBase, string Uid, string PassWord)
@@ -132,6 +175,11 @@ namespace DSWeb.Controllers
             return Json(new { total = total, rows = rows }, JsonRequestBehavior.AllowGet);
         }
 
+
+        /// <summary>
+        /// 上传文件
+        /// </summary>
+        /// <returns></returns>
         public JsonResult UpLoader()
         {
             HttpPostedFileBase file = Request.Files[0];

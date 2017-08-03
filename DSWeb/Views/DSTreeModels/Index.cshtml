@@ -10,7 +10,7 @@
     <link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap-table.min.css" rel="stylesheet" />
     <link href="~/Content/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" type="text/css" />
-
+    <link href="~/Content/bootstrapValidator.min.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="~/Scripts/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
     <script type="text/javascript" src="~/Scripts/fileinput.min.js"></script>
@@ -19,6 +19,7 @@
     <script type="text/javascript" src="~/Scripts/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrapValidator.min.js"></script>
     <script type="text/javascript">
         $(function () {
             //1.初始化Table
@@ -41,7 +42,7 @@
                     url: '/DSTreeModels/GetDSTreeModelList',         //请求后台的URL（*）
                     method: 'post',                      //请求方式（*）
                     toolbar: '#toolbar',                //工具按钮用哪个容器
-                    striped: false,                      //是否显示行间隔色
+                    striped: true,                      //是否显示行间隔色
                     cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                     pagination: true,                   //是否显示分页（*）
                     sortable: false,                     //是否启用排序
@@ -56,6 +57,7 @@
                     showColumns: true,                  //是否显示所有的列
                     showRefresh: true,                  //是否显示刷新按钮
                     minimumCountColumns: 2,             //最少允许的列数
+                    singleSelect:true,
                     clickToSelect: true,                //是否启用点击选中行
                     height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
                     uniqueId: "ModGUID",                     //每一行的唯一标识，一般为主键列
@@ -76,9 +78,6 @@
                     }, {
                         field: 'ModRemark',
                         title: '模型描述'
-                    },{
-                        field: 'ModDataSource',
-                        title: '模型数据源'
                     }]
                 });
             };
@@ -92,10 +91,11 @@
             oInit.Init = function () {
                 ///新增
                 $("#btn_xz").click(function () {
-                    $("#modal").removeData();
-                    $("#modal").modal({
-                        remote: "/DSTreeModels/Create"
-                    })
+                    //$("#modal").removeData();
+                    //$("#modal").modal({
+                    //    remote: "/DSTreeModels/Create"
+                    //})
+                    window.open("/DSTreeModels/Create");
                 });
 
                 ////修改

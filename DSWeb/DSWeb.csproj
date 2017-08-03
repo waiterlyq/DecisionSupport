@@ -176,6 +176,8 @@
     <Content Include="Content\bootstrap3-editable\css\bootstrap-editable.css" />
     <Content Include="Content\bootstrap3-editable\img\clear.png" />
     <Content Include="Content\bootstrap3-editable\img\loading.gif" />
+    <Content Include="Content\bootstrapValidator.css" />
+    <Content Include="Content\bootstrapValidator.min.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\img\diy\1_close.png" />
     <Content Include="Content\img\diy\1_open.png" />
@@ -253,6 +255,8 @@
     <Content Include="Scripts\bootstrap-editable\js\bootstrap-editable.min.js" />
     <Content Include="Scripts\bootstrap3-editable\js\bootstrap-editable.js" />
     <Content Include="Scripts\bootstrap3-editable\js\bootstrap-editable.min.js" />
+    <Content Include="Scripts\bootstrapValidator.js" />
+    <Content Include="Scripts\bootstrapValidator.min.js" />
     <Content Include="Scripts\d3\d3.js" />
     <Content Include="Scripts\d3\d3.min.js" />
     <Content Include="Scripts\d3\README.md" />

@@ -5,26 +5,77 @@
 <!DOCTYPE html>
 <html>
 <head>
+   
     <meta name="viewport" content="width=device-width" />
     <title>新增</title>
+     <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrapValidator.min.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="~/Scripts/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/fileinput.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/Inputfilezh.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-table/bootstrap-table.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrapValidator.min.js"></script>
     <script>
         var stepID = 1;
         var isFile = 0;
         $(function () {
             $("#ModFile").hide();
             var oButtonInit = new ButtonInit();
+            var oValidator = new ValidatorInit();
             oButtonInit.Init();
+            oValidator.Init();
             initFileInput("FileData", "DSTreeModels/UpLoader?ModGUID=" + '@Model.ModGUID')
             divShowHide();
-
+           
         });
+        var ValidatorInit = function () {
+            var oValidator = new Object();
+            ///初始化表单校验
+            oValidator.Init = function()
+            {
+                $('form').bootstrapValidator({
+                    message: 'This value is not valid',
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        ModName: {
+                            message: '模型名称不能为空',
+                            validators: {
+                                notEmpty: {
+                                    message: '模型名称不能为空'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            return oValidator;
+        }
 
         var TableInit = function () {
             var oTableInit = new Object();
             //初始化Table
             oTableInit.Init = function () {
-                $('#tb_DSTreeModel').bootstrapTable({
-                    url: '/DSTreeModels/GetFieldName?ModGUID="' + '@Model.ModGUID' + "&isFile=" + isFile,         //请求后台的URL（*）
+                var dbs = {
+                    ModServer: $('#ModServer').val(),
+                    ModDataBase: $('#ModDataBase').val(),
+                    ModUid: $('#ModUid').val(),
+                    ModPassword: $('#ModPassword').val(),
+                    ModDataSource: $('#ModDataSource').val()
+                };
+                $('#tb_DSTreeCEMaps').bootstrapTable({
+                    url: '/DSTreeModels/GetFieldName?ModGUID=' + '@Model.ModGUID' + '&isFile=' + isFile + '&dbs=' + JSON.stringify(dbs),         //请求后台的URL（*）
                     method: 'post',                      //请求方式（*）
                     striped: false,                      //是否显示行间隔色
                     cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
@@ -34,32 +85,21 @@
                     queryParams: oTableInit.queryParams,
                     search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
                     strictSearch: false,
-                    showColumns: true,                  //是否显示所有的列
-                    showRefresh: true,                  //是否显示刷新按钮
+                    showColumns: false,                  //是否显示所有的列
+                    showRefresh: false,                  //是否显示刷新按钮
                     minimumCountColumns: 1,             //最少允许的列数
                     clickToSelect: true,                //是否启用点击选中行
-                    height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
-                    uniqueId: "ModGUID",                     //每一行的唯一标识，一般为主键列
+                    //height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                    uniqueId: "FieldName",                     //每一行的唯一标识，一般为主键列
                     showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
                     cardView: false,                    //是否显示详细视图
                     detailView: false,                   //是否显示父子表
+                    singleSelect: true,
                     columns: [{
                         checkbox: true
                     }, {
-                        field: 'ModName',
-                        title: '模型名称'
-                    }, {
-                        field: 'ModStatus',
-                        title: '模型状态'
-                    }, {
-                        field: 'ModCycleType',
-                        title: '模型生成周期类型'
-                    }, {
-                        field: 'ModRemark',
-                        title: '模型描述'
-                    }, {
-                        field: 'ModDataSource',
-                        title: '模型数据源'
+                        field: 'FieldName',
+                        title: '字段名称'
                     }]
                 });
             };
@@ -76,6 +116,8 @@
             }
         }
 
+        
+
         ///显示隐藏步骤div
         function divShowHide() {
             if (stepID == 1) {
@@ -86,7 +128,7 @@
                 $("#btnTestDb").hide();
                 $("#preStep").hide();
                 $("#nextStep").show();
-                $("#save").hide();
+                $("#save").show();
                 fileShowHide();
             }
             else {
@@ -99,6 +141,8 @@
                     $("#preStep").show();
                     $("#nextStep").hide();
                     $("#save").show();
+                    var oTable = new TableInit();
+                    oTable.Init();
                 }
                 else {
                     switch (stepID) {
@@ -131,6 +175,8 @@
                             $("#preStep").show();
                             $("#nextStep").hide();
                             $("#save").show();
+                            var oTable = new TableInit();
+                            oTable.Init();
                             break;
                     }
                 }
@@ -227,8 +273,7 @@
         </button>
         <h3>新增模型</h3>
     </div>
-    @using (Html.BeginForm())
-    {
+    <form>
         @Html.AntiForgeryToken()
         <div class="modal-body">
             <div id="ModMain" class="form-horizontal">
@@ -238,7 +283,7 @@
                         @Html.LabelFor(model => model.ModName, htmlAttributes: new { @class = "control-label col-md-3" })
                         <div class="col-md-7">
                             @Html.EditorFor(model => model.ModName, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ModName, "", new { @class = "text-danger" })
+                           
                         </div>
                     </div>
                     <div class="form-group">
@@ -246,7 +291,7 @@
                         <div class="col-md-3">
                             @Html.RadioButtonFor(model => model.IsFileDataSource, 1)是
                             @Html.RadioButtonFor(model => model.IsFileDataSource, 0, htmlAttributes: new { @checked = "true" })否
-                            @Html.ValidationMessageFor(model => model.IsFileDataSource, "", new { @class = "text-danger" })
+                          
                         </div>
                     </div>
                     <div id="ModFile" class="form-group text-center">
@@ -259,7 +304,7 @@
                         @Html.LabelFor(model => model.ModRemark, htmlAttributes: new { @class = "control-label col-md-3" })
                         <div class="col-lg-7">
                             @Html.TextAreaFor(model => model.ModRemark, new { @class = "form-control", @rows = "6" })
-                            @Html.ValidationMessageFor(model => model.ModRemark, "", new { @class = "text-danger" })
+                           
                         </div>
                     </div>
                 </fieldset>
@@ -271,31 +316,29 @@
                         @Html.LabelFor(model => model.ModServer, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
                             @Html.EditorFor(model => model.ModServer, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ModServer, "", new { @class = "text-danger" })
+                           
                         </div>
                         @Html.LabelFor(model => model.ModDataBase, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModDataBase, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ModDataBase, "", new { @class = "text-danger" })
+                            @Html.EditorFor(model => model.ModDataBase, new { htmlAttributes = new { @class = "form-control" } })    
                         </div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.ModUid, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
                             @Html.EditorFor(model => model.ModUid, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ModUid, "", new { @class = "text-danger" })
+                           
                         </div>
                         @Html.LabelFor(model => model.ModPassword, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
                             @Html.EditorFor(model => model.ModPassword, new { htmlAttributes = new { @class = "form-control", @type = "password" } })
-                            @Html.ValidationMessageFor(model => model.ModPassword, "", new { @class = "text-danger" })
+                            
                         </div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.ModDataSource, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-lg-10">
                             @Html.TextAreaFor(model => model.ModDataSource, new { @class = "form-control", @rows = "4" })
-                            @Html.ValidationMessageFor(model => model.ModDataSource, "", new { @class = "text-danger" })
                         </div>
                     </div>
                 </fieldset>
@@ -307,19 +350,16 @@
                         @Html.LabelFor(model => model.ModCycleType, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
                             @Html.EditorFor(model => model.ModCycleType, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ModCycleType, "", new { @class = "text-danger" })
                         </div>
                         @Html.LabelFor(model => model.ModCycleWD, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
                             @Html.EditorFor(model => model.ModCycleWD, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ModCycleWD, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.ModCycleDate, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
                             @Html.EditorFor(model => model.ModCycleDate, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ModCycleDate, "", new { @class = "text-danger" })
                         </div>
                     </div>
                 </fieldset>
@@ -343,7 +383,7 @@
                 </div>
             </div>
         </div>
-    }
+    </form>
     @*@using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
