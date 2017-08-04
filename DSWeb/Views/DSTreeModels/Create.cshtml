@@ -5,15 +5,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-   
+
     <meta name="viewport" content="width=device-width" />
     <title>新增</title>
-     <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/bootstrap-table.min.css" rel="stylesheet" />
-    <link href="~/Content/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/bootstrapValidator.min.css" rel="stylesheet" type="text/css" />
+
     <script type="text/javascript" src="~/Scripts/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
     <script type="text/javascript" src="~/Scripts/fileinput.min.js"></script>
@@ -23,6 +18,12 @@
     <script type="text/javascript" src="~/Scripts/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrapValidator.min.js"></script>
+    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrapValidator.min.css" rel="stylesheet" type="text/css" />
     <script>
         var stepID = 1;
         var isFile = 0;
@@ -32,15 +33,13 @@
             var oValidator = new ValidatorInit();
             oButtonInit.Init();
             oValidator.Init();
-            initFileInput("FileData", "DSTreeModels/UpLoader?ModGUID=" + '@Model.ModGUID')
-            divShowHide();
-           
+            fileShowHide();
+            initFileInput("FileData", "UpLoader?ModGUID=" + '@Model.ModGUID')
         });
         var ValidatorInit = function () {
             var oValidator = new Object();
             ///初始化表单校验
-            oValidator.Init = function()
-            {
+            oValidator.Init = function () {
                 $('form').bootstrapValidator({
                     message: 'This value is not valid',
                     feedbackIcons: {
@@ -109,79 +108,20 @@
         ///显示隐藏文件上传控件
         function fileShowHide() {
             if ($("input[name='IsFileDataSource']:checked").val() == 1) {
-                $("#ModFile").show(300);
-            }
-            else {
-                $("#ModFile").hide(300);
-            }
-        }
-
-        
-
-        ///显示隐藏步骤div
-        function divShowHide() {
-            if (stepID == 1) {
-                $("#ModMain").show(500);
-                $("#ModDB").hide();
-                $("#ModCycle").hide();
-                $("#ModFactor").hide();
+                $("#ModFile").show();
+                $("#ModDB").hide(300);
+                $("#ModCycle").hide(300);
                 $("#btnTestDb").hide();
-                $("#preStep").hide();
-                $("#nextStep").show();
-                $("#save").show();
-                fileShowHide();
             }
             else {
-                if (isFile == 1) {
-                    $("#ModMain").hide();
-                    $("#ModDB").hide();
-                    $("#ModCycle").hide();
-                    $("#ModFactor").show(500);
-                    $("#btnTestDb").hide();
-                    $("#preStep").show();
-                    $("#nextStep").hide();
-                    $("#save").show();
-                    var oTable = new TableInit();
-                    oTable.Init();
-                }
-                else {
-                    switch (stepID) {
-                        case 2:
-                            $("#ModMain").hide();
-                            $("#ModDB").show(500);
-                            $("#ModCycle").hide();
-                            $("#ModFactor").hide();
-                            $("#btnTestDb").show();
-                            $("#preStep").show();
-                            $("#nextStep").show();
-                            $("#save").hide();
-                            break;
-                        case 3:
-                            $("#ModMain").hide();
-                            $("#ModDB").hide();
-                            $("#ModCycle").show(500);
-                            $("#ModFactor").hide();
-                            $("#btnTestDb").hide();
-                            $("#preStep").show();
-                            $("#nextStep").show();
-                            $("#save").hide();
-                            break;
-                        case 4:
-                            $("#ModMain").hide();
-                            $("#ModDB").hide();
-                            $("#ModCycle").hide();
-                            $("#ModFactor").show(500);
-                            $("#btnTestDb").hide();
-                            $("#preStep").show();
-                            $("#nextStep").hide();
-                            $("#save").show();
-                            var oTable = new TableInit();
-                            oTable.Init();
-                            break;
-                    }
-                }
+                $("#ModFile").hide();
+                $("#ModDB").show(300);
+                $("#ModCycle").show(300);
+                $("#btnTestDb").show();
             }
         }
+
+
 
         //初始化fileinput控件（第一次初始化）
         function initFileInput(ctrlName, uploadUrl) {
@@ -197,9 +137,12 @@
                 showPreview: false,
                 dropZoneEnabled: false,
                 maxFileCount: 1,
+                minFileCount: 1,
+                msgErrorClass:'file-error-message',
                 dropZoneTitle: "拖拽文件到这里 &hellip;",
                 browseClass: "btn btn-primary" //按钮样式
             }).on("filebatchselected", function (event, files) {
+                debugger;
                 $(this).fileinput("upload");
             });
         }
@@ -246,17 +189,6 @@
 
                     });
                 });
-                $("#preStep").click(function () {
-                    stepID--;
-                    divShowHide();
-                });
-                $("#nextStep").click(function () {
-                    if (stepID == 1) {
-                        isFile = $("input[name='IsFileDataSource']:checked").val();
-                    }
-                    stepID++;
-                    divShowHide();
-                });
                 $("input[name='IsFileDataSource']").change(function () {
                     fileShowHide();
                 });
@@ -267,10 +199,6 @@
 </head>
 <body>
     <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"
-                aria-hidden="true">
-            ×
-        </button>
         <h3>新增模型</h3>
     </div>
     <form>
@@ -283,28 +211,27 @@
                         @Html.LabelFor(model => model.ModName, htmlAttributes: new { @class = "control-label col-md-3" })
                         <div class="col-md-7">
                             @Html.EditorFor(model => model.ModName, new { htmlAttributes = new { @class = "form-control" } })
-                           
+
                         </div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.IsFileDataSource, htmlAttributes: new { @class = "control-label col-md-3" })
                         <div class="col-md-3">
-                            @Html.RadioButtonFor(model => model.IsFileDataSource, 1)是
-                            @Html.RadioButtonFor(model => model.IsFileDataSource, 0, htmlAttributes: new { @checked = "true" })否
-                          
+                            @Html.RadioButtonFor(model => model.IsFileDataSource, 1, htmlAttributes: new { @checked = "true" })是
+                            @Html.RadioButtonFor(model => model.IsFileDataSource, 0)否
                         </div>
                     </div>
                     <div id="ModFile" class="form-group text-center">
                         <div class="col-md-3 text-right"><label class="control-label">上传文件</label></div>
                         <div class="col-md-5" style="padding-bottom:20px;text-align:center">
-                            <input id="FileData" type="file" />
+                            <input id="FileData" name="FileData" type="file" />
                         </div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.ModRemark, htmlAttributes: new { @class = "control-label col-md-3" })
                         <div class="col-lg-7">
                             @Html.TextAreaFor(model => model.ModRemark, new { @class = "form-control", @rows = "6" })
-                           
+
                         </div>
                     </div>
                 </fieldset>
@@ -316,23 +243,23 @@
                         @Html.LabelFor(model => model.ModServer, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
                             @Html.EditorFor(model => model.ModServer, new { htmlAttributes = new { @class = "form-control" } })
-                           
+
                         </div>
                         @Html.LabelFor(model => model.ModDataBase, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModDataBase, new { htmlAttributes = new { @class = "form-control" } })    
+                            @Html.EditorFor(model => model.ModDataBase, new { htmlAttributes = new { @class = "form-control" } })
                         </div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.ModUid, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
                             @Html.EditorFor(model => model.ModUid, new { htmlAttributes = new { @class = "form-control" } })
-                           
+
                         </div>
                         @Html.LabelFor(model => model.ModPassword, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
                             @Html.EditorFor(model => model.ModPassword, new { htmlAttributes = new { @class = "form-control", @type = "password" } })
-                            
+
                         </div>
                     </div>
                     <div class="form-group">
@@ -367,17 +294,15 @@
             <div id="ModFactor" class="form-horizontal" hidden="hidden">
                 <fieldset>
                     <legend>选择结果属性</legend>
-                    <div class="panel-body" style="padding-bottom:0px;">
-                        <table id="tb_DSTreeCEMaps"></table>
-                    </div>
+                    @*<div class="panel-body" style="padding-bottom:0px;">
+                            <table id="tb_DSTreeCEMaps"></table>
+                        </div>*@
                 </fieldset>
             </div>
             <div class="form-horizontal">
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10 text-center">
                         <input id="btnTestDb" type="button" value="测试数据库连接" class="btn btn-default" />
-                        <input id="preStep" type="button" value="上一步" class="btn btn-default" />
-                        <input id="nextStep" type="button" value="下一步" class="btn btn-default" />
                         <input id="save" type="submit" value="保存" class="btn btn-default" />
                     </div>
                 </div>
