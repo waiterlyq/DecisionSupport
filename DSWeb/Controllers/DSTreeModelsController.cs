@@ -57,61 +57,69 @@ namespace DSWeb.Controllers
         /// 获取列名
         /// </summary>
         /// <returns></returns>
-        public string GetFieldName()
+        public string GetFieldName(string ModGUID, string isFile, string ModDataSource)
         {
-            string strModGUID = Request.QueryString["ModGUID"];
-            string isFile = Request.QueryString["isFile"];
             DataTable dt = new DataTable();
-            if(string.IsNullOrEmpty(isFile)||string.IsNullOrEmpty(strModGUID))
+            if (string.IsNullOrEmpty(isFile) || string.IsNullOrEmpty(ModGUID))
             {
                 return "";
             }
-            if(isFile=="1")
+            try
             {
-                string dirPath = HttpContext.Server.MapPath("/Uploads/" + strModGUID + "/");
-                string strFilePath = Directory.GetFiles(dirPath)[0];
-                DirectoryInfo di = new DirectoryInfo(dirPath);
-                FileInfo fi = di.GetFiles()[0];
-                if(fi.FullName != "")
+                ///文件类型数据
+                if (isFile == "1")
                 {
-                    if(fi.Extension == ".csv")
+                    string dirPath = HttpContext.Server.MapPath("/Uploads/" + ModGUID + "/");
+                    DirectoryInfo di = new DirectoryInfo(dirPath);
+                    FileInfo fi = di.GetFiles()[0];
+                    if (fi.FullName != "")
                     {
-                        dt = CsvHelper.GetFieldName(fi.FullName);
-                    }
-                    else
-                    {
-                        ExcelHelper exc = new ExcelHelper(fi.FullName);
-                        dt = exc.GetExcelFieldName();
+                        if (fi.Extension == ".csv")
+                        {
+                            dt = CsvHelper.GetFieldName(fi.FullName);
+                        }
+                        else
+                        {
+                            using (ExcelHelper exc = new ExcelHelper(fi.FullName))
+                            {
+                                dt = exc.GetExcelFieldName();
+                            }
+                        }
                     }
                 }
-            }
-            else
-            {
-                string strModDataSource = Request.QueryString["dbs"];
-                if(string.IsNullOrEmpty(strModDataSource))
-                {
-                    return null;
-                }
+                ////数据库类型数据
                 else
                 {
-                    DSTreeModel dbs = JsonConvert.DeserializeObject<DSTreeModel>(strModDataSource);
-                    SQLHelper targetdb = new SQLHelper(dbs.GetConnString());
-                    string strSql = "select top 1 * from (" + dbs.ModDataSource + ") tmp";
-                    DataTable dtTemp = targetdb.GetTable(strSql);
-                    if(dtTemp ==null)
+                    if (string.IsNullOrEmpty(ModDataSource))
                     {
                         return null;
                     }
-                    int ic = dtTemp.Columns.Count;
-                    dt.Columns.Add("FieldName");
-                    for(int i = 0; i < ic;i++)
+                    else
                     {
-                        DataRow dr = dt.NewRow();
-                        dr[0] = dtTemp.Columns[i].ColumnName;
-                        dt.Rows.Add(dr);
+                        DSTreeModel dbs = JsonConvert.DeserializeObject<DSTreeModel>(ModDataSource);
+                        SQLHelper targetdb = new SQLHelper(dbs.GetConnString());
+                        string strSql = "select top 1 * from (" + dbs.ModDataSource + ") tmp";
+                        DataTable dtTemp = targetdb.GetTable(strSql);
+                        if (dtTemp == null)
+                        {
+                            return null;
+                        }
+                        int ic = dtTemp.Columns.Count;
+                        dt.Columns.Add("FieldName");
+                        for (int i = 0; i < ic; i++)
+                        {
+                            DataRow dr = dt.NewRow();
+                            dr[0] = dtTemp.Columns[i].ColumnName;
+                            dt.Rows.Add(dr);
+                        }
                     }
                 }
             }
+            catch (Exception e)
+            {
+                MyLog.writeLog("EEROR", e);
+            }
+
             return JsonConvert.SerializeObject(dt);
         }
 
@@ -184,12 +192,22 @@ namespace DSWeb.Controllers
         {
             HttpPostedFileBase file = Request.Files[0];
             string strModGUID = Request.QueryString["ModGUID"];
+            string dirPath = HttpContext.Server.MapPath("/Uploads/" + strModGUID + "/");
+
             try
             {
-                string dirPath = HttpContext.Server.MapPath("/Uploads/" + strModGUID + "/");
                 if (!Directory.Exists(dirPath))
                 {
                     Directory.CreateDirectory(dirPath);
+                }
+                else
+                {
+                    DirectoryInfo di = new DirectoryInfo(dirPath);
+                    FileInfo[] fis = di.GetFiles();
+                    foreach (FileInfo fi in fis)
+                    {
+                        System.IO.File.Delete(fi.FullName);
+                    }
                 }
                 string filePath = Path.Combine(dirPath, file.FileName);
                 file.SaveAs(filePath);
@@ -199,16 +217,28 @@ namespace DSWeb.Controllers
                 st.Dispose();
                 st.Close();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                MyLog.writeLog("ERROR",e);
+                MyLog.writeLog("ERROR", e);
             }
-           
+
             //foreach (HttpPostedFileBase file in FilesInput)
             //{
             //    string filePath = Path.Combine(HttpContext.Server.MapPath("/Uploads/"), Path.GetExtension(file.FileName));
             //    file.SaveAs(filePath);
             //}
+            return Json(new { });
+        }
+
+        public JsonResult DeleteFile(string ModGUID)
+        {
+            string dirPath = HttpContext.Server.MapPath("/Uploads/" + ModGUID + "/");
+            DirectoryInfo di = new DirectoryInfo(dirPath);
+            FileInfo[] fis = di.GetFiles();
+            foreach (FileInfo fi in fis)
+            {
+                System.IO.File.Delete(fi.FullName);
+            }
             return Json(new { });
         }
 

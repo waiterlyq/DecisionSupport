@@ -13,28 +13,23 @@
     <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
     <script type="text/javascript" src="~/Scripts/fileinput.min.js"></script>
     <script type="text/javascript" src="~/Scripts/Inputfilezh.js"></script>
-    <script type="text/javascript" src="~/Scripts/bootstrap-table/bootstrap-table.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrapValidator.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-select.min.js"></script>
     <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/bootstrap-table.min.css" rel="stylesheet" />
-    <link href="~/Content/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrapValidator.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
     <script>
-        var stepID = 1;
-        var isFile = 0;
         $(function () {
-            $("#ModFile").hide();
+
             var oButtonInit = new ButtonInit();
             var oValidator = new ValidatorInit();
             oButtonInit.Init();
             oValidator.Init();
+            initFileInput("FileData", "UpLoader?ModGUID=" + '@Model.ModGUID');
             fileShowHide();
-            initFileInput("FileData", "UpLoader?ModGUID=" + '@Model.ModGUID')
+
         });
         var ValidatorInit = function () {
             var oValidator = new Object();
@@ -62,65 +57,23 @@
             return oValidator;
         }
 
-        var TableInit = function () {
-            var oTableInit = new Object();
-            //初始化Table
-            oTableInit.Init = function () {
-                var dbs = {
-                    ModServer: $('#ModServer').val(),
-                    ModDataBase: $('#ModDataBase').val(),
-                    ModUid: $('#ModUid').val(),
-                    ModPassword: $('#ModPassword').val(),
-                    ModDataSource: $('#ModDataSource').val()
-                };
-                $('#tb_DSTreeCEMaps').bootstrapTable({
-                    url: '/DSTreeModels/GetFieldName?ModGUID=' + '@Model.ModGUID' + '&isFile=' + isFile + '&dbs=' + JSON.stringify(dbs),         //请求后台的URL（*）
-                    method: 'post',                      //请求方式（*）
-                    striped: false,                      //是否显示行间隔色
-                    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
-                    pagination: false,                   //是否显示分页（*）
-                    sortable: false,                     //是否启用排序
-                    sortOrder: "asc",                   //排序方式
-                    queryParams: oTableInit.queryParams,
-                    search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
-                    strictSearch: false,
-                    showColumns: false,                  //是否显示所有的列
-                    showRefresh: false,                  //是否显示刷新按钮
-                    minimumCountColumns: 1,             //最少允许的列数
-                    clickToSelect: true,                //是否启用点击选中行
-                    //height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
-                    uniqueId: "FieldName",                     //每一行的唯一标识，一般为主键列
-                    showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
-                    cardView: false,                    //是否显示详细视图
-                    detailView: false,                   //是否显示父子表
-                    singleSelect: true,
-                    columns: [{
-                        checkbox: true
-                    }, {
-                        field: 'FieldName',
-                        title: '字段名称'
-                    }]
-                });
-            };
-            return oTableInit;
-        };
-
         ///显示隐藏文件上传控件
         function fileShowHide() {
             if ($("input[name='IsFileDataSource']:checked").val() == 1) {
-                $("#ModFile").show();
+                $("#ModFileL").show(300);
+                $("#ModFileI").show(300);
                 $("#ModDB").hide(300);
                 $("#ModCycle").hide(300);
                 $("#btnTestDb").hide();
             }
             else {
-                $("#ModFile").hide();
+                $("#ModFileL").hide(300);
+                $("#ModFileI").hide(300);
                 $("#ModDB").show(300);
                 $("#ModCycle").show(300);
                 $("#btnTestDb").show();
             }
         }
-
 
 
         //初始化fileinput控件（第一次初始化）
@@ -136,15 +89,56 @@
                 showCaption: true,//是否显示标题
                 showPreview: false,
                 dropZoneEnabled: false,
+                showRemove: false,
                 maxFileCount: 1,
                 minFileCount: 1,
                 msgErrorClass: 'file-error-message',
+                msgValidationErrorClass: 'text-danger',
                 dropZoneTitle: "拖拽文件到这里 &hellip;",
                 browseClass: "btn btn-primary" //按钮样式
             }).on("filebatchselected", function (event, files) {
-                debugger;
                 $(this).fileinput("upload");
-            });
+            }).on("fileuploaded", function (event, data, previewId, index) {
+                var oSelectInit = new SelectInit();
+                oSelectInit.Init();
+            });;
+        }
+
+        var SelectInit = function () {
+            var oInit = new Object();
+            oInit.Init = function () {
+                alert(0);
+                var dbs = {
+                    ModServer: $('#ModServer').val(),
+                    ModDataBase: $('#ModDataBase').val(),
+                    ModUid: $('#ModUid').val(),
+                    ModPassword: $('#ModPassword').val(),
+                    ModDataSource: $('#ModDataSource').val()
+                };
+                $("#resultSelector").find("option").remove();
+                $.ajax({
+                    type: "post",
+                    url: '/DSTreeModels/GetFieldName',
+                    data: { ModGUID: '@Model.ModGUID', isFile: $("input[name='IsFileDataSource']:checked").val(), ModDataSource: JSON.stringify(dbs) },
+                    success: function (data) {
+                        var json = eval(data); //数组
+                        $.each(json, function (index, item) {
+                            $("#resultSelector").append("<option value='" + json[index].FieldName + "'>" + json[index].FieldName + "</option>");
+                        });
+
+
+                    },
+                    error: function () {
+
+                    },
+                    complete: function () {
+
+                    }
+
+                });
+
+            }
+            return oInit;
         }
 
         var ButtonInit = function () {
@@ -218,27 +212,23 @@
                             @Html.RadioButtonFor(model => model.IsFileDataSource, 0)否
                         </div>
                     </div>
-                    <div id="ModFile" class="form-group text-center">
-                        <div class="col-md-2 text-right">
+                    <div class="form-group text-center">
+                        <div id="ModFileL" class="col-md-2 text-right">
                             <label class="control-label">上传文件</label>
                         </div>
-                        <div class="col-md-4" style="padding-bottom:20px;text-align:center">
-                            <input id="FileData" name="FileData" type="file" />
+                        <div id="ModFileI" class="col-md-4" style="padding-bottom:20px;text-align:center">
+                            <input id="FileData" class="input-sm" name="FileData" type="file" />
                         </div>
                         <div class="col-md-2 text-right">
                             <label class="control-label">结果属性</label>
                         </div>
                         <div class="col-md-4">
-                            <select class="form-control">
-                                <option>
-                                    1
-                                </option>
-                            </select>
+                            <select id="resultSelector" class="form-control input-sm"></select>
                         </div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.ModRemark, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-8">
+                        <div class="col-md-10">
                             @Html.TextAreaFor(model => model.ModRemark, new { @class = "form-control", @rows = "6" })
 
                         </div>
@@ -285,7 +275,11 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.ModCycleType, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModCycleType, new { htmlAttributes = new { @class = "form-control  input-sm" } })
+                            <select id="ModCycleTypeSelector" class="form-control input-sm">
+                                <option value="Month">月</option>
+                                <option value="Week">周</option>
+                                <option value="None">无</option>
+                            </select>
                         </div>
                         @Html.LabelFor(model => model.ModCycleWD, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
