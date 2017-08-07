@@ -138,7 +138,7 @@
                 dropZoneEnabled: false,
                 maxFileCount: 1,
                 minFileCount: 1,
-                msgErrorClass:'file-error-message',
+                msgErrorClass: 'file-error-message',
                 dropZoneTitle: "拖拽文件到这里 &hellip;",
                 browseClass: "btn btn-primary" //按钮样式
             }).on("filebatchselected", function (event, files) {
@@ -208,28 +208,37 @@
                 <fieldset>
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="form-group">
-                        @Html.LabelFor(model => model.ModName, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-7">
-                            @Html.EditorFor(model => model.ModName, new { htmlAttributes = new { @class = "form-control" } })
-
+                        @Html.LabelFor(model => model.ModName, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.ModName, new { htmlAttributes = new { @class = "form-control input-sm" } })
                         </div>
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.IsFileDataSource, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-3">
+                        @Html.LabelFor(model => model.IsFileDataSource, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
                             @Html.RadioButtonFor(model => model.IsFileDataSource, 1, htmlAttributes: new { @checked = "true" })是
                             @Html.RadioButtonFor(model => model.IsFileDataSource, 0)否
                         </div>
                     </div>
                     <div id="ModFile" class="form-group text-center">
-                        <div class="col-md-3 text-right"><label class="control-label">上传文件</label></div>
-                        <div class="col-md-5" style="padding-bottom:20px;text-align:center">
+                        <div class="col-md-2 text-right">
+                            <label class="control-label">上传文件</label>
+                        </div>
+                        <div class="col-md-4" style="padding-bottom:20px;text-align:center">
                             <input id="FileData" name="FileData" type="file" />
+                        </div>
+                        <div class="col-md-2 text-right">
+                            <label class="control-label">结果属性</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-control">
+                                <option>
+                                    1
+                                </option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(model => model.ModRemark, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-lg-7">
+                        @Html.LabelFor(model => model.ModRemark, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-8">
                             @Html.TextAreaFor(model => model.ModRemark, new { @class = "form-control", @rows = "6" })
 
                         </div>
@@ -242,30 +251,30 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.ModServer, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModServer, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.ModServer, new { htmlAttributes = new { @class = "form-control  input-sm" } })
 
                         </div>
                         @Html.LabelFor(model => model.ModDataBase, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModDataBase, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.ModDataBase, new { htmlAttributes = new { @class = "form-control  input-sm" } })
                         </div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.ModUid, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModUid, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.ModUid, new { htmlAttributes = new { @class = "form-control  input-sm" } })
 
                         </div>
                         @Html.LabelFor(model => model.ModPassword, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModPassword, new { htmlAttributes = new { @class = "form-control", @type = "password" } })
+                            @Html.EditorFor(model => model.ModPassword, new { htmlAttributes = new { @class = "form-control  input-sm", @type = "password" } })
 
                         </div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.ModDataSource, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-lg-10">
-                            @Html.TextAreaFor(model => model.ModDataSource, new { @class = "form-control", @rows = "4" })
+                            @Html.TextAreaFor(model => model.ModDataSource, new { @class = "form-control  input-sm", @rows = "4" })
                         </div>
                     </div>
                 </fieldset>
@@ -276,27 +285,19 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.ModCycleType, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModCycleType, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.ModCycleType, new { htmlAttributes = new { @class = "form-control  input-sm" } })
                         </div>
                         @Html.LabelFor(model => model.ModCycleWD, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModCycleWD, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.ModCycleWD, new { htmlAttributes = new { @class = "form-control  input-sm" } })
                         </div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.ModCycleDate, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModCycleDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.ModCycleDate, new { htmlAttributes = new { @class = "form-control  input-sm" } })
                         </div>
                     </div>
-                </fieldset>
-            </div>
-            <div id="ModFactor" class="form-horizontal" hidden="hidden">
-                <fieldset>
-                    <legend>选择结果属性</legend>
-                    @*<div class="panel-body" style="padding-bottom:0px;">
-                            <table id="tb_DSTreeCEMaps"></table>
-                        </div>*@
                 </fieldset>
             </div>
             <div class="form-horizontal">
