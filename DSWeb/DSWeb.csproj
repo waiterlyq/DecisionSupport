@@ -146,6 +146,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-datetimepicker.css" />
+    <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\bootstrap-editable\css\bootstrap-editable.css" />
     <Content Include="Content\bootstrap-editable\img\clear.png" />
     <Content Include="Content\bootstrap-editable\img\loading.gif" />
@@ -253,6 +255,8 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="log4net.config" />
     <Content Include="Models\DS.edmx.sql" />
+    <Content Include="Scripts\bootstrap-datetimepicker.js" />
+    <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap-editable\js\bootstrap-editable.js" />
     <Content Include="Scripts\bootstrap-editable\js\bootstrap-editable.min.js" />
     <Content Include="Scripts\bootstrap-select.js" />
