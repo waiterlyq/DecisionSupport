@@ -11,7 +11,7 @@
 
     <script type="text/javascript" src="~/Scripts/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/fileinput.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/fileinput.js"></script>
     <script type="text/javascript" src="~/Scripts/Inputfilezh.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrapValidator.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap-select.min.js"></script>
@@ -20,17 +20,27 @@
     <link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrapValidator.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .main {
+            height: 0;
+            padding-bottom: 40%;
+            padding-top: 5%;
+        }
+    </style>
     <script>
         $(function () {
-
             var oButtonInit = new ButtonInit();
             var oValidator = new ValidatorInit();
+            var oFileInputInit = new FileInputInit();
+            var oSelectInit = new SelectInit();
+            oSelectInit.Init();
             oButtonInit.Init();
             oValidator.Init();
-            initFileInput("FileData", "UpLoader?ModGUID=" + '@Model.ModGUID');
-            fileShowHide();
-
+            oFileInputInit.Init();
         });
+
+
+        ///表单校验
         var ValidatorInit = function () {
             var oValidator = new Object();
             ///初始化表单校验
@@ -75,39 +85,48 @@
             }
         }
 
+        ///上传控件初始化
+        var FileInputInit = function () {
+            var oInit = new Object();
+            oInit.Init = function () {
+                var control = $('#FileData');
+                control.fileinput({
+                    language: 'zh', //设置语言
+                    uploadAsync: true,
+                    enctype: 'multipart/form-data',
+                    uploadUrl: "UpLoadFile?ModGUID=" + '@Model.ModGUID', //上传的地址
+                    deleteUrl: "DeleteFile?ModGUID=" + '@Model.ModGUID',
+                    allowedFileExtensions: ['csv', 'xlsx', 'xls'],//接收的文件后缀
+                    showUpload: true, //是否显示上传按钮
+                    showCaption: false,//是否显示标题
+                    showPreview: true,
+                    dropZoneEnabled: true,
+                    textEncoding: "GB2312",
+                    showRemove: false,
+                    maxFileCount: 1,
+                    elCaptionText: "只能上传csv、xls、xlsx文件",
+                    msgErrorClass: 'file-error-message',
+                    msgValidationErrorClass: 'text-danger',
+                    dropZoneTitle: "拖拽文件到这里 &hellip;",
+                    msgInvalidFileType: '不正确的类型 "{name}". 只支持 "{types}" 类型的文件.',
+                    browseClass: "btn btn-primary" //按钮样式,
+                }).on("fileuploaded", function (event, data, previewId, index) {
+                    var oSelectInit = new SelectInit();
+                    oSelectInit.Init();
+                }).on('filesuccessremove', function (event, id) {
+                    $("#resultSelector").find("option").remove();
+                }).on("filecleared", function (event, data, msg) {
+                    $("#resultSelector").find("option").remove();
+                });
 
-        //初始化fileinput控件（第一次初始化）
-        function initFileInput(ctrlName, uploadUrl) {
-            var control = $('#' + ctrlName);
-            control.fileinput({
-                language: 'zh', //设置语言
-                uploadAsync: true,
-                enctype: 'multipart/form-data',
-                uploadUrl: uploadUrl, //上传的地址
-                allowedFileExtensions: ['csv', 'xlsx', 'xls'],//接收的文件后缀
-                showUpload: false, //是否显示上传按钮
-                showCaption: true,//是否显示标题
-                showPreview: false,
-                dropZoneEnabled: false,
-                showRemove: false,
-                maxFileCount: 1,
-                minFileCount: 1,
-                msgErrorClass: 'file-error-message',
-                msgValidationErrorClass: 'text-danger',
-                dropZoneTitle: "拖拽文件到这里 &hellip;",
-                browseClass: "btn btn-primary" //按钮样式
-            }).on("filebatchselected", function (event, files) {
-                $(this).fileinput("upload");
-            }).on("fileuploaded", function (event, data, previewId, index) {
-                var oSelectInit = new SelectInit();
-                oSelectInit.Init();
-            });;
+            }
+            return oInit;
         }
 
+        ///结果字段下拉框选择
         var SelectInit = function () {
             var oInit = new Object();
             oInit.Init = function () {
-                alert(0);
                 var dbs = {
                     ModServer: $('#ModServer').val(),
                     ModDataBase: $('#ModDataBase').val(),
@@ -119,7 +138,7 @@
                 $.ajax({
                     type: "post",
                     url: '/DSTreeModels/GetFieldName',
-                    data: { ModGUID: '@Model.ModGUID', isFile: $("input[name='IsFileDataSource']:checked").val(), ModDataSource: JSON.stringify(dbs) },
+                    data: { ModGUID: '@Model.ModGUID', isFile: $("input[name='isFile']:checked").val(), ModDataSource: JSON.stringify(dbs) },
                     success: function (data) {
                         var json = eval(data); //数组
                         $.each(json, function (index, item) {
@@ -136,7 +155,15 @@
                     }
 
                 });
+                ///当文件尚未上传时自动上传
+                $("#resultSelector").click(function () {
+                    if ($("input[name='isFile']:checked").val() == 1) {
+                        if ($("#resultSelector option").length < 1 && $("#FileData").val() != "") {
+                            $("#FileData").fileinput("upload");
+                        }
+                    }
 
+                });
             }
             return oInit;
         }
@@ -183,8 +210,30 @@
 
                     });
                 });
-                $("input[name='IsFileDataSource']").change(function () {
-                    fileShowHide();
+                $('#btnModMain').click(function () {
+                    $('#ModMain').show(500);
+                    $('#ModData').hide();
+                    $('#ModPlan').hide();
+                });
+                $('#btnModData').click(function () {
+                    $('#ModMain').hide();
+                    $('#ModData').show();
+                    if ($("input[name='isFile']:checked").val() == 1) {
+                        $('#ModFile').show(500);
+                        $('#ModDB').hide();
+                        $('#btnTestDb').hide();
+                    }
+                    else {
+                        $('#ModDB').show(500);
+                        $('#ModFile').hide();
+                        $('#btnTestDb').show();
+                    }
+                    $('#ModPlan').hide();
+                });
+                $('#btnModPlan').click(function () {
+                    $('#ModMain').hide();
+                    $('#ModData').hide();
+                    $('#ModPlan').show(500);
                 });
             }
             return oInit;
@@ -195,30 +244,97 @@
     <div class="modal-header">
         <h3>新增模型</h3>
     </div>
-    <form>
-        @Html.AntiForgeryToken()
-        <div class="modal-body">
-            <div id="ModMain" class="form-horizontal">
-                <fieldset>
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="container col-lg-2 col-md-2 col-sm-2">
+        <div class="row">
+            <div>
+                <button id="btnModMain" class="btn btn-large btn-block btn-primary" type="button">属性设置</button>
+            </div>
+            <div>
+                <button id="btnModData" class="btn btn-large btn-block btn-primary" type="button">配置样本</button>
+            </div>
+            <div>
+                <button id="btnModPlan" class="btn btn-large btn-block btn-primary" type="button">执行计划</button>
+            </div>
+        </div>
+    </div>
+    <div class="container col-lg-10 col-md-10  col-sm-10">
+        <form id="MyForm" role="form">
+            <div id="ModMain" class="form-horizontal main">
+                <div class="row">
                     <div class="form-group">
-                        @Html.LabelFor(model => model.ModName, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-4">
-                            @Html.EditorFor(model => model.ModName, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                        <div>
+                            <label class="control-label col-md-2 text-right">模型名称</label>
+                            <div class="col-md-4">
+                                <input type="text" id="ModName" name="ModName" class="form-control input-sm" />
+                            </div>
                         </div>
-                        @Html.LabelFor(model => model.IsFileDataSource, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-4">
-                            @Html.RadioButtonFor(model => model.IsFileDataSource, 1, htmlAttributes: new { @checked = "true" })是
-                            @Html.RadioButtonFor(model => model.IsFileDataSource, 0)否
+                        <div>
+                            <label class="control-label col-md-2 text-right">是否文件数据</label>
+                            <div class="col-md-4 form-inline">
+                                <input type="radio" class="radio" value="1" name="isFile" checked />是
+                                <input type="radio" class="radio" value="0" name="isFile" />否
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group text-center">
-                        <div id="ModFileL" class="col-md-2 text-right">
+                    <div class="form-group">
+                        <label class="control-label col-md-2 text-right">模型描述</label>
+                        <div class="col-md-10">
+                            <textarea class="form-control" rows="8" name="ModRemark"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="ModData" class="form-horizontal text-center main" hidden="hidden">
+                <div id="ModFile" class="form-horizontal" hidden="hidden">
+                    <div class="form-group">
+                        <div class="col-md-2 text-right">
                             <label class="control-label">上传文件</label>
+
                         </div>
-                        <div id="ModFileI" class="col-md-4" style="padding-bottom:20px;text-align:center">
+                        <div class="col-md-4" style="padding-bottom:20px;text-align:center">
                             <input id="FileData" class="input-sm" name="FileData" type="file" />
+                            <small>仅支持上传excel、csv文件</small>
                         </div>
+                    </div>
+                </div>
+                <div id="ModDB" class="form-horizontal" hidden="hidden">
+                    <div class="form-group">
+                        <div class="col-md-2 text-right">
+                            <label class="control-label">服务器</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control input-sm" id="ModServer" name="ModServer" />
+                        </div>
+                        <div class="col-md-2 text-right">
+                            <label class="control-label">数据库</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control input-sm" id="ModDataBase" name="ModDataBase" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2 text-right">
+                            <label class="control-label">用户名</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control input-sm" id="ModUid" name="ModUid" />
+                        </div>
+                        <div class="col-md-2 text-right">
+                            <label class="control-label">密码</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="password" class="form-control input-sm" id="ModPassword" name="ModPassword" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2 text-right">模型数据源</label>
+                        <div class="col-md-10">
+                            <textarea class="form-control" rows="8" id="ModDataSource"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div id="ResultSelect" class="form-horizontal">
+                    <div class="form-group">
                         <div class="col-md-2 text-right">
                             <label class="control-label">结果属性</label>
                         </div>
@@ -226,75 +342,12 @@
                             <select id="resultSelector" class="form-control input-sm"></select>
                         </div>
                     </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ModRemark, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.TextAreaFor(model => model.ModRemark, new { @class = "form-control", @rows = "6" })
-
-                        </div>
-                    </div>
-                </fieldset>
+                </div>
             </div>
-            <div id="ModDB" class="form-horizontal" hidden="hidden">
-                <fieldset>
-                    <legend>设置数据源</legend>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ModServer, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModServer, new { htmlAttributes = new { @class = "form-control  input-sm" } })
-
-                        </div>
-                        @Html.LabelFor(model => model.ModDataBase, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModDataBase, new { htmlAttributes = new { @class = "form-control  input-sm" } })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ModUid, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModUid, new { htmlAttributes = new { @class = "form-control  input-sm" } })
-
-                        </div>
-                        @Html.LabelFor(model => model.ModPassword, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModPassword, new { htmlAttributes = new { @class = "form-control  input-sm", @type = "password" } })
-
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ModDataSource, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-lg-10">
-                            @Html.TextAreaFor(model => model.ModDataSource, new { @class = "form-control  input-sm", @rows = "4" })
-                        </div>
-                    </div>
-                </fieldset>
+            <div id="ModPlan main" class="form-group" hidden="hidden">
+                <p>4</p>
             </div>
-            <div id="ModCycle" class="form-horizontal" hidden="hidden">
-                <fieldset>
-                    <legend>设置生成周期</legend>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ModCycleType, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-sm-4">
-                            <select id="ModCycleTypeSelector" class="form-control input-sm">
-                                <option value="Month">月</option>
-                                <option value="Week">周</option>
-                                <option value="None">无</option>
-                            </select>
-                        </div>
-                        @Html.LabelFor(model => model.ModCycleWD, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModCycleWD, new { htmlAttributes = new { @class = "form-control  input-sm" } })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ModCycleDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModCycleDate, new { htmlAttributes = new { @class = "form-control  input-sm" } })
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-            <div class="form-horizontal">
+            <div id="ModBtn" class="form-group">
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10 text-center">
                         <input id="btnTestDb" type="button" value="测试数据库连接" class="btn btn-default" />
@@ -302,96 +355,116 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
-    @*@using (Html.BeginForm())
-        {
+        </form>
+    </div>
+    @*<form>
             @Html.AntiForgeryToken()
+            <div class="modal-body">
+                <div id="ModMain" class="form-horizontal">
+                    <fieldset>
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ModName, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.ModName, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                            </div>
+                            @Html.LabelFor(model => model.IsFileDataSource, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-4">
+                                @Html.RadioButtonFor(model => model.IsFileDataSource, 1, htmlAttributes: new { @checked = "true" })是
+                                @Html.RadioButtonFor(model => model.IsFileDataSource, 0)否
+                            </div>
+                        </div>
+                        <div class="form-group text-center">
+                            <div id="ModFileL" class="col-md-2 text-right">
+                                <label class="control-label">上传文件</label>
+                            </div>
+                            <div id="ModFileI" class="col-md-4" style="padding-bottom:20px;text-align:center">
+                                <input id="FileData" class="input-sm" name="FileData" type="file" />
+                            </div>
+                            <div class="col-md-2 text-right">
+                                <label class="control-label">结果属性</label>
+                            </div>
+                            <div class="col-md-4">
+                                <select id="resultSelector" class="form-control input-sm"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ModRemark, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.TextAreaFor(model => model.ModRemark, new { @class = "form-control", @rows = "6" })
 
-            <div class="form-horizontal">
-                <hr />
-                <fieldset>
-                    <legend>新增模型</legend>
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ModName, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.ModName, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ModName, "", new { @class = "text-danger" })
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ModCycleType, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModCycleType, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ModCycleType, "", new { @class = "text-danger" })
-                        </div>
-                        @Html.LabelFor(model => model.ModCycleWD, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModCycleWD, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ModCycleWD, "", new { @class = "text-danger" })
-                        </div>
-                        @Html.LabelFor(model => model.ModCycleDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModCycleDate, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ModCycleDate, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <legend>配置数据源</legend>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ModServer, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModServer, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ModServer, "", new { @class = "text-danger" })
-                        </div>
-                        @Html.LabelFor(model => model.ModDataBase, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModDataBase, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ModDataBase, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ModUid, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModUid, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ModUid, "", new { @class = "text-danger" })
-                        </div>
-                        @Html.LabelFor(model => model.ModPassword, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-sm-4">
-                            @Html.EditorFor(model => model.ModPassword, new { htmlAttributes = new { @class = "form-control", @type = "password" } })
-                            @Html.ValidationMessageFor(model => model.ModPassword, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ModDataSource, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-lg-10">
-                            @Html.TextAreaFor(model => model.ModDataSource, new { @class = "form-control", @rows = "4" })
-                            @Html.ValidationMessageFor(model => model.ModDataSource, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                </fieldset>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ModRemark, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-lg-10">
-                        @Html.TextAreaFor(model => model.ModRemark, new { @class = "form-control", @rows = "4" })
-                        @Html.ValidationMessageFor(model => model.ModRemark, "", new { @class = "text-danger" })
-                    </div>
+                    </fieldset>
                 </div>
-                <div class="form-group">
-                    <div class="col-lg-10">
+                <div id="ModDB" class="form-horizontal" hidden="hidden">
+                    <fieldset>
+                        <legend>设置数据源</legend>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ModServer, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-sm-4">
+                                @Html.EditorFor(model => model.ModServer, new { htmlAttributes = new { @class = "form-control  input-sm" } })
 
-                        <input id="FileData" type="file" />
-                    </div>
+                            </div>
+                            @Html.LabelFor(model => model.ModDataBase, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-sm-4">
+                                @Html.EditorFor(model => model.ModDataBase, new { htmlAttributes = new { @class = "form-control  input-sm" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ModUid, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-sm-4">
+                                @Html.EditorFor(model => model.ModUid, new { htmlAttributes = new { @class = "form-control  input-sm" } })
+
+                            </div>
+                            @Html.LabelFor(model => model.ModPassword, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-sm-4">
+                                @Html.EditorFor(model => model.ModPassword, new { htmlAttributes = new { @class = "form-control  input-sm", @type = "password" } })
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ModDataSource, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-lg-10">
+                                @Html.TextAreaFor(model => model.ModDataSource, new { @class = "form-control  input-sm", @rows = "4" })
+                            </div>
+                        </div>
+                    </fieldset>
                 </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="保存" class="btn btn-default" />
-                        <input id="btnTestDb" type="button" value="测试数据库连接" class="btn btn-default" />
+                <div id="ModCycle" class="form-horizontal" hidden="hidden">
+                    <fieldset>
+                        <legend>设置生成周期</legend>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ModCycleType, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-sm-4">
+                                <select id="ModCycleTypeSelector" class="form-control input-sm">
+                                    <option value="Month">月</option>
+                                    <option value="Week">周</option>
+                                    <option value="None">无</option>
+                                </select>
+                            </div>
+                            @Html.LabelFor(model => model.ModCycleWD, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-sm-4">
+                                @Html.EditorFor(model => model.ModCycleWD, new { htmlAttributes = new { @class = "form-control  input-sm" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ModCycleDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-sm-4">
+                                @Html.EditorFor(model => model.ModCycleDate, new { htmlAttributes = new { @class = "form-control  input-sm" } })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10 text-center">
+                            <input id="btnTestDb" type="button" value="测试数据库连接" class="btn btn-default" />
+                            <input id="save" type="submit" value="保存" class="btn btn-default" />
+                        </div>
                     </div>
                 </div>
             </div>
-        }*@
+        </form>*@
 </body>
 </html>

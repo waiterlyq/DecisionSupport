@@ -183,12 +183,31 @@ namespace DSWeb.Controllers
             return Json(new { total = total, rows = rows }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 删除文件
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult DeleteFile()
+        {
+            string strModGUID = Request.QueryString["ModGUID"];
+            string dirPath = HttpContext.Server.MapPath("/Uploads/" + strModGUID + "/");
+            if (Directory.Exists(dirPath))
+            {
+                DirectoryInfo di = new DirectoryInfo(dirPath);
+                FileInfo[] fis = di.GetFiles();
+                foreach (FileInfo fi in fis)
+                {
+                    fi.Delete();
+                }
+            }
+            return Json(new { });
+        }
 
         /// <summary>
         /// 上传文件
         /// </summary>
         /// <returns></returns>
-        public JsonResult UpLoader()
+        public JsonResult UpLoadFile()
         {
             HttpPostedFileBase file = Request.Files[0];
             string strModGUID = Request.QueryString["ModGUID"];
@@ -206,7 +225,7 @@ namespace DSWeb.Controllers
                     FileInfo[] fis = di.GetFiles();
                     foreach (FileInfo fi in fis)
                     {
-                        System.IO.File.Delete(fi.FullName);
+                        fi.Delete();
                     }
                 }
                 string filePath = Path.Combine(dirPath, file.FileName);
