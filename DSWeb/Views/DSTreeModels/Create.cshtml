@@ -8,18 +8,22 @@
 
     <meta name="viewport" content="width=device-width" />
     <title>新增</title>
-
     <script type="text/javascript" src="~/Scripts/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/moment-with-locales.min.js"></script>
     <script type="text/javascript" src="~/Scripts/fileinput.js"></script>
     <script type="text/javascript" src="~/Scripts/Inputfilezh.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrapValidator.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap-select.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+
     <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrapValidator.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap-datetimepicker.min.css" />
     <style type="text/css">
         .main {
             height: 0;
@@ -32,13 +36,52 @@
             var oButtonInit = new ButtonInit();
             var oValidator = new ValidatorInit();
             var oFileInputInit = new FileInputInit();
-            var oSelectInit = new SelectInit();
-            oSelectInit.Init();
+            var oResultSelectInit = new ResultSelectInit();
+            var oTimePickerInit = new TimePickerInit();
+            var oPlanTypeSelectInit = new PlanTypeSelectInit();
+            oResultSelectInit.Init();
             oButtonInit.Init();
             oValidator.Init();
             oFileInputInit.Init();
+            oTimePickerInit.Init();
+            oPlanTypeSelectInit.Init();
         });
 
+        var TimePickerInit = function () {
+            var oTimePicker = new Object();
+            oTimePicker.Init = function () {
+                $('#OnceDate').datetimepicker({
+                    format: 'YYYY-MM-DD',
+                    locale: moment.locale('zh-cn')
+                });
+                $('#OnceTime').datetimepicker({
+                    format: 'hh:mm',
+                    locale: moment.locale('zh-cn')
+                });
+            }
+            return oTimePicker;
+        }
+
+        var PlanTypeSelectInit = function () {
+            var oPlanTypeSelectInit = new Object;
+            oPlanTypeSelectInit.Init = function () {
+                oPlanTypeSelectInit.Show();
+                $('#PlanType').change(function () {
+                    oPlanTypeSelectInit.Show();
+                })
+            };
+            oPlanTypeSelectInit.Show = function () {
+                if ($('#PlanType').val() == 1) {
+                    $('#ExecuteOnce').show(500);
+                    $('#ExecuteRepeat').hide();
+                }
+                else {
+                    $('#ExecuteOnce').hide();
+                    $('#ExecuteRepeat').show(500);
+                }
+            };
+            return oPlanTypeSelectInit;
+        }
 
         ///表单校验
         var ValidatorInit = function () {
@@ -67,23 +110,6 @@
             return oValidator;
         }
 
-        ///显示隐藏文件上传控件
-        function fileShowHide() {
-            if ($("input[name='IsFileDataSource']:checked").val() == 1) {
-                $("#ModFileL").show(300);
-                $("#ModFileI").show(300);
-                $("#ModDB").hide(300);
-                $("#ModCycle").hide(300);
-                $("#btnTestDb").hide();
-            }
-            else {
-                $("#ModFileL").hide(300);
-                $("#ModFileI").hide(300);
-                $("#ModDB").show(300);
-                $("#ModCycle").show(300);
-                $("#btnTestDb").show();
-            }
-        }
 
         ///上传控件初始化
         var FileInputInit = function () {
@@ -98,18 +124,19 @@
                     deleteUrl: "DeleteFile?ModGUID=" + '@Model.ModGUID',
                     allowedFileExtensions: ['csv', 'xlsx', 'xls'],//接收的文件后缀
                     showUpload: true, //是否显示上传按钮
-                    showCaption: false,//是否显示标题
-                    showPreview: true,
+                    showCaption: true,//是否显示标题
+                    showPreview: false,
                     dropZoneEnabled: true,
                     textEncoding: "GB2312",
                     showRemove: false,
                     maxFileCount: 1,
-                    elCaptionText: "只能上传csv、xls、xlsx文件",
                     msgErrorClass: 'file-error-message',
                     msgValidationErrorClass: 'text-danger',
                     dropZoneTitle: "拖拽文件到这里 &hellip;",
                     msgInvalidFileType: '不正确的类型 "{name}". 只支持 "{types}" 类型的文件.',
                     browseClass: "btn btn-primary" //按钮样式,
+                }).on("filebatchselected", function (event, files) {
+                    $("#resultSelector").find("option").remove();
                 }).on("fileuploaded", function (event, data, previewId, index) {
                     var oSelectInit = new SelectInit();
                     oSelectInit.Init();
@@ -124,7 +151,7 @@
         }
 
         ///结果字段下拉框选择
-        var SelectInit = function () {
+        var ResultSelectInit = function () {
             var oInit = new Object();
             oInit.Init = function () {
                 var dbs = {
@@ -144,8 +171,6 @@
                         $.each(json, function (index, item) {
                             $("#resultSelector").append("<option value='" + json[index].FieldName + "'>" + json[index].FieldName + "</option>");
                         });
-
-
                     },
                     error: function () {
 
@@ -158,7 +183,7 @@
                 ///当文件尚未上传时自动上传
                 $("#resultSelector").click(function () {
                     if ($("input[name='isFile']:checked").val() == 1) {
-                        if ($("#resultSelector option").length < 1 && $("#FileData").val() != "") {
+                        if ($("#resultSelector option").length < 1 && $(".file-caption-name").text() != "") {
                             $("#FileData").fileinput("upload");
                         }
                     }
@@ -168,9 +193,10 @@
             return oInit;
         }
 
+
+        ///按钮初始化
         var ButtonInit = function () {
             var oInit = new Object();
-
             oInit.Init = function () {
                 $("#btnTestDb").click(function () {
                     var Server = $("#ModServer").val();
@@ -234,7 +260,17 @@
                     $('#ModMain').hide();
                     $('#ModData').hide();
                     $('#ModPlan').show(500);
+                    $('#btnTestDb').hide();
                 });
+                $("input[name='isFile']").change(function () {
+                    $("#resultSelector").find("option").remove();
+                    if ($("input[name='isFile']:checked").val() == 0) {
+                        if ($("#resultSelector option").length < 1 && $(".file-caption-name").text() != "") {
+                            var oSelectInit = new SelectInit();
+                            oSelectInit.Init();
+                        }
+                    }
+                })
             }
             return oInit;
         };
@@ -258,28 +294,29 @@
         </div>
     </div>
     <div class="container col-lg-10 col-md-10  col-sm-10">
-        <form id="MyForm" role="form">
+        <form id="MyForm" role="form" class="form-horizontal">
             <div id="ModMain" class="form-horizontal main">
-                <div class="row">
-                    <div class="form-group">
-                        <div>
-                            <label class="control-label col-md-2 text-right">模型名称</label>
-                            <div class="col-md-4">
-                                <input type="text" id="ModName" name="ModName" class="form-control input-sm" />
-                            </div>
-                        </div>
-                        <div>
-                            <label class="control-label col-md-2 text-right">是否文件数据</label>
-                            <div class="col-md-4 form-inline">
-                                <input type="radio" class="radio" value="1" name="isFile" checked />是
-                                <input type="radio" class="radio" value="0" name="isFile" />否
-                            </div>
+                <div class="row col-md-12">
+                    <div class="form-group col-md-6">
+                        <label class="control-label col-md-4 text-right">模型名称</label>
+                        <div class="col-md-8">
+                            <input type="text" id="ModName" name="ModName" class="form-control input-sm" />
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group  col-md-6">
+                        <label class="control-label col-md-4 text-right">是否文件数据</label>
+                        <div class="col-md-8 form-inline">
+                            <input type="radio" class="radio" value="1" name="isFile" checked />是
+                            <input type="radio" class="radio" value="0" name="isFile" />否
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-12">
                         <label class="control-label col-md-2 text-right">模型描述</label>
                         <div class="col-md-10">
-                            <textarea class="form-control" rows="8" name="ModRemark"></textarea>
+                            <textarea class="form-control" rows="10" name="ModRemark"></textarea>
                         </div>
                     </div>
                 </div>
@@ -289,7 +326,6 @@
                     <div class="form-group">
                         <div class="col-md-2 text-right">
                             <label class="control-label">上传文件</label>
-
                         </div>
                         <div class="col-md-4" style="padding-bottom:20px;text-align:center">
                             <input id="FileData" class="input-sm" name="FileData" type="file" />
@@ -298,54 +334,154 @@
                     </div>
                 </div>
                 <div id="ModDB" class="form-horizontal" hidden="hidden">
-                    <div class="form-group">
-                        <div class="col-md-2 text-right">
-                            <label class="control-label">服务器</label>
+                    <div class="row col-md-12">
+                        <div class="form-group col-md-6">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label">服务器</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control input-sm" id="ModServer" name="ModServer" />
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <input type="text" class="form-control input-sm" id="ModServer" name="ModServer" />
-                        </div>
-                        <div class="col-md-2 text-right">
-                            <label class="control-label">数据库</label>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="text" class="form-control input-sm" id="ModDataBase" name="ModDataBase" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-2 text-right">
-                            <label class="control-label">用户名</label>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="text" class="form-control input-sm" id="ModUid" name="ModUid" />
-                        </div>
-                        <div class="col-md-2 text-right">
-                            <label class="control-label">密码</label>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="password" class="form-control input-sm" id="ModPassword" name="ModPassword" />
+                        <div class="form-group col-md-6">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label">数据库</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control input-sm" id="ModDataBase" name="ModDataBase" />
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-2 text-right">模型数据源</label>
-                        <div class="col-md-10">
-                            <textarea class="form-control" rows="8" id="ModDataSource"></textarea>
+                    <div class="row col-md-12">
+                        <div class="form-group  col-md-6">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label">用户名</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control input-sm" id="ModUid" name="ModUid" />
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-6">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label">密码</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="password" class="form-control input-sm" id="ModPassword" name="ModPassword" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label class="control-label col-md-2 text-right">模型数据源</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" rows="8" id="ModDataSource" name="ModDataSource"></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div id="ResultSelect" class="form-horizontal">
-                    <div class="form-group">
-                        <div class="col-md-2 text-right">
-                            <label class="control-label">结果属性</label>
-                        </div>
-                        <div class="col-md-4">
-                            <select id="resultSelector" class="form-control input-sm"></select>
+                    <div class="row">
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-2 text-right">
+                                <label class="control-label">结果属性</label>
+                            </div>
+                            <div class="col-md-4">
+                                <select id="resultSelector" class="form-control input-sm"></select>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="ModPlan main" class="form-group" hidden="hidden">
-                <p>4</p>
+            <div id="ModPlan" class="form-horizontal main" hidden="hidden">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <div class="col-md-2 text-right">
+                            <label class="control-label">计划类型</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="PlanType" class="form-control">
+                                <option value="1">执行一次</option>
+                                <option value="2">重复执行</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div id="ExecuteOnce" class="row col-md-12">
+                    <fieldset><strong>执行一次</strong></fieldset>
+                    <hr />
+                    <div class="form-group  col-md-6">
+                        <div class="col-md-4 text-right">
+                            <label class="control-label">执行日期</label>
+                        </div>
+                        <div class="col-md-8">
+                            <div class='input-group date' id='OnceDate'>
+                                <input type='text' class="form-control" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-6">
+                        <div class="col-md-4 text-right">
+                            <label class="control-label">执行时间</label>
+                        </div>
+                        <div class="col-md-8">
+                            <div class='input-group date' id='OnceTime'>
+                                <input type='text' class="form-control" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="ExecuteRepeat" class="form-horizontal col-md-12" hidden="hidden">
+                    <fieldset><strong>频率</strong></fieldset>
+                    <hr />
+                    <div class="row col-md-12">
+                        <div class="form-group">
+                            <div class="col-md-2 text-right">
+                                <label class="control-label">执行</label>
+                            </div>
+                            <div class="col-md-4">
+                                <select id="Frequency" class="form-control">
+                                    <option value="1">每天</option>
+                                    <option value="2">每周</option>
+                                    <option value="2">每月</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row col-md-12">
+                        <div class="form-group  col-md-6">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label">执行日期</label>
+                            </div>
+                            <div class="col-md-8">
+                                <div class='input-group date' id='OnceDate'>
+                                    <input type='text' class="form-control" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-6">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label">执行时间</label>
+                            </div>
+                            <div class="col-md-8">
+                                <div class='input-group date' id='OnceTime'>
+                                    <input type='text' class="form-control" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div id="ModBtn" class="form-group">
                 <div class="form-group">

@@ -471,6 +471,10 @@
     <Content Include="Scripts\locales\vi.js" />
     <Content Include="Scripts\locales\zh-TW.js" />
     <Content Include="Scripts\locales\zh.js" />
+    <Content Include="Scripts\moment-with-locales.js" />
+    <Content Include="Scripts\moment-with-locales.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\plugins\piexif.js" />
     <Content Include="Scripts\plugins\piexif.min.js" />
     <Content Include="Scripts\plugins\purify.js" />
