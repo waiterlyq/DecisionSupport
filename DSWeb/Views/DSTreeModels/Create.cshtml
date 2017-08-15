@@ -36,15 +36,14 @@
             var oButtonInit = new ButtonInit();
             var oValidator = new ValidatorInit();
             var oFileInputInit = new FileInputInit();
-            var oResultSelectInit = new ResultSelectInit();
             var oTimePickerInit = new TimePickerInit();
-            var oPlanTypeSelectInit = new PlanTypeSelectInit();
-            oResultSelectInit.Init();
+            var oSelectInit = new SelectInit();
+            oSelectInit.Init();
             oButtonInit.Init();
             oValidator.Init();
             oFileInputInit.Init();
             oTimePickerInit.Init();
-            oPlanTypeSelectInit.Init();
+
         });
 
         var TimePickerInit = function () {
@@ -55,13 +54,75 @@
                     locale: moment.locale('zh-cn')
                 });
                 $('#OnceTime').datetimepicker({
-                    format: 'hh:mm',
+                    format: 'HH:mm',
+                    locale: moment.locale('zh-cn')
+                });
+                $('#RDETime').datetimepicker({
+                    format: 'HH:mm',
+                    locale: moment.locale('zh-cn')
+                });
+                $('#RDEStart').datetimepicker({
+                    format: 'HH:mm',
+                    locale: moment.locale('zh-cn')
+                });
+                $('#BeginDate').datetimepicker({
+                    format: 'YYYY-MM-DD',
+                    locale: moment.locale('zh-cn')
+                });
+                $('#EndDate').datetimepicker({
+                    format: 'YYYY-MM-DD',
                     locale: moment.locale('zh-cn')
                 });
             }
             return oTimePicker;
         }
 
+        ///下拉选项初始化
+        var SelectInit = function () {
+            var oSelectInit = new Object;
+            oSelectInit.Init = function () {
+                var oResultSelectInit = new ResultSelectInit();
+                var oPlanTypeSelectInit = new PlanTypeSelectInit();
+                var oFrequencySelectInit = new FrequencySelectInit();
+                oFrequencySelectInit.Init();
+                oResultSelectInit.Init();
+                oPlanTypeSelectInit.Init();
+            }
+            return oSelectInit;
+        }
+
+        ///重复执行下拉框初始化
+        var FrequencySelectInit = function () {
+            var oFrequencySelectInit = new Object();
+            oFrequencySelectInit.Show = function () {
+                switch ($("#Frequency").val()) {
+                    case "1":
+                        $("#EDExecute").show(500);
+                        $("#EWExecute").hide();
+                        $("#EMExecute").hide();
+                        break;
+                    case "2":
+                        $("#EDExecute").hide();
+                        $("#EWExecute").show(500);
+                        $("#EMExecute").hide();
+                        break;
+                    case "3":
+                        $("#EDExecute").hide();
+                        $("#EWExecute").hide();
+                        $("#EMExecute").show(500);
+                        break;
+                }
+            }
+            oFrequencySelectInit.Init = function () {
+                oFrequencySelectInit.Show();
+                $("#Frequency").change(function () {
+                    oFrequencySelectInit.Show();
+                })
+            };
+            return oFrequencySelectInit;
+        }
+
+        ///执行计划类型初始化
         var PlanTypeSelectInit = function () {
             var oPlanTypeSelectInit = new Object;
             oPlanTypeSelectInit.Init = function () {
@@ -89,7 +150,6 @@
             ///初始化表单校验
             oValidator.Init = function () {
                 $('form').bootstrapValidator({
-                    message: 'This value is not valid',
                     feedbackIcons: {
                         valid: 'glyphicon glyphicon-ok',
                         invalid: 'glyphicon glyphicon-remove',
@@ -97,10 +157,44 @@
                     },
                     fields: {
                         ModName: {
-                            message: '模型名称不能为空',
                             validators: {
                                 notEmpty: {
                                     message: '模型名称不能为空'
+                                }
+                            }
+                        },
+                        ModServer: {
+                            validators: {
+                                notEmpty: {
+                                    message: '服务器不能为空'
+                                }
+                            }
+                        },
+                        ModDataBase: {
+                            validators: {
+                                notEmpty: {
+                                    message: '数据库不能为空'
+                                }
+                            }
+                        },
+                        ModUid: {
+                            validators: {
+                                notEmpty: {
+                                    message: '用户不能为空'
+                                }
+                            }
+                        },
+                        ModPassword: {
+                            validators: {
+                                notEmpty: {
+                                    message: '密码不能为空'
+                                }
+                            }
+                        },
+                        ModDataSource: {
+                            validators: {
+                                notEmpty: {
+                                    message: '数据源不能为空'
                                 }
                             }
                         }
@@ -262,6 +356,7 @@
                     $('#ModPlan').show(500);
                     $('#btnTestDb').hide();
                 });
+                ///是否文件单选框
                 $("input[name='isFile']").change(function () {
                     $("#resultSelector").find("option").remove();
                     if ($("input[name='isFile']:checked").val() == 0) {
@@ -269,6 +364,17 @@
                             var oSelectInit = new SelectInit();
                             oSelectInit.Init();
                         }
+                    }
+                });
+                ///每天是否间隔执行
+                $("input[name='RdE']").change(function () {
+                    if ($("input[name='RdE']:checked").val() == 1) {
+                        $('#RDayinterval').show(500);
+                        $('#RDOTime').hide(500);
+                    }
+                    else {
+                        $('#RDayinterval').hide(500);
+                        $('#RDOTime').show(500);
                     }
                 })
             }
@@ -322,8 +428,8 @@
                 </div>
             </div>
             <div id="ModData" class="form-horizontal text-center main" hidden="hidden">
-                <div id="ModFile" class="form-horizontal" hidden="hidden">
-                    <div class="form-group">
+                <div id="ModFile" class="row form-horizontal" hidden="hidden">
+                    <div class="form-group col-md-12">
                         <div class="col-md-2 text-right">
                             <label class="control-label">上传文件</label>
                         </div>
@@ -437,7 +543,11 @@
                     </div>
                 </div>
                 <div id="ExecuteRepeat" class="form-horizontal col-md-12" hidden="hidden">
-                    <fieldset><strong>频率</strong></fieldset>
+                    <fieldset>
+                        <strong>
+                            频率
+                        </strong>
+                    </fieldset>
                     <hr />
                     <div class="row col-md-12">
                         <div class="form-group">
@@ -448,35 +558,184 @@
                                 <select id="Frequency" class="form-control">
                                     <option value="1">每天</option>
                                     <option value="2">每周</option>
-                                    <option value="2">每月</option>
+                                    <option value="3">每月</option>
                                 </select>
                             </div>
                         </div>
                     </div>
-                    <div class="row col-md-12">
-                        <div class="form-group  col-md-6">
-                            <div class="col-md-4 text-right">
-                                <label class="control-label">执行日期</label>
+                    <div id="EDExecute" class="row col-md-12">
+                        <div class="form-group">
+                            <div class="col-md-2 text-right">
+                                <label class="control-label">执行间隔</label>
                             </div>
-                            <div class="col-md-8">
-                                <div class='input-group date' id='OnceDate'>
-                                    <input type='text' class="form-control" />
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
+                            <div class="col-md-4">
+                                <input id="ExecuteInterD" type="number" class="form-control col-md-10" value="1"><small>间隔多少天执行一次</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="EWExecute" class="row col-md-12">
+                        <div class="form-group">
+                            <div class="col-md-2 text-right">
+                                <label class="control-label">执行间隔</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input id="ExecuteInterW" type="number" class="form-control" value="1"><small>间隔多少周执行一次</small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 text-right">
+                                <label class="control-label">在</label>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="ic1" value="Monday"> 周一
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="ic2" value="Tuesday"> 周二
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="ic3" value="Wednesday"> 周三
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="ic4" value="Thrusday"> 周四
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="ic5" value="Friday"> 周五
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="ic6" value="Saturday"> 周六
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="ic7" value="Sunday"> 周天
+                                </label>
+                            </div>
+                            <div class="text-left">
+                                <label class="control-label">执行</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="EMExecute" class="row col-md-12">
+                        <div class="form-group">
+                            <div class="col-md-2 text-right">
+                                <label class="control-label">执行间隔</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input id="ExecuteInterM" type="number" class="form-control col-md-10" value="1"><small>间隔多少月执行一次</small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 text-right">
+                                <label class="control-label">执行时间</label>
+                            </div>
+                            <div class="col-md-4">
+                                <select id="MOrder" class="form-control">
+                                    <option value="1">第一个</option>
+                                    <option value="2">第二个</option>
+                                    <option value="3">第三个</option>
+                                    <option value="4">第四个</option>
+                                    <option value="5">最后一个</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <select id="MDay" class="form-control">
+                                    <option value="1">星期一</option>
+                                    <option value="2">星期二</option>
+                                    <option value="3">星期三</option>
+                                    <option value="4">星期五</option>
+                                    <option value="5">星期六</option>
+                                    <option value="6">星期天</option>
+                                    <option value="7">天</option>
+                                    <option value="8">工作日</option>
+                                    <option value="休息日">工作日</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="RDayExecute" class="row col-md-12">
+                        <fieldset>
+                            <strong>
+                                每天频率
+                            </strong>
+                        </fieldset>
+                        <hr />
+                        <div class="row col-md-12">
+                            <div class="form-group  col-md-6">
+                                <label class="control-label col-md-4 text-right">每天</label>
+                                <div class="col-md-8 form-inline">
+                                    <input type="radio" class="radio" value="0" name="RdE" checked />执行一次
+                                    <input type="radio" class="radio" value="1" name="RdE" />间隔执行
+                                </div>
+                            </div>
+                            <div id="RDOTime" class="form-group  col-md-6">
+                                <div class="col-md-4 text-right">
+                                    <label class="control-label">执行时间</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class='input-group date' id='RDETime'>
+                                        <input type='text' class="form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group  col-md-6">
-                            <div class="col-md-4 text-right">
-                                <label class="control-label">执行时间</label>
+                        <div id="RDayinterval" class="row col-md-12" hidden>
+                            <div class="form-group col-md-6">
+                                <div class="col-md-4 text-right">
+                                    <label class="control-label">间隔时间</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input id="ExecuteInterH" type="number" class="form-control col-md-10" value="1"><small>间隔多少小时执行一次</small>
+                                </div>
                             </div>
-                            <div class="col-md-8">
-                                <div class='input-group date' id='OnceTime'>
-                                    <input type='text' class="form-control" />
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
+                            <div class="row col-md-6">
+                                <div class="col-md-4 text-right">
+                                    <label class="control-label">开始时间</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class='input-group date' id='RDEStart'>
+                                        <input type='text' class="form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="Duration" class="row col-md-12">
+                        <fieldset>
+                            <strong>
+                                持续时间
+                            </strong>
+                        </fieldset>
+                        <hr />
+                        <div class="row col-md-12">
+                            <div class="form-group  col-md-6">
+                                <div class="col-md-4 text-right">
+                                    <label class="control-label">开始时间</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class='input-group date' id='BeginDate'>
+                                        <input type='text' class="form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group  col-md-6">
+                                <div class="col-md-4 text-right">
+                                    <label class="control-label">结束时间</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class='input-group date' id='EndDate'>
+                                        <input type='text' class="form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
