@@ -17,13 +17,13 @@
     <script type="text/javascript" src="~/Scripts/bootstrapValidator.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap-select.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
-
+    <script type="text/javascript" src="~/Scripts/bootbox.min.js"></script>
     <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrapValidator.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/bootstrap-datetimepicker.min.css" />
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
     <style type="text/css">
         .main {
             height: 0;
@@ -61,15 +61,15 @@
                     format: 'HH:mm',
                     locale: moment.locale('zh-cn')
                 });
-                $('#RDEStart').datetimepicker({
+                $('#RDBeginTime').datetimepicker({
                     format: 'HH:mm',
                     locale: moment.locale('zh-cn')
                 });
-                $('#BeginDate').datetimepicker({
+                $('#DurBeginTime').datetimepicker({
                     format: 'YYYY-MM-DD',
                     locale: moment.locale('zh-cn')
                 });
-                $('#EndDate').datetimepicker({
+                $('#DurEndTime').datetimepicker({
                     format: 'YYYY-MM-DD',
                     locale: moment.locale('zh-cn')
                 });
@@ -95,7 +95,7 @@
         var FrequencySelectInit = function () {
             var oFrequencySelectInit = new Object();
             oFrequencySelectInit.Show = function () {
-                switch ($("#Frequency").val()) {
+                switch ($("#FrequencyType").val()) {
                     case "1":
                         $("#EDExecute").show(500);
                         $("#EWExecute").hide();
@@ -115,7 +115,7 @@
             }
             oFrequencySelectInit.Init = function () {
                 oFrequencySelectInit.Show();
-                $("#Frequency").change(function () {
+                $("#FrequencyType").change(function () {
                     oFrequencySelectInit.Show();
                 })
             };
@@ -200,6 +200,50 @@
                         }
                     }
                 });
+            };
+            oValidator.beforeSubmit = function () {
+                var strMsg = " ";
+                var isValid = true;
+                if ($("#ModName").val() == "") {
+                    strMsg += "模型名称";
+                    isValid = false;
+                }
+                if ($("input[name='isFile']:checked").val() == 0) {
+                    if ($("#ModServer").val() == "") {
+                        strMsg += " 服务器";
+                        isValid = false;
+                    }
+                    if ($("#ModDataBase").val() == "") {
+                        strMsg += " 数据库";
+                        isValid = false;
+                    }
+                    if ($("#ModUid").val() == "") {
+                        strMsg += " 用户名";
+                        isValid = false;
+                    }
+                    if ($("#ModPassword").val() == "") {
+                        strMsg += " 密码";
+                        isValid = false;
+                    }
+                    if ($("#ModDataSource").val() == "") {
+                        strMsg += " 数据源";
+                        isValid = false;
+                    }
+                }
+                if (!isValid) {
+                    strMsg += "不能为空!";
+                    bootbox.dialog({
+                        message: strMsg,
+                        title: "不通过",
+                        buttons: {
+                            OK: {
+                                label: "确定",
+                                className: "btn-primary"
+                            }
+                        }
+                    });
+                }
+                return isValid;
             }
             return oValidator;
         }
@@ -288,27 +332,18 @@
         }
 
 
+
+
         ///按钮初始化
         var ButtonInit = function () {
             var oInit = new Object();
             oInit.Init = function () {
                 $("#btnTestDb").click(function () {
-                    var Server = $("#ModServer").val();
-                    var DataBase = $("#ModDataBase").val();
-                    var Uid = $("#ModUid").val();
-                    var PassWord = $("#ModPassword").val();
-                    if (Server == "") {
-                        alert("请填写服务器！");
-                        return;
-                    }
-                    if (DataBase == "") {
-                        alert("请填写数据库！");
-                        return;
-                    }
-                    if (Uid == "") {
-                        alert("请填写登录名！");
-                        return;
-                    }
+                    $("form").data("bootstrapValidator").validateField("ModServer");
+                    $("form").data("bootstrapValidator").validateField("ModDataBase");
+                    $("form").data("bootstrapValidator").validateField("ModUid");
+                    $("form").data("bootstrapValidator").validateField("ModPassword");
+                    $("form").data("bootstrapValidator").validateField("ModDataSource");
                     $.ajax({
                         type: "post",
                         url: "/DSTreeModels/CheckDbString",
@@ -334,6 +369,7 @@
                     $('#ModMain').show(500);
                     $('#ModData').hide();
                     $('#ModPlan').hide();
+                    $('#btnTestDb').hide();
                 });
                 $('#btnModData').click(function () {
                     $('#ModMain').hide();
@@ -361,14 +397,18 @@
                     $("#resultSelector").find("option").remove();
                     if ($("input[name='isFile']:checked").val() == 0) {
                         if ($("#resultSelector option").length < 1 && $(".file-caption-name").text() != "") {
-                            var oSelectInit = new SelectInit();
-                            oSelectInit.Init();
+                            var oResultSelectInit = new ResultSelectInit();
+                            oResultSelectInit.Init();
                         }
+                        $("#PlanType").removeAttr("disabled");
+                    }
+                    else {
+                        $("#PlanType").attr("disabled", "disabled");
                     }
                 });
                 ///每天是否间隔执行
-                $("input[name='RdE']").change(function () {
-                    if ($("input[name='RdE']:checked").val() == 1) {
+                $("input[name='RDType']").change(function () {
+                    if ($("input[name='RDType']:checked").val() == 1) {
                         $('#RDayinterval').show(500);
                         $('#RDOTime').hide(500);
                     }
@@ -376,7 +416,87 @@
                         $('#RDayinterval').hide(500);
                         $('#RDOTime').show(500);
                     }
-                })
+                });
+                $("form").submit(function (e) {
+
+                    var oValidatorInit = new ValidatorInit();
+                    if (oValidatorInit.beforeSubmit()) {
+                        var Mod = {
+                            ModGUID: '@Model.ModGUID',
+                            ModName: $('#ModName').val(),
+                            ModRemark: $('#ModRemark').val(),
+                            ModStatus: $('#ModStatus').val(),
+                            IsFile: $("input[name='isFile']:checked").val(),
+                            FileName: $(".file-caption-name").text(),
+                            ModServer: $('#ModServer').val(),
+                            ModDataBase: $('#ModDataBase').val(),
+                            ModUid: $('#ModUid').val(),
+                            ModPassword: $('#ModPassword').val(),
+                            ModDataSource: $('#ModDataSource').val()
+                        }
+                        var interval = "";
+                        switch ($('#FrequencyType').val()) {
+                            case "1":
+                                interval = $("#ExecuteInterD").val();
+                                break;
+                            case "2":
+                                interval = $("#ExecuteInterW").val();
+                                break;
+                            case "3":
+                                interval = $("#ExecuteInterM").val();
+                                break;
+                        }
+                        var ModEP = {
+                            ModGUID: '@Model.ModGUID',
+                            PlanType: $('#PlanType').val(),
+                            OnceDate: $('#OnceDate :input').val(),
+                            OnceTime: $('#OnceTime :input').val(),
+                            FrequencyType: $('#FrequencyType').val(),
+                            IntervalCount: interval,
+                            EWMonday: $('#EWMonday').is(':checked'),
+                            EWTuesday: $('#EWTuesday').is(':checked'),
+                            EWWednesday: $('#EWWednesday').is(':checked'),
+                            EWThrusday: $('#EWThrusday').is(':checked'),
+                            EWFriday: $('#EWFriday').is(':checked'),
+                            EWSaturday: $('#EWSaturday').is(':checked'),
+                            EWSunday: $('#EWSunday').is(':checked'),
+                            EMEType: $('#EMEType').val(),
+                            EMEDay: $('#EMEDay').val(),
+                            RDType: $("input[name='RDType']:checked").val(),
+                            RDETime: $('#RDETime :input').val(),
+                            RDInterval: $('#RDInterval').val(),
+                            RDBeginTime: $('#RDBeginTime :input').val(),
+                            RDBeginTime: $('#DurBeginTime :input').val(),
+                            RDBeginTime: $('#DurBeginTime :input').val()
+                        }
+                        $.ajax({
+                            type: "post",
+                            url: '/DSTreeModels/SaveModel',
+                            data: { Mod: JSON.stringify(Mod), ModEP: JSON.stringify(ModEP) },
+                            success: function (data) {
+                                alert("保存成功");
+                                window.close();
+                            },
+                            error: function () {
+
+                            },
+                            complete: function () {
+
+                            }
+
+                        });
+                    }
+                    if (typeof jQuery.data(this, "disabledOnSubmit") == 'undefined') {
+                        jQuery.data(this, "disabledOnSubmit", { submited: true });
+                        $('input[type=submit]', this).each(function () {
+                            $(this).attr("disabled", "disabled");
+                        });
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                });
             }
             return oInit;
         };
@@ -505,7 +625,7 @@
                             <label class="control-label">计划类型</label>
                         </div>
                         <div class="col-md-4">
-                            <select id="PlanType" class="form-control">
+                            <select id="PlanType" class="form-control" disabled>
                                 <option value="1">执行一次</option>
                                 <option value="2">重复执行</option>
                             </select>
@@ -555,7 +675,7 @@
                                 <label class="control-label">执行</label>
                             </div>
                             <div class="col-md-4">
-                                <select id="Frequency" class="form-control">
+                                <select id="FrequencyType" class="form-control">
                                     <option value="1">每天</option>
                                     <option value="2">每周</option>
                                     <option value="3">每月</option>
@@ -588,25 +708,25 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="ic1" value="Monday"> 周一
+                                    <input type="checkbox" id="EWMonday" value="Monday"> 周一
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="ic2" value="Tuesday"> 周二
+                                    <input type="checkbox" id="EWTuesday" value="Tuesday"> 周二
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="ic3" value="Wednesday"> 周三
+                                    <input type="checkbox" id="EWWednesday" value="Wednesday"> 周三
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="ic4" value="Thrusday"> 周四
+                                    <input type="checkbox" id="EWThrusday" value="Thrusday"> 周四
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="ic5" value="Friday"> 周五
+                                    <input type="checkbox" id="EWFriday" value="Friday"> 周五
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="ic6" value="Saturday"> 周六
+                                    <input type="checkbox" id="EWSaturday" value="Saturday"> 周六
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="ic7" value="Sunday"> 周天
+                                    <input type="checkbox" id="EWSunday" value="Sunday"> 周天
                                 </label>
                             </div>
                             <div class="text-left">
@@ -628,7 +748,7 @@
                                 <label class="control-label">执行时间</label>
                             </div>
                             <div class="col-md-4">
-                                <select id="MOrder" class="form-control">
+                                <select id="EMEType" class="form-control">
                                     <option value="1">第一个</option>
                                     <option value="2">第二个</option>
                                     <option value="3">第三个</option>
@@ -637,7 +757,7 @@
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <select id="MDay" class="form-control">
+                                <select id="EMEDay" class="form-control">
                                     <option value="1">星期一</option>
                                     <option value="2">星期二</option>
                                     <option value="3">星期三</option>
@@ -662,8 +782,8 @@
                             <div class="form-group  col-md-6">
                                 <label class="control-label col-md-4 text-right">每天</label>
                                 <div class="col-md-8 form-inline">
-                                    <input type="radio" class="radio" value="0" name="RdE" checked />执行一次
-                                    <input type="radio" class="radio" value="1" name="RdE" />间隔执行
+                                    <input type="radio" class="radio" value="0" name="RDType" checked />执行一次
+                                    <input type="radio" class="radio" value="1" name="RDType" />间隔执行
                                 </div>
                             </div>
                             <div id="RDOTime" class="form-group  col-md-6">
@@ -686,7 +806,7 @@
                                     <label class="control-label">间隔时间</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input id="ExecuteInterH" type="number" class="form-control col-md-10" value="1"><small>间隔多少小时执行一次</small>
+                                    <input id="RDInterval" type="number" class="form-control col-md-10" value="1"><small>间隔多少小时执行一次</small>
                                 </div>
                             </div>
                             <div class="row col-md-6">
@@ -694,7 +814,7 @@
                                     <label class="control-label">开始时间</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <div class='input-group date' id='RDEStart'>
+                                    <div class='input-group date' id='RDBeginTime'>
                                         <input type='text' class="form-control" />
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
@@ -717,7 +837,7 @@
                                     <label class="control-label">开始时间</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <div class='input-group date' id='BeginDate'>
+                                    <div class='input-group date' id='DurBeginTime'>
                                         <input type='text' class="form-control" />
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
@@ -730,7 +850,7 @@
                                     <label class="control-label">结束时间</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <div class='input-group date' id='EndDate'>
+                                    <div class='input-group date' id='DurEndTime'>
                                         <input type='text' class="form-control" />
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
@@ -745,121 +865,12 @@
             <div id="ModBtn" class="form-group">
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10 text-center">
-                        <input id="btnTestDb" type="button" value="测试数据库连接" class="btn btn-default" />
+                        <input id="btnTestDb" type="button" value="测试数据库连接" class="btn btn-default" hidden />
                         <input id="save" type="submit" value="保存" class="btn btn-default" />
                     </div>
                 </div>
             </div>
         </form>
     </div>
-    @*<form>
-            @Html.AntiForgeryToken()
-            <div class="modal-body">
-                <div id="ModMain" class="form-horizontal">
-                    <fieldset>
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.ModName, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-4">
-                                @Html.EditorFor(model => model.ModName, new { htmlAttributes = new { @class = "form-control input-sm" } })
-                            </div>
-                            @Html.LabelFor(model => model.IsFileDataSource, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-4">
-                                @Html.RadioButtonFor(model => model.IsFileDataSource, 1, htmlAttributes: new { @checked = "true" })是
-                                @Html.RadioButtonFor(model => model.IsFileDataSource, 0)否
-                            </div>
-                        </div>
-                        <div class="form-group text-center">
-                            <div id="ModFileL" class="col-md-2 text-right">
-                                <label class="control-label">上传文件</label>
-                            </div>
-                            <div id="ModFileI" class="col-md-4" style="padding-bottom:20px;text-align:center">
-                                <input id="FileData" class="input-sm" name="FileData" type="file" />
-                            </div>
-                            <div class="col-md-2 text-right">
-                                <label class="control-label">结果属性</label>
-                            </div>
-                            <div class="col-md-4">
-                                <select id="resultSelector" class="form-control input-sm"></select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.ModRemark, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.TextAreaFor(model => model.ModRemark, new { @class = "form-control", @rows = "6" })
-
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
-                <div id="ModDB" class="form-horizontal" hidden="hidden">
-                    <fieldset>
-                        <legend>设置数据源</legend>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.ModServer, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-sm-4">
-                                @Html.EditorFor(model => model.ModServer, new { htmlAttributes = new { @class = "form-control  input-sm" } })
-
-                            </div>
-                            @Html.LabelFor(model => model.ModDataBase, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-sm-4">
-                                @Html.EditorFor(model => model.ModDataBase, new { htmlAttributes = new { @class = "form-control  input-sm" } })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.ModUid, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-sm-4">
-                                @Html.EditorFor(model => model.ModUid, new { htmlAttributes = new { @class = "form-control  input-sm" } })
-
-                            </div>
-                            @Html.LabelFor(model => model.ModPassword, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-sm-4">
-                                @Html.EditorFor(model => model.ModPassword, new { htmlAttributes = new { @class = "form-control  input-sm", @type = "password" } })
-
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.ModDataSource, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-lg-10">
-                                @Html.TextAreaFor(model => model.ModDataSource, new { @class = "form-control  input-sm", @rows = "4" })
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
-                <div id="ModCycle" class="form-horizontal" hidden="hidden">
-                    <fieldset>
-                        <legend>设置生成周期</legend>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.ModCycleType, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-sm-4">
-                                <select id="ModCycleTypeSelector" class="form-control input-sm">
-                                    <option value="Month">月</option>
-                                    <option value="Week">周</option>
-                                    <option value="None">无</option>
-                                </select>
-                            </div>
-                            @Html.LabelFor(model => model.ModCycleWD, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-sm-4">
-                                @Html.EditorFor(model => model.ModCycleWD, new { htmlAttributes = new { @class = "form-control  input-sm" } })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.ModCycleDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-sm-4">
-                                @Html.EditorFor(model => model.ModCycleDate, new { htmlAttributes = new { @class = "form-control  input-sm" } })
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10 text-center">
-                            <input id="btnTestDb" type="button" value="测试数据库连接" class="btn btn-default" />
-                            <input id="save" type="submit" value="保存" class="btn btn-default" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>*@
 </body>
 </html>

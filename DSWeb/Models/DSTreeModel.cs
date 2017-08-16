@@ -11,42 +11,21 @@ namespace DSWeb.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class DSTreeModel
     {
         public System.Guid ModGUID { get; set; }
-        [Display(Name = "模型名称")]
         public string ModName { get; set; }
-        [Display(Name = "生成时间")]
-        public Nullable<System.DateTime> ModGenerateTime { get; set; }
-        [Display(Name = "数据源")]
-        public string ModDataSource { get; set; }
-        [Display(Name = "模型描述")]
         public string ModRemark { get; set; }
-        [Display(Name = "是否文件数据")]
-        public Nullable<bool> IsFileDataSource { get; set; }
-        [Display(Name = "服务器")]
-        public string ModServer { get; set; }
-        [Display(Name = "数据库")]
-        public string ModDataBase { get; set; }
-        [Display(Name = "登录名")]
-        public string ModUid { get; set; }
-        [Display(Name = "数据库密码")]
-        public string ModPassword { get; set; }
-        [Display(Name = "执行周期")]
-        public string ModCycleType { get; set; }
-        [Display(Name = "执行日期")]
-        public Nullable<int> ModCycleWD { get; set; }
-        [Display(Name = "执行时间")]
-        public Nullable<int> ModCycleDate { get; set; }
-        [Display(Name = "模型状态")]
         public string ModStatus { get; set; }
-
-        public string GetConnString()
-        {
-            string strconn = @"data source=" + ModServer + ";initial catalog=" + ModDataBase + ";user id=" + ModUid + ";password=" + ModPassword;
-            return strconn;
-        }
+        public Nullable<System.DateTime> ModGenerateTime { get; set; }
+        public Nullable<bool> IsFile { get; set; }
+        public string FileName { get; set; }
+        public string FilePath { get; set; }
+        public string ModServer { get; set; }
+        public string ModDataBase { get; set; }
+        public string ModUid { get; set; }
+        public string ModPassword { get; set; }
+        public string ModDataSource { get; set; }
     }
 }

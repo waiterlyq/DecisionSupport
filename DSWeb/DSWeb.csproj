@@ -242,19 +242,22 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
-    <EntityDeploy Include="Models\DS.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>DS.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\DS.edmx.diagram">
-      <DependentUpon>DS.edmx</DependentUpon>
-    </Content>
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="log4net.config" />
+    <Content Include="Models\DS.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DS.edmx</DependentUpon>
+      <LastGenOutput>DS.Context.cs</LastGenOutput>
+    </Content>
     <Content Include="Models\DS.edmx.sql" />
+    <Content Include="Models\DS.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DS.edmx</DependentUpon>
+      <LastGenOutput>DS.cs</LastGenOutput>
+    </Content>
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap-editable\js\bootstrap-editable.js" />
@@ -273,21 +276,18 @@
     <Content Include="Scripts\d3\API.md" />
     <Content Include="Content\bootstrap-fileinput\sass\fileinput.scss" />
     <Content Include="Content\bootstrap-select.css.map" />
+    <EntityDeploy Include="Models\DS.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DS.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\DS.edmx.diagram">
+      <DependentUpon>DS.edmx</DependentUpon>
+    </Content>
     <None Include="Properties\PublishProfiles\测试发布.pubxml">
       <SubType>Designer</SubType>
     </None>
     <Content Include="Scripts\bootstrap-select.js.map" />
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
-    <Content Include="Models\DS.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>DS.Context.cs</LastGenOutput>
-      <DependentUpon>DS.edmx</DependentUpon>
-    </Content>
-    <Content Include="Models\DS.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>DS.edmx</DependentUpon>
-      <LastGenOutput>DS.cs</LastGenOutput>
-    </Content>
     <Content Include="Scripts\bootbox.js" />
     <Content Include="Scripts\bootbox.min.js" />
     <Content Include="Scripts\bootstrap-table\bootstrap-table.js" />
@@ -511,6 +511,12 @@
       <DependentUpon>DS.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DSTreeCEMap.cs">
+      <DependentUpon>DS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DSTreeExecutePlan.cs">
+      <DependentUpon>DS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DSTreeFactors.cs">
       <DependentUpon>DS.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DSTreeModel.cs">

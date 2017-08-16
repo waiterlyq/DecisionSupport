@@ -13,10 +13,10 @@ namespace DSWeb.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class DSEntities : DbContext
+    public partial class dotnet_erp257sp1_chengyu_zqdy_branch6Entities : DbContext
     {
-        public DSEntities()
-            : base("name=DSEntities")
+        public dotnet_erp257sp1_chengyu_zqdy_branch6Entities()
+            : base("name=dotnet_erp257sp1_chengyu_zqdy_branch6Entities")
         {
         }
     
@@ -27,6 +27,8 @@ namespace DSWeb.Models
     
         public virtual DbSet<DSTree> DSTree { get; set; }
         public virtual DbSet<DSTreeCEMap> DSTreeCEMap { get; set; }
+        public virtual DbSet<DSTreeFactors> DSTreeFactors { get; set; }
         public virtual DbSet<DSTreeModel> DSTreeModel { get; set; }
+        public virtual DbSet<DSTreeExecutePlan> DSTreeExecutePlan { get; set; }
     }
 }

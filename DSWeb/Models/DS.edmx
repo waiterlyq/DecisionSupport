@@ -4,66 +4,131 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="DSModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-  <EntityContainer Name="DSModelStoreContainer">
-    <EntitySet Name="DSTree" EntityType="DSModel.Store.DSTree" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="DSTreeCEMap" EntityType="DSModel.Store.DSTreeCEMap" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="DSTreeModel" EntityType="DSModel.Store.DSTreeModel" store:Type="Tables" Schema="dbo" />
-  </EntityContainer>
-  <EntityType Name="DSTree">
-    <Key>
-      <PropertyRef Name="DSTreeGUID" />
-    </Key>
-    <Property Name="DSTreeGUID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="ModGUID" Type="uniqueidentifier" Nullable="true" />
-    <Property Name="ID" Type="varchar" Nullable="true" MaxLength="100" />
-    <Property Name="PID" Type="varchar" Nullable="true" MaxLength="100" />
-    <Property Name="FactorName" Type="varchar" Nullable="true" MaxLength="100" />
-    <Property Name="FactorNameCn" Type="varchar" Nullable="true" MaxLength="100" />
-    <Property Name="Operator" Type="varchar" Nullable="true" MaxLength="50" />
-    <Property Name="OperatorCn" Type="varchar" Nullable="true" MaxLength="50" />
-    <Property Name="FactorValue" Type="varchar(max)" Nullable="true" />
-    <Property Name="FactorValueCn" Type="varchar(max)" Nullable="true" />
-    <Property Name="Describe" Type="varchar(max)" Nullable="true" />
-    <Property Name="DescribeCn" Type="varchar(max)" Nullable="true" />
-    <Property Name="Result" Type="varchar" Nullable="true" MaxLength="500" />
-    <Property Name="ResultCn" Type="varchar" Nullable="true" MaxLength="500" />
-    <Property Name="CoverCount" Type="int" Nullable="true" />
-    <Property Name="ErrorCount" Type="int" Nullable="true" />
-  </EntityType>
-  <EntityType Name="DSTreeCEMap">
-    <Key>
-      <PropertyRef Name="CEMapGUID" />
-    </Key>
-    <Property Name="CEMapGUID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="ModGUID" Type="uniqueidentifier" Nullable="true" />
-    <Property Name="ECellName" Type="varchar" Nullable="true" MaxLength="50" />
-    <Property Name="CCellName" Type="varchar" Nullable="true" MaxLength="50" />
-    <Property Name="IsResultFactor" Type="bit" Nullable="true" />
-  </EntityType>
-  <EntityType Name="DSTreeModel">
-    <Key>
-      <PropertyRef Name="ModGUID" />
-    </Key>
-    <Property Name="ModGUID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="ModName" Type="varchar" Nullable="true" MaxLength="50" />
-    <Property Name="ModGenerateTime" Type="datetime" Nullable="true" />
-    <Property Name="ModDataSource" Type="varchar(max)" Nullable="true" />
-    <Property Name="ModRemark" Type="varchar(max)" Nullable="true" />
-    <Property Name="IsFileDataSource" Type="bit" Nullable="true" />
-    <Property Name="ModServer" Type="varchar" Nullable="true" MaxLength="50" />
-    <Property Name="ModDataBase" Type="varchar" Nullable="true" MaxLength="50" />
-    <Property Name="ModUid" Type="varchar" Nullable="true" MaxLength="50" />
-    <Property Name="ModPassword" Type="varchar" Nullable="true" MaxLength="50" />
-    <Property Name="ModCycleType" Type="varchar" Nullable="true" MaxLength="50" />
-    <Property Name="ModCycleWD" Type="int" Nullable="true" />
-    <Property Name="ModCycleDate" Type="int" Nullable="true" />
-    <Property Name="ModStatus" Type="varchar" Nullable="true" MaxLength="50" />
-  </EntityType>
-</Schema></edmx:StorageModels>
+    <Schema Namespace="dotnet_erp257sp1_chengyu_zqdy_branch6Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="DSTree">
+          <Key>
+            <PropertyRef Name="DSTreeGUID" />
+          </Key>
+          <Property Name="DSTreeGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ModGUID" Type="uniqueidentifier" />
+          <Property Name="ID" Type="varchar" MaxLength="100" />
+          <Property Name="PID" Type="varchar" MaxLength="100" />
+          <Property Name="FactorName" Type="varchar" MaxLength="100" />
+          <Property Name="FactorNameCn" Type="varchar" MaxLength="100" />
+          <Property Name="Operator" Type="varchar" MaxLength="50" />
+          <Property Name="OperatorCn" Type="varchar" MaxLength="50" />
+          <Property Name="FactorValue" Type="varchar(max)" />
+          <Property Name="FactorValueCn" Type="varchar(max)" />
+          <Property Name="Describe" Type="varchar(max)" />
+          <Property Name="DescribeCn" Type="varchar(max)" />
+          <Property Name="Result" Type="varchar" MaxLength="500" />
+          <Property Name="ResultCn" Type="varchar" MaxLength="500" />
+          <Property Name="CoverCount" Type="int" />
+          <Property Name="ErrorCount" Type="int" />
+        </EntityType>
+        <EntityType Name="DSTreeCEMap">
+          <Key>
+            <PropertyRef Name="CEMapGUID" />
+          </Key>
+          <Property Name="CEMapGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ModGUID" Type="uniqueidentifier" />
+          <Property Name="ECellName" Type="varchar" MaxLength="50" />
+          <Property Name="CCellName" Type="varchar" MaxLength="50" />
+          <Property Name="IsResultFactor" Type="bit" />
+        </EntityType>
+        <!--生成过程中发现错误:
+警告 6002: 表/视图“dotnet_erp257sp1_chengyu_zqdy_branch6.dbo.DSTreeExecutePlan”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+        <EntityType Name="DSTreeExecutePlan">
+          <Key>
+            <PropertyRef Name="ExecutePlanGUID" />
+          </Key>
+          <Property Name="ExecutePlanGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ModGUID" Type="uniqueidentifier" />
+          <Property Name="PlanType" Type="int" />
+          <Property Name="OnceDate" Type="datetime" />
+          <Property Name="OnceTime" Type="datetime" />
+          <Property Name="FrequencyType" Type="int" />
+          <Property Name="IntervalCount" Type="int" />
+          <Property Name="EWMonday" Type="bit" />
+          <Property Name="EWTuesday" Type="bit" />
+          <Property Name="EWWednesday" Type="bit" />
+          <Property Name="EWThrusday" Type="bit" />
+          <Property Name="EWFriday" Type="bit" />
+          <Property Name="EWSaturday" Type="bit" />
+          <Property Name="EWSunday" Type="bit" />
+          <Property Name="EMEType" Type="int" />
+          <Property Name="EMEDay" Type="int" />
+          <Property Name="RDType" Type="bit" />
+          <Property Name="RDETime" Type="datetime" />
+          <Property Name="RDInterval" Type="int" />
+          <Property Name="RDBeginTime" Type="datetime" />
+          <Property Name="DurBeginTime" Type="datetime" />
+          <Property Name="DurEndTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="DSTreeFactors">
+          <Key>
+            <PropertyRef Name="FactorGUID" />
+          </Key>
+          <Property Name="FactorGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ModGUID" Type="uniqueidentifier" />
+          <Property Name="Factorname" Type="varchar" MaxLength="50" />
+          <Property Name="FactornameCn" Type="varchar" MaxLength="50" />
+          <Property Name="Useage" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="DSTreeModel">
+          <Key>
+            <PropertyRef Name="ModGUID" />
+          </Key>
+          <Property Name="ModGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ModName" Type="varchar" MaxLength="50" />
+          <Property Name="ModRemark" Type="varchar(max)" />
+          <Property Name="ModStatus" Type="varchar" MaxLength="50" />
+          <Property Name="ModGenerateTime" Type="datetime" />
+          <Property Name="IsFile" Type="bit" />
+          <Property Name="FileName" Type="varchar" MaxLength="50" />
+          <Property Name="FilePath" Type="varchar" MaxLength="200" />
+          <Property Name="ModServer" Type="varchar" MaxLength="50" />
+          <Property Name="ModDataBase" Type="varchar" MaxLength="50" />
+          <Property Name="ModUid" Type="varchar" MaxLength="50" />
+          <Property Name="ModPassword" Type="varchar" MaxLength="50" />
+          <Property Name="ModDataSource" Type="varchar(max)" />
+        </EntityType>
+        <EntityContainer Name="dotnet_erp257sp1_chengyu_zqdy_branch6ModelStoreContainer">
+          <EntitySet Name="DSTree" EntityType="Self.DSTree" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DSTreeCEMap" EntityType="Self.DSTreeCEMap" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DSTreeFactors" EntityType="Self.DSTreeFactors" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DSTreeModel" EntityType="Self.DSTreeModel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DSTreeExecutePlan" EntityType="Self.DSTreeExecutePlan" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [DSTreeExecutePlan].[ExecutePlanGUID] AS [ExecutePlanGUID], 
+    [DSTreeExecutePlan].[ModGUID] AS [ModGUID], 
+    [DSTreeExecutePlan].[PlanType] AS [PlanType], 
+    [DSTreeExecutePlan].[OnceDate] AS [OnceDate], 
+    [DSTreeExecutePlan].[OnceTime] AS [OnceTime], 
+    [DSTreeExecutePlan].[FrequencyType] AS [FrequencyType], 
+    [DSTreeExecutePlan].[IntervalCount] AS [IntervalCount], 
+    [DSTreeExecutePlan].[EWMonday] AS [EWMonday], 
+    [DSTreeExecutePlan].[EWTuesday] AS [EWTuesday], 
+    [DSTreeExecutePlan].[EWWednesday] AS [EWWednesday], 
+    [DSTreeExecutePlan].[EWThrusday] AS [EWThrusday], 
+    [DSTreeExecutePlan].[EWFriday] AS [EWFriday], 
+    [DSTreeExecutePlan].[EWSaturday] AS [EWSaturday], 
+    [DSTreeExecutePlan].[EWSunday] AS [EWSunday], 
+    [DSTreeExecutePlan].[EMEType] AS [EMEType], 
+    [DSTreeExecutePlan].[EMEDay] AS [EMEDay], 
+    [DSTreeExecutePlan].[RDType] AS [RDType], 
+    [DSTreeExecutePlan].[RDETime] AS [RDETime], 
+    [DSTreeExecutePlan].[RDInterval] AS [RDInterval], 
+    [DSTreeExecutePlan].[RDBeginTime] AS [RDBeginTime], 
+    [DSTreeExecutePlan].[DurBeginTime] AS [DurBeginTime], 
+    [DSTreeExecutePlan].[DurEndTime] AS [DurEndTime]
+    FROM [dbo].[DSTreeExecutePlan] AS [DSTreeExecutePlan]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="DSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="dotnet_erp257sp1_chengyu_zqdy_branch6Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="DSTree">
           <Key>
             <PropertyRef Name="DSTreeGUID" />
@@ -95,91 +160,169 @@
           <Property Name="CCellName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="IsResultFactor" Type="Boolean" />
         </EntityType>
+        <EntityType Name="DSTreeFactors">
+          <Key>
+            <PropertyRef Name="FactorGUID" />
+          </Key>
+          <Property Name="FactorGUID" Type="Guid" Nullable="false" />
+          <Property Name="ModGUID" Type="Guid" />
+          <Property Name="Factorname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FactornameCn" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Useage" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
         <EntityType Name="DSTreeModel">
           <Key>
             <PropertyRef Name="ModGUID" />
           </Key>
           <Property Name="ModGUID" Type="Guid" Nullable="false" />
           <Property Name="ModName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ModGenerateTime" Type="DateTime" Precision="3" />
-          <Property Name="ModDataSource" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="ModRemark" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="IsFileDataSource" Type="Boolean" />
+          <Property Name="ModStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ModGenerateTime" Type="DateTime" Precision="3" />
+          <Property Name="IsFile" Type="Boolean" />
+          <Property Name="FileName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FilePath" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="ModServer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ModDataBase" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ModUid" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ModPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ModCycleType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ModCycleWD" Type="Int32" />
-          <Property Name="ModCycleDate" Type="Int32" />
-          <Property Name="ModStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ModDataSource" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityContainer Name="DSEntities" annotation:LazyLoadingEnabled="true">
+        <EntityType Name="DSTreeExecutePlan">
+          <Key>
+            <PropertyRef Name="ExecutePlanGUID" />
+          </Key>
+          <Property Name="ExecutePlanGUID" Type="Guid" Nullable="false" />
+          <Property Name="ModGUID" Type="Guid" />
+          <Property Name="PlanType" Type="Int32" />
+          <Property Name="OnceDate" Type="DateTime" Precision="3" />
+          <Property Name="OnceTime" Type="DateTime" Precision="3" />
+          <Property Name="FrequencyType" Type="Int32" />
+          <Property Name="IntervalCount" Type="Int32" />
+          <Property Name="EWMonday" Type="Boolean" />
+          <Property Name="EWTuesday" Type="Boolean" />
+          <Property Name="EWWednesday" Type="Boolean" />
+          <Property Name="EWThrusday" Type="Boolean" />
+          <Property Name="EWFriday" Type="Boolean" />
+          <Property Name="EWSaturday" Type="Boolean" />
+          <Property Name="EWSunday" Type="Boolean" />
+          <Property Name="EMEType" Type="Int32" />
+          <Property Name="EMEDay" Type="Int32" />
+          <Property Name="RDType" Type="Boolean" />
+          <Property Name="RDETime" Type="DateTime" Precision="3" />
+          <Property Name="RDInterval" Type="Int32" />
+          <Property Name="RDBeginTime" Type="DateTime" Precision="3" />
+          <Property Name="DurBeginTime" Type="DateTime" Precision="3" />
+          <Property Name="DurEndTIme" Type="DateTime" Precision="3" />
+          <Property Name="DurEndTime" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityContainer Name="dotnet_erp257sp1_chengyu_zqdy_branch6Entities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="DSTree" EntityType="Self.DSTree" />
           <EntitySet Name="DSTreeCEMap" EntityType="Self.DSTreeCEMap" />
+          <EntitySet Name="DSTreeFactors" EntityType="Self.DSTreeFactors" />
           <EntitySet Name="DSTreeModel" EntityType="Self.DSTreeModel" />
+          <EntitySet Name="DSTreeExecutePlan" EntityType="Self.DSTreeExecutePlan" />
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
-    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="DSModelStoreContainer" CdmEntityContainer="DSEntities">
-    <EntitySetMapping Name="DSTree">
-      <EntityTypeMapping TypeName="IsTypeOf(DSModel.DSTree)">
-        <MappingFragment StoreEntitySet="DSTree">
-          <ScalarProperty Name="DSTreeGUID" ColumnName="DSTreeGUID" />
-          <ScalarProperty Name="ModGUID" ColumnName="ModGUID" />
-          <ScalarProperty Name="ID" ColumnName="ID" />
-          <ScalarProperty Name="PID" ColumnName="PID" />
-          <ScalarProperty Name="FactorName" ColumnName="FactorName" />
-          <ScalarProperty Name="FactorNameCn" ColumnName="FactorNameCn" />
-          <ScalarProperty Name="Operator" ColumnName="Operator" />
-          <ScalarProperty Name="OperatorCn" ColumnName="OperatorCn" />
-          <ScalarProperty Name="FactorValue" ColumnName="FactorValue" />
-          <ScalarProperty Name="FactorValueCn" ColumnName="FactorValueCn" />
-          <ScalarProperty Name="Describe" ColumnName="Describe" />
-          <ScalarProperty Name="DescribeCn" ColumnName="DescribeCn" />
-          <ScalarProperty Name="Result" ColumnName="Result" />
-          <ScalarProperty Name="ResultCn" ColumnName="ResultCn" />
-          <ScalarProperty Name="CoverCount" ColumnName="CoverCount" />
-          <ScalarProperty Name="ErrorCount" ColumnName="ErrorCount" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="DSTreeCEMap">
-      <EntityTypeMapping TypeName="IsTypeOf(DSModel.DSTreeCEMap)">
-        <MappingFragment StoreEntitySet="DSTreeCEMap">
-          <ScalarProperty Name="CEMapGUID" ColumnName="CEMapGUID" />
-          <ScalarProperty Name="ModGUID" ColumnName="ModGUID" />
-          <ScalarProperty Name="ECellName" ColumnName="ECellName" />
-          <ScalarProperty Name="CCellName" ColumnName="CCellName" />
-          <ScalarProperty Name="IsResultFactor" ColumnName="IsResultFactor" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="DSTreeModel">
-      <EntityTypeMapping TypeName="IsTypeOf(DSModel.DSTreeModel)">
-        <MappingFragment StoreEntitySet="DSTreeModel">
-          <ScalarProperty Name="ModGUID" ColumnName="ModGUID" />
-          <ScalarProperty Name="ModName" ColumnName="ModName" />
-          <ScalarProperty Name="ModGenerateTime" ColumnName="ModGenerateTime" />
-          <ScalarProperty Name="ModDataSource" ColumnName="ModDataSource" />
-          <ScalarProperty Name="ModRemark" ColumnName="ModRemark" />
-          <ScalarProperty Name="IsFileDataSource" ColumnName="IsFileDataSource" />
-          <ScalarProperty Name="ModServer" ColumnName="ModServer" />
-          <ScalarProperty Name="ModDataBase" ColumnName="ModDataBase" />
-          <ScalarProperty Name="ModUid" ColumnName="ModUid" />
-          <ScalarProperty Name="ModPassword" ColumnName="ModPassword" />
-          <ScalarProperty Name="ModCycleType" ColumnName="ModCycleType" />
-          <ScalarProperty Name="ModCycleWD" ColumnName="ModCycleWD" />
-          <ScalarProperty Name="ModCycleDate" ColumnName="ModCycleDate" />
-          <ScalarProperty Name="ModStatus" ColumnName="ModStatus" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-  </EntityContainerMapping>
-</Mapping></edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="dotnet_erp257sp1_chengyu_zqdy_branch6ModelStoreContainer" CdmEntityContainer="dotnet_erp257sp1_chengyu_zqdy_branch6Entities">
+          <EntitySetMapping Name="DSTree">
+            <EntityTypeMapping TypeName="dotnet_erp257sp1_chengyu_zqdy_branch6Model.DSTree">
+              <MappingFragment StoreEntitySet="DSTree">
+                <ScalarProperty Name="DSTreeGUID" ColumnName="DSTreeGUID" />
+                <ScalarProperty Name="ModGUID" ColumnName="ModGUID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="PID" ColumnName="PID" />
+                <ScalarProperty Name="FactorName" ColumnName="FactorName" />
+                <ScalarProperty Name="FactorNameCn" ColumnName="FactorNameCn" />
+                <ScalarProperty Name="Operator" ColumnName="Operator" />
+                <ScalarProperty Name="OperatorCn" ColumnName="OperatorCn" />
+                <ScalarProperty Name="FactorValue" ColumnName="FactorValue" />
+                <ScalarProperty Name="FactorValueCn" ColumnName="FactorValueCn" />
+                <ScalarProperty Name="Describe" ColumnName="Describe" />
+                <ScalarProperty Name="DescribeCn" ColumnName="DescribeCn" />
+                <ScalarProperty Name="Result" ColumnName="Result" />
+                <ScalarProperty Name="ResultCn" ColumnName="ResultCn" />
+                <ScalarProperty Name="CoverCount" ColumnName="CoverCount" />
+                <ScalarProperty Name="ErrorCount" ColumnName="ErrorCount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DSTreeCEMap">
+            <EntityTypeMapping TypeName="dotnet_erp257sp1_chengyu_zqdy_branch6Model.DSTreeCEMap">
+              <MappingFragment StoreEntitySet="DSTreeCEMap">
+                <ScalarProperty Name="CEMapGUID" ColumnName="CEMapGUID" />
+                <ScalarProperty Name="ModGUID" ColumnName="ModGUID" />
+                <ScalarProperty Name="ECellName" ColumnName="ECellName" />
+                <ScalarProperty Name="CCellName" ColumnName="CCellName" />
+                <ScalarProperty Name="IsResultFactor" ColumnName="IsResultFactor" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DSTreeFactors">
+            <EntityTypeMapping TypeName="dotnet_erp257sp1_chengyu_zqdy_branch6Model.DSTreeFactors">
+              <MappingFragment StoreEntitySet="DSTreeFactors">
+                <ScalarProperty Name="FactorGUID" ColumnName="FactorGUID" />
+                <ScalarProperty Name="ModGUID" ColumnName="ModGUID" />
+                <ScalarProperty Name="Factorname" ColumnName="Factorname" />
+                <ScalarProperty Name="FactornameCn" ColumnName="FactornameCn" />
+                <ScalarProperty Name="Useage" ColumnName="Useage" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DSTreeModel">
+            <EntityTypeMapping TypeName="dotnet_erp257sp1_chengyu_zqdy_branch6Model.DSTreeModel">
+              <MappingFragment StoreEntitySet="DSTreeModel">
+                <ScalarProperty Name="ModGUID" ColumnName="ModGUID" />
+                <ScalarProperty Name="ModName" ColumnName="ModName" />
+                <ScalarProperty Name="ModRemark" ColumnName="ModRemark" />
+                <ScalarProperty Name="ModStatus" ColumnName="ModStatus" />
+                <ScalarProperty Name="ModGenerateTime" ColumnName="ModGenerateTime" />
+                <ScalarProperty Name="IsFile" ColumnName="IsFile" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="ModServer" ColumnName="ModServer" />
+                <ScalarProperty Name="ModDataBase" ColumnName="ModDataBase" />
+                <ScalarProperty Name="ModUid" ColumnName="ModUid" />
+                <ScalarProperty Name="ModPassword" ColumnName="ModPassword" />
+                <ScalarProperty Name="ModDataSource" ColumnName="ModDataSource" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DSTreeExecutePlan">
+            <EntityTypeMapping TypeName="dotnet_erp257sp1_chengyu_zqdy_branch6Model.DSTreeExecutePlan">
+              <MappingFragment StoreEntitySet="DSTreeExecutePlan">
+                <ScalarProperty Name="DurEndTime" ColumnName="DurEndTime" />
+                <ScalarProperty Name="ExecutePlanGUID" ColumnName="ExecutePlanGUID" />
+                <ScalarProperty Name="ModGUID" ColumnName="ModGUID" />
+                <ScalarProperty Name="PlanType" ColumnName="PlanType" />
+                <ScalarProperty Name="OnceDate" ColumnName="OnceDate" />
+                <ScalarProperty Name="OnceTime" ColumnName="OnceTime" />
+                <ScalarProperty Name="FrequencyType" ColumnName="FrequencyType" />
+                <ScalarProperty Name="IntervalCount" ColumnName="IntervalCount" />
+                <ScalarProperty Name="EWMonday" ColumnName="EWMonday" />
+                <ScalarProperty Name="EWTuesday" ColumnName="EWTuesday" />
+                <ScalarProperty Name="EWWednesday" ColumnName="EWWednesday" />
+                <ScalarProperty Name="EWThrusday" ColumnName="EWThrusday" />
+                <ScalarProperty Name="EWFriday" ColumnName="EWFriday" />
+                <ScalarProperty Name="EWSaturday" ColumnName="EWSaturday" />
+                <ScalarProperty Name="EWSunday" ColumnName="EWSunday" />
+                <ScalarProperty Name="EMEType" ColumnName="EMEType" />
+                <ScalarProperty Name="EMEDay" ColumnName="EMEDay" />
+                <ScalarProperty Name="RDType" ColumnName="RDType" />
+                <ScalarProperty Name="RDETime" ColumnName="RDETime" />
+                <ScalarProperty Name="RDInterval" ColumnName="RDInterval" />
+                <ScalarProperty Name="RDBeginTime" ColumnName="RDBeginTime" />
+                <ScalarProperty Name="DurBeginTime" ColumnName="DurBeginTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
   </edmx:Runtime>
   <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
   <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
@@ -192,8 +335,8 @@
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="false" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="false" />
-        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
       </DesignerInfoPropertySet>
     </Options>
