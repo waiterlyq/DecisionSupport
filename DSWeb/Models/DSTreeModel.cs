@@ -27,5 +27,12 @@ namespace DSWeb.Models
         public string ModUid { get; set; }
         public string ModPassword { get; set; }
         public string ModDataSource { get; set; }
+
+        public string GetConnString()
+        {
+            string strconn = @"data source=" + ModServer + ";initial catalog=" + ModDataBase + ";user id=" + ModUid + ";password=" + ModPassword;
+            return strconn;
+        }
+
     }
 }
