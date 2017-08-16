@@ -303,7 +303,7 @@
                 $.ajax({
                     type: "post",
                     url: '/DSTreeModels/GetFieldName',
-                    data: { ModGUID: '@Model.ModGUID', isFile: $("input[name='isFile']:checked").val(), ModDataSource: JSON.stringify(dbs) },
+                    data: { ModGUID: '@Model.ModGUID', isFile: $("input[name='isFile']:checked").val(), db: JSON.stringify(dbs) },
                     success: function (data) {
                         var json = eval(data); //数组
                         $.each(json, function (index, item) {

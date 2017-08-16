@@ -57,7 +57,7 @@ namespace DSWeb.Controllers
         /// 获取列名
         /// </summary>
         /// <returns></returns>
-        public string GetFieldName(string ModGUID, string isFile, string ModDataSource)
+        public string GetFieldName(string ModGUID, string isFile, string db)
         {
             DataTable dt = new DataTable();
             if (string.IsNullOrEmpty(isFile) || string.IsNullOrEmpty(ModGUID))
@@ -90,13 +90,13 @@ namespace DSWeb.Controllers
                 ////数据库类型数据
                 else
                 {
-                    if (string.IsNullOrEmpty(ModDataSource))
+                    if (string.IsNullOrEmpty(db))
                     {
                         return null;
                     }
                     else
                     {
-                        DSTreeModel dbs = JsonConvert.DeserializeObject<DSTreeModel>(ModDataSource);
+                        DSTreeModel dbs = JsonConvert.DeserializeObject<DSTreeModel>(db);
                         SQLHelper targetdb = new SQLHelper(dbs.GetConnString());
                         string strSql = "select top 1 * from (" + dbs.ModDataSource + ") tmp";
                         DataTable dtTemp = targetdb.GetTable(strSql);
