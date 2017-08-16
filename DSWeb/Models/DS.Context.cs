@@ -13,10 +13,10 @@ namespace DSWeb.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class dotnet_erp257sp1_chengyu_zqdy_branch6Entities : DbContext
+    public partial class DSEntities : DbContext
     {
-        public dotnet_erp257sp1_chengyu_zqdy_branch6Entities()
-            : base("name=dotnet_erp257sp1_chengyu_zqdy_branch6Entities")
+        public DSEntities()
+            : base("name=DSEntities")
         {
         }
     
