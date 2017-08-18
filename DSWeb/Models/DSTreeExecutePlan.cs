@@ -35,7 +35,6 @@ namespace DSWeb.Models
         public Nullable<int> RDInterval { get; set; }
         public Nullable<System.DateTime> RDBeginTime { get; set; }
         public Nullable<System.DateTime> DurBeginTime { get; set; }
-        public Nullable<System.DateTime> DurEndTIme { get; set; }
         public Nullable<System.DateTime> DurEndTime { get; set; }
     }
 }

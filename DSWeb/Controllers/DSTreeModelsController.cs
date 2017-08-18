@@ -133,12 +133,21 @@ namespace DSWeb.Controllers
                 con.Open();
                 if (con.State == ConnectionState.Open)
                 {
-                    result = "success";
+                    SQLHelper db = new SQLHelper(strconn);
+                    if (db.IsReaderUID(Uid))
+                    {
+                        result = "success";
+                    }
+                    else
+                    {
+                        result = "failure";
+                    }
                 }
                 else
                 {
                     result = "failure";
                 }
+
             }
             catch (Exception)
             {

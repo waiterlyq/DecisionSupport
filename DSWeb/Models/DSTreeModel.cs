@@ -33,6 +33,5 @@ namespace DSWeb.Models
             string strconn = @"data source=" + ModServer + ";initial catalog=" + ModDataBase + ";user id=" + ModUid + ";password=" + ModPassword;
             return strconn;
         }
-
     }
 }

@@ -213,7 +213,6 @@
           <Property Name="RDInterval" Type="Int32" />
           <Property Name="RDBeginTime" Type="DateTime" Precision="3" />
           <Property Name="DurBeginTime" Type="DateTime" Precision="3" />
-          <Property Name="DurEndTIme" Type="DateTime" Precision="3" />
           <Property Name="DurEndTime" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityContainer Name="dotnet_erp257sp1_chengyu_zqdy_branch6Entities" annotation:LazyLoadingEnabled="true">
